@@ -1,14 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package EPortfolioGeneratorUI;
+
+import javafx.scene.layout.Region;
 
 /**
  *
- * @author andrewestevez
+ * @author Freddy Estevez
  */
-public class PageEditView {
+public class PageEditView extends Region{
     
+    public PageEditView(String file){
+        
+    }
+
 }
