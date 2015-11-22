@@ -5,6 +5,7 @@
  */
 package eportfoliogenerator;
 
+import EPortfolioGeneratorUI.ListDialog;
 import EPortfolioGeneratorUI.ParagraphDialog;
 import EPortfolioGeneratorUI.SelectDialog;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class EPortfolioGenerator extends Application {
         primaryStage.setTitle("Eportfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
-        ParagraphDialog dia = new ParagraphDialog();
+        ListDialog dia = new ListDialog();
         dia.display("title");
     }
 

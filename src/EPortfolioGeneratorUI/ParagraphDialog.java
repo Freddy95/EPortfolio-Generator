@@ -42,7 +42,7 @@ public class ParagraphDialog {
         paragraph = new TextArea();
         paragraph.setTooltip(new Tooltip("Enter Text Here"));
         okBtn = new Button("OK");
-        VBox layout = new VBox(25);
+        VBox layout = new VBox(15);
         layout.setPadding(new Insets(10, 10, 10, 10));
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(labelHeading, heading, labelParagraph, paragraph, okBtn);
