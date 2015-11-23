@@ -1,16 +1,22 @@
 
 package EPortfolioGeneratorUI;
 
-import javafx.scene.layout.Region;
+import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
 
 /**
  *
  * @author Freddy Estevez
  */
-public class PageEditView extends Region{
+public class PageEditView extends VBox{
     
-    public PageEditView(String file){
-        
+    public PageEditView(){
+        setSpacing(30);
+        getStyleClass().add("pageEditView");
+    }
+    
+    public void addComponent(ComponentEditView v){
+        getChildren().add(v);
     }
 
 }

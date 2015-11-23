@@ -3,3 +3,43 @@
     Author     : FreddyEstevez
 */
 
+.fileToolbar{// file toolbar
+    -fx-background-color: #3399ff;
+    -fx-padding: 5px 5px 5px 5px;
+}
+
+.siteToolbar{// site toolbar
+    -fx-background-color: #b3d9ff;
+    -fx-padding: 5px 5px 5px 5px;
+    -fx-alignment: center;
+}
+.workSpace{// workspace or right side buttons
+    -fx-background-color: white;
+    -fx-padding: 5px 10px 5px 10px;
+    -fx-border-color: white white white #b3d9ff;
+    -fx-border-width: 2px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.pageEditView{// vbox which holds component edit views
+   -fx-background-color: #cce5ff;
+   -fx-alignment: center; 
+}
+
+.componentEditView{//specific component edit views
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-font-size: 15px;
+    
+}
+
+.heading{//the header or caption of each component if it has one
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+
+
+

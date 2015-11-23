@@ -5,12 +5,17 @@
  */
 package eportfoliogenerator;
 
+import Components.Component;
+import Components.ImageComponent;
+import Components.ParagraphComponent;
 import EPortfolioGeneratorUI.AddHyperLinkDialog;
 import EPortfolioGeneratorUI.AddImageDialog;
 import EPortfolioGeneratorUI.AddListDialog;
 import EPortfolioGeneratorUI.AddParagraphDialog;
 import EPortfolioGeneratorUI.AddSlideShowDialog;
 import EPortfolioGeneratorUI.AddVideoDialog;
+import EPortfolioGeneratorUI.ComponentEditView;
+import EPortfolioGeneratorUI.PageEditView;
 import EPortfolioGeneratorUI.SelectDialog;
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +26,13 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -32,6 +40,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -49,12 +58,13 @@ public class EPortfolioGenerator extends Application {
     static VBox siteToolbar;
     static VBox workSpace;
     static VBox top;
+    static PageEditView pageEditor;
+    static ScrollPane pageEditorScrollPane;
     static Label currentPage;
     static ArrayList<Label> pages;
-    static HBox addRemove;
     static WebView webView;
     static WebEngine engine;
-    
+    static double width;
     
     static Button addPage;
     static Button removePage;
@@ -68,11 +78,13 @@ public class EPortfolioGenerator extends Application {
     static Button setName;
     static Button addComponent;
     static Button removeComponent;
-    static Button editComponent;
     static Button selectFont;
     static Button selectLayout;
     static Button selectBannerImage;
     static Button selectColorTemplate;
+    static Button setFooter;
+    static Button pageEditView;
+    static Button siteEditView;
 
     @Override
     public void start(Stage primaryStage) {
@@ -83,15 +95,14 @@ public class EPortfolioGenerator extends Application {
         BorderPane pane = new BorderPane();
         pane.setTop(fileToolbar);
         pane.setLeft(siteToolbar);
-        pane.setCenter(webView);
+        pane.setCenter(pageEditorScrollPane);
         pane.setRight(workSpace);
         Scene scene = new Scene(pane);
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         primaryStage.setScene(scene);
         primaryStage.setTitle("Eportfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
-        AddHyperLinkDialog dia = new AddHyperLinkDialog();
-        dia.display("Add Image");
     }
 
     /**
@@ -138,6 +149,8 @@ public class EPortfolioGenerator extends Application {
      */
     public static void initFileToolbar() {
         fileToolbar = new FlowPane();
+
+        fileToolbar.getStyleClass().add("fileToolbar");
         fileToolbar.setHgap(20);
         newEportfolio = initChildButton(fileToolbar, "icons/new.png", "New Eportfolio", false);
         load = initChildButton(fileToolbar, "icons/load.png", "Load Eportfolio", false);
@@ -149,11 +162,10 @@ public class EPortfolioGenerator extends Application {
     
     public static void initSiteToolbar(){
         siteToolbar = new VBox(10);
-        addRemove = new HBox(10);
+        siteToolbar.getStyleClass().add("siteToolbar");
         currentPage = new Label();
-        addPage = initChildButton(addRemove, "icons/add.png", "Export Eportfolio", false);
-        removePage = initChildButton(addRemove, "icons/Remove.png", "Export Eportfolio", false);
-        siteToolbar.getChildren().add(addRemove);
+        addPage = initChildButton(siteToolbar, "icons/add.png", "Add Page", false);
+        removePage = initChildButton(siteToolbar, "icons/Remove.png", "Remove Current Page", false);
         currentPage.setText("Current page");
         pages = new ArrayList<>();
         pages.add(new Label("Page 1"));
@@ -174,9 +186,9 @@ public class EPortfolioGenerator extends Application {
         // GET THE SIZE OF THE SCREEN
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-
+        
         // AND USE IT TO SIZE THE WINDOW
-        primaryStage.setX(bounds.getMinX());
+        primaryStage.setX(bounds.getMinX());     
         primaryStage.setY(bounds.getMinY());
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
@@ -185,33 +197,61 @@ public class EPortfolioGenerator extends Application {
     
     
     public static void initPageEditView(){
-        webView = new WebView();
-        engine = webView.getEngine();
-        File file = new File("index.html");
-        if (file.exists()); else {
-            try {
-                file.createNewFile();
-            } catch (IOException ex) {
-            }
-        }
-        
-        try {
-            engine.load(file.toURI().toURL().toExternalForm());
-        } catch (MalformedURLException ex) {
-        }
-       
+          pageEditor = new PageEditView();
+          pageEditor.getStyleClass().add("pageEditView");
+          ParagraphComponent a = new ParagraphComponent("This is a heading",
+                  "My paragraph consists on many many things. Its pretty cool to"
+                          + " be honest. I wonder how wide i can get this to be lets see how wide i can get this to be shoulc be pretty intereting i hope its not too wide but it should still be funny.", "Paragraph");
+          ComponentEditView v = new ComponentEditView(a);
+          ImageComponent b = new ImageComponent("Cool heading", "file:image.jpg", "Image");
+          ComponentEditView w = new ComponentEditView(b);
+          ComponentEditView x = new ComponentEditView(a);
+          pageEditor.addComponent(v);
+          pageEditor.addComponent(w);
+          pageEditor.addComponent(x);
+          pageEditor.setMinWidth(getWidth()*.785);
+//        webView = new WebView();
+//        engine = webView.getEngine();
+//        File file = new File("index.html");
+//        if (file.exists()); else {
+//            try {
+//                file.createNewFile();
+//            } catch (IOException ex) {
+//            }
+//        }
+//        
+//        try {
+//            engine.load(file.toURI().toURL().toExternalForm());
+//        } catch (MalformedURLException ex) {
+//        }
+//       
+                    pageEditorScrollPane = new ScrollPane(pageEditor);
+
     }
     
     
     public static void initWorkSpace(){
         workSpace = new VBox(10);
+        workSpace.getStyleClass().add("workSpace");
         setTitle = initButton(workSpace, "Set Title", "", false);
         setName = initButton(workSpace, "Set Name", "", false);
         selectLayout = initButton(workSpace, "Select  Layout", "", false);
         selectColorTemplate = initButton(workSpace, "Select Color Theme", "", false);
         selectFont = initButton(workSpace, "Select Font", "", false);
-        editComponent = initButton(workSpace, "Edit Component", "", false);
         addComponent = initButton(workSpace, "Add Component", "", false);
         removeComponent = initButton(workSpace, "Remove Component", "", false);
+        setFooter = initButton(workSpace, "Set Footer", "", false);
+        
+    }
+    
+    public static double getWidth(){
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+        width = bounds.getWidth();
+        return width;
+    }
+    public void initComponents(){
+       // components = new VBox();
+        
     }
 }
