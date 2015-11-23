@@ -43,7 +43,6 @@
 
 .dialog{// style for dialog boxes
     -fx-background-color: #cce5ff;
-    -fx-text-align: left;
     -fx-alignment: center;
     -fx-font-size: 15px;
 }
@@ -55,6 +54,12 @@
     -fx-spacing: 30px;
     -fx-background-color:#cce5ff;
     -fx-alignment: center;
+    -fx-font-size: 15px;
 }
 
+.dialogList{
+    -fx-background-color:#cce5ff;
+    -fx-font-size: 15px;
+    -fx-alignment: center;
+}
 

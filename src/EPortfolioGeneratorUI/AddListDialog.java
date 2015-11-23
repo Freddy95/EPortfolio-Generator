@@ -40,7 +40,8 @@ public class AddListDialog {
         createList.setText("List: ");
         list = new ListView();
         list.setMinSize(300, 300);
-       
+        list.getItems().add("I like pie");
+        list.getItems().add("I Like cookies");
         addBtn = new Button("Add Element");
         removeBtn = new Button("Remove Element");
         HBox btns = new HBox(15);
@@ -52,7 +53,8 @@ public class AddListDialog {
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(labelHeading, heading, createList, list, btns, okBtn);
         scene = new Scene(layout, 400, 600);
-        
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        layout.getStyleClass().add("dialogList");
         window.setScene(scene);
         window.show();
     }

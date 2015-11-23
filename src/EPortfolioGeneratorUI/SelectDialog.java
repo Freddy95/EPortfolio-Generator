@@ -58,6 +58,9 @@ public class SelectDialog{
             }else if(box.getValue().equals("HyperLink Text")){
                 AddHyperLinkDialog d = new AddHyperLinkDialog();
                 d.display("Add HyperLink Text");
+            }else if(box.getValue().equals("List")){
+                AddListDialog d = new AddListDialog();
+                d.display("Add List");
             }
         });
     }

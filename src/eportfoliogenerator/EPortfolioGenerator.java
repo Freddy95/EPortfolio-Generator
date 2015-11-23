@@ -274,6 +274,7 @@ public class EPortfolioGenerator extends Application {
             components.add("Paragraph");
             components.add("Image");
             components.add("Video");
+            components.add("List");
             components.add("Slide Show");
             components.add("HyperLink Text");
             SelectDialog dia = new SelectDialog(components);

@@ -48,7 +48,8 @@ public class AddParagraphDialog {
         layout.getChildren().addAll(labelHeading, heading, labelParagraph, paragraph, okBtn);
         scene = new Scene(layout, 400, 400);
         paragraph.setMinSize(100, 100);
-        
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        layout.getStyleClass().add("dialog");
         window.setScene(scene);
         window.show();
        
