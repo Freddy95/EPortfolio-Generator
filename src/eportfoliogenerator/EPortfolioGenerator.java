@@ -5,12 +5,19 @@
  */
 package eportfoliogenerator;
 
+import EPortfolioGeneratorUI.AddHyperLinkDialog;
 import EPortfolioGeneratorUI.AddImageDialog;
 import EPortfolioGeneratorUI.AddListDialog;
 import EPortfolioGeneratorUI.AddParagraphDialog;
+import EPortfolioGeneratorUI.AddSlideShowDialog;
 import EPortfolioGeneratorUI.AddVideoDialog;
 import EPortfolioGeneratorUI.SelectDialog;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -83,7 +90,7 @@ public class EPortfolioGenerator extends Application {
         primaryStage.setTitle("Eportfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
-        AddVideoDialog dia = new AddVideoDialog();
+        AddHyperLinkDialog dia = new AddHyperLinkDialog();
         dia.display("Add Image");
     }
 
@@ -180,7 +187,19 @@ public class EPortfolioGenerator extends Application {
     public static void initPageEditView(){
         webView = new WebView();
         engine = webView.getEngine();
-        engine.load("file:index.html");
+        File file = new File("index.html");
+        if (file.exists()); else {
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+            }
+        }
+        
+        try {
+            engine.load(file.toURI().toURL().toExternalForm());
+        } catch (MalformedURLException ex) {
+        }
+       
     }
     
     
