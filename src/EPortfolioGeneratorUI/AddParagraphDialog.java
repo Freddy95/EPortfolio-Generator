@@ -5,10 +5,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,9 +30,13 @@ public class AddParagraphDialog {
     TextField heading;
     TextArea paragraph;
     Button okBtn;
+    ChoiceBox<String> box;
 
     public void display(String title) {
+        HBox elems = new HBox(15);
         window = new Stage();
+        box = new ChoiceBox<>();
+        
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         labelHeading = new Label();
@@ -42,10 +48,19 @@ public class AddParagraphDialog {
         paragraph = new TextArea();
         paragraph.setTooltip(new Tooltip("Enter Text Here"));
         okBtn = new Button("OK");
+        box.getItems().add("Font 1");
+        box.getItems().add("Font 2");
+        box.getItems().add("Font 3");
+        box.getItems().add("Font 4");
+        box.getItems().add("Font 5");
+        box.setValue("Select Font");
+        
+        elems.getChildren().addAll(box, okBtn);
+        elems.getStyleClass().add("dialogButton");
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(10, 10, 10, 10));
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(labelHeading, heading, labelParagraph, paragraph, okBtn);
+        layout.getChildren().addAll(labelHeading, heading, labelParagraph, paragraph, elems);
         scene = new Scene(layout, 400, 400);
         paragraph.setMinSize(100, 100);
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");

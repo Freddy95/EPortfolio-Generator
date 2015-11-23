@@ -8,6 +8,7 @@ package eportfoliogenerator;
 import Components.Component;
 import Components.ImageComponent;
 import Components.ParagraphComponent;
+import EPortfolioGeneratorUI.AddBannerImageDialog;
 import EPortfolioGeneratorUI.AddHyperLinkDialog;
 import EPortfolioGeneratorUI.AddImageDialog;
 import EPortfolioGeneratorUI.AddListDialog;
@@ -88,6 +89,7 @@ public class EPortfolioGenerator extends Application {
     static Button setFooter;
     static Button pageEditView;
     static Button siteEditView;
+    static Button toogleView;
 
     @Override
     public void start(Stage primaryStage) {
@@ -160,11 +162,13 @@ public class EPortfolioGenerator extends Application {
         save = initChildButton(fileToolbar, "icons/save.png", "Save", false);
         saveAs = initChildButton(fileToolbar, "icons/saveAs.png", "Save As", false);
         export = initChildButton(fileToolbar, "icons/export.png", "Export Eportfolio", false);
+        toogleView = initChildButton(fileToolbar, "icons/site.png", "Site View", false);
         exit = initChildButton(fileToolbar, "icons/exit.png", "Exit", false);
+        exit.setAlignment(Pos.TOP_RIGHT);
     }
     
     public static void initSiteToolbar(){
-        siteToolbar = new VBox(10);
+        siteToolbar = new VBox(20);
         siteToolbar.getStyleClass().add("siteToolbar");
         currentPage = new Label();
         addPage = initChildButton(siteToolbar, "icons/add.png", "Add Page", false);
@@ -213,7 +217,7 @@ public class EPortfolioGenerator extends Application {
           pageEditor.addComponent(w);
           w.addComponent(a);
           w.addComponent(b);
-          pageEditor.setMinWidth(getWidth()*.785);
+          pageEditor.setMinWidth(getWidth()*.773);
 //        webView = new WebView();
 //        engine = webView.getEngine();
 //        File file = new File("index.html");
@@ -296,10 +300,6 @@ public class EPortfolioGenerator extends Application {
             dia.display("Select Font", "Select Font for the Page to use");
         });
         
-        selectBannerImage.setOnAction(e ->{
-            AddImageDialog d = new AddImageDialog();
-            d.display("Add Banner Image");
-        });
         
         selectColorTemplate.setOnAction(e -> {
             components.clear();
@@ -336,6 +336,10 @@ public class EPortfolioGenerator extends Application {
         setFooter.setOnAction(e -> {
             SetDialog d = new SetDialog();
             d.display("Enter Footer Text", "Enter Footer Text");
+        });
+        selectBannerImage.setOnAction(e -> {
+            AddBannerImageDialog d = new AddBannerImageDialog();
+            d.display("Add Banner Image");
         });
     }
 }

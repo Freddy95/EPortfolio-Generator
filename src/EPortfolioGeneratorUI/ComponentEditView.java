@@ -60,6 +60,9 @@ public class ComponentEditView extends HBox {
         para.getChildren().addAll(heading, text);
         getChildren().add(para);
         getChildren().add(editComponent);
+        editComponent.setOnAction(e -> {
+            
+        });
     }
 
     public void initImage() {
