@@ -69,3 +69,8 @@
 .exitButton{
     -fx-alignment: top-right;
 }
+
+.currentPage{
+    
+    -fx-background-color: white;
+}

@@ -175,11 +175,29 @@ public class EPortfolioGenerator extends Application {
         addPage = initChildButton(siteToolbar, "icons/add.png", "Add Page", false);
         removePage = initChildButton(siteToolbar, "icons/Remove.png", "Remove Current Page", false);
         currentPage.setText("Current page");
+        currentPage.getStyleClass().add("currentPage");
+        
         pages = new ArrayList<>();
+        pages.add(currentPage);
         pages.add(new Label("Page 1"));
         pages.add(new Label("Page 2"));
+        pages.get(0).setOnMouseClicked(e -> {
+            pages.get(0).getStyleClass().add("currentPage");
+            pages.get(1).getStyleClass().clear();
+            pages.get(2).getStyleClass().clear();
+        });
+        pages.get(1).setOnMouseClicked(e -> {
+            pages.get(1).getStyleClass().add("currentPage");
+            pages.get(2).getStyleClass().clear();
+            pages.get(0).getStyleClass().clear();
+        });
+        pages.get(2).setOnMouseClicked(e -> {
+            pages.get(2).getStyleClass().add("currentPage");
+            pages.get(0).getStyleClass().clear();
+            pages.get(1).getStyleClass().clear();
+        });
+        
         //pages.add(currentPage);
-        siteToolbar.getChildren().add(currentPage);
         addPages();
         
     }
