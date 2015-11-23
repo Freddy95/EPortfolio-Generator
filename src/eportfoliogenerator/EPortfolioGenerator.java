@@ -20,6 +20,7 @@ import EPortfolioGeneratorUI.PageEditView;
 import EPortfolioGeneratorUI.RemoveComponentDialog;
 import EPortfolioGeneratorUI.SelectDialog;
 import EPortfolioGeneratorUI.SetDialog;
+import EPortfolioGeneratorUI.SiteView;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -89,7 +90,7 @@ public class EPortfolioGenerator extends Application {
     static Button setFooter;
     static Button pageEditView;
     static Button siteEditView;
-    static Button toogleView;
+    static Button toggleView;
 
     @Override
     public void start(Stage primaryStage) {
@@ -162,7 +163,7 @@ public class EPortfolioGenerator extends Application {
         save = initChildButton(fileToolbar, "icons/save.png", "Save", false);
         saveAs = initChildButton(fileToolbar, "icons/saveAs.png", "Save As", false);
         export = initChildButton(fileToolbar, "icons/export.png", "Export Eportfolio", false);
-        toogleView = initChildButton(fileToolbar, "icons/site.png", "Site View", false);
+        toggleView = initChildButton(fileToolbar, "icons/site.png", "Site View", false);
         exit = initChildButton(fileToolbar, "icons/exit.png", "Exit", false);
         exit.setAlignment(Pos.TOP_RIGHT);
     }
@@ -218,20 +219,7 @@ public class EPortfolioGenerator extends Application {
           w.addComponent(a);
           w.addComponent(b);
           pageEditor.setMinWidth(getWidth()*.773);
-//        webView = new WebView();
-//        engine = webView.getEngine();
-//        File file = new File("index.html");
-//        if (file.exists()); else {
-//            try {
-//                file.createNewFile();
-//            } catch (IOException ex) {
-//            }
-//        }
 //        
-//        try {
-//            engine.load(file.toURI().toURL().toExternalForm());
-//        } catch (MalformedURLException ex) {
-//        }
 //       
                     pageEditorScrollPane = new ScrollPane(pageEditor);
 
@@ -341,5 +329,11 @@ public class EPortfolioGenerator extends Application {
             AddBannerImageDialog d = new AddBannerImageDialog();
             d.display("Add Banner Image");
         });
+        
+        toggleView.setOnAction(e -> {
+            SiteView v = new SiteView();
+            v.display();
+        });
+        
     }
 }
