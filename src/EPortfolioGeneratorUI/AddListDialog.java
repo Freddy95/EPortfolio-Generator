@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  *
  * @author Freddy Estevez
  */
-public class ListDialog {
+public class AddListDialog {
     Stage window;
     Scene scene;
     Label labelHeading;

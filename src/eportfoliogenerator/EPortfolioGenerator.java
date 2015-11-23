@@ -5,8 +5,10 @@
  */
 package eportfoliogenerator;
 
-import EPortfolioGeneratorUI.ListDialog;
-import EPortfolioGeneratorUI.ParagraphDialog;
+import EPortfolioGeneratorUI.AddImageDialog;
+import EPortfolioGeneratorUI.AddListDialog;
+import EPortfolioGeneratorUI.AddParagraphDialog;
+import EPortfolioGeneratorUI.AddVideoDialog;
 import EPortfolioGeneratorUI.SelectDialog;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -81,8 +83,8 @@ public class EPortfolioGenerator extends Application {
         primaryStage.setTitle("Eportfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
-        ListDialog dia = new ListDialog();
-        dia.display("title");
+        AddVideoDialog dia = new AddVideoDialog();
+        dia.display("Add Image");
     }
 
     /**
@@ -178,7 +180,7 @@ public class EPortfolioGenerator extends Application {
     public static void initPageEditView(){
         webView = new WebView();
         engine = webView.getEngine();
-        engine.load("index.html");
+        engine.load("file:index.html");
     }
     
     

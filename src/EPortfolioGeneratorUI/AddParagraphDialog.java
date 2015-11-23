@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  *
  * @author Freddy Estevez
  */
-public class ParagraphDialog {
+public class AddParagraphDialog {
 
     Stage window;
     Scene scene;
