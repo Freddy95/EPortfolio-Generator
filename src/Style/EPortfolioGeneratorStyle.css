@@ -38,8 +38,23 @@
 .heading{//the header or caption of each component if it has one
     -fx-font-size: 30px;
     -fx-font-weight: bold;
+    
 }
 
+.dialog{// style for dialog boxes
+    -fx-background-color: #cce5ff;
+    -fx-text-align: left;
+    -fx-alignment: center;
+    -fx-font-size: 15px;
+}
 
+.dialogButton{
+    -fx-alignment: center;
+}
+.dialogImage{
+    -fx-spacing: 30px;
+    -fx-background-color:#cce5ff;
+    -fx-alignment: center;
+}
 
 

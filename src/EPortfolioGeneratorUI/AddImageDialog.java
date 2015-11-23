@@ -1,6 +1,7 @@
 
 package EPortfolioGeneratorUI;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,8 +28,9 @@ public class AddImageDialog {
     
     
     public void display(String title){
-        labelHeading = new Label("Enter Heading");
+        labelHeading = new Label("Enter Caption:");
         heading = new TextField();
+        heading.setPrefWidth(200);
         ImageView view = new ImageView();
         Image image = new Image("file:image.jpg");
         view.setImage(image);
@@ -40,11 +42,14 @@ public class AddImageDialog {
         addImage = new Button("Add Image");
         
         VBox layout = new VBox(15);
+        layout.setPadding(new Insets(10,10,10,10));
         layout.getChildren().addAll(labelHeading, heading, view, addImage, okBtn);
-        scene = new Scene(layout, 400, 400);
+        scene = new Scene(layout, 400, 500);
         window = new Stage();
         window.setScene(scene);
         window.initModality(Modality.APPLICATION_MODAL);
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        layout.getStyleClass().add("dialogImage");
         window.show();
     }
 }

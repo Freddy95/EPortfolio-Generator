@@ -105,6 +105,7 @@ public class EPortfolioGenerator extends Application {
         primaryStage.setTitle("Eportfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
+        initHandlers();
     }
 
     /**
@@ -265,5 +266,19 @@ public class EPortfolioGenerator extends Application {
                 view.deselect();
             }
         }
+    }
+    
+    public static void initHandlers(){
+        addComponent.setOnAction(e -> {
+            ArrayList<String> components = new ArrayList<>();
+            components.add("Paragraph");
+            components.add("Image");
+            components.add("Video");
+            components.add("Slide Show");
+            components.add("HyperLink Text");
+            SelectDialog dia = new SelectDialog(components);
+            dia.display("Add Component", "Select Type of"
+                    + " Component");
+        });
     }
 }

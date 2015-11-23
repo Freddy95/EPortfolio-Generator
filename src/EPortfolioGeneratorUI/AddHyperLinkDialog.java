@@ -47,9 +47,11 @@ public class AddHyperLinkDialog {
         layout.setPadding(new Insets(10, 10, 10, 10));
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(labelHeading, heading, labelParagraph, paragraph, okBtn);
-        scene = new Scene(layout, 500, 400);
+        scene = new Scene(layout, 650, 400);
         paragraph.setMinSize(100, 100);
-        
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        layout.getStyleClass().add("dialog");
+        okBtn.getStyleClass().add("dialogButton");
         window.setScene(scene);
         window.show();
        
