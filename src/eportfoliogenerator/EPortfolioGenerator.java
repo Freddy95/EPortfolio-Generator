@@ -16,7 +16,9 @@ import EPortfolioGeneratorUI.AddSlideShowDialog;
 import EPortfolioGeneratorUI.AddVideoDialog;
 import EPortfolioGeneratorUI.ComponentEditView;
 import EPortfolioGeneratorUI.PageEditView;
+import EPortfolioGeneratorUI.RemoveComponentDialog;
 import EPortfolioGeneratorUI.SelectDialog;
+import EPortfolioGeneratorUI.SetDialog;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -138,11 +140,9 @@ public class EPortfolioGenerator extends Application {
         return button;
     }
     
-    public static Button initButton(Pane toolbar, String title,String toolTip, boolean disabled){  
+    public static Button initButton(Pane toolbar, String title, boolean disabled){  
         Button button = new Button(title);
         button.setDisable(disabled);
-        Tooltip buttonTooltip = new Tooltip(toolTip);
-        button.setTooltip(buttonTooltip);
         toolbar.getChildren().add(button);
         return button;
     }
@@ -237,14 +237,15 @@ public class EPortfolioGenerator extends Application {
     public static void initWorkSpace(){
         workSpace = new VBox(10);
         workSpace.getStyleClass().add("workSpace");
-        setTitle = initButton(workSpace, "Set Title", "", false);
-        setName = initButton(workSpace, "Set Name", "", false);
-        selectLayout = initButton(workSpace, "Select  Layout", "", false);
-        selectColorTemplate = initButton(workSpace, "Select Color Theme", "", false);
-        selectFont = initButton(workSpace, "Select Font", "", false);
-        addComponent = initButton(workSpace, "Add Component", "", false);
-        removeComponent = initButton(workSpace, "Remove Component", "", false);
-        setFooter = initButton(workSpace, "Set Footer", "", false);
+        setTitle = initButton(workSpace, "Set Title", false);
+        setName = initButton(workSpace, "Set Name",  false);
+        selectBannerImage = initButton(workSpace, "Select Banner Image",  false);
+        selectLayout = initButton(workSpace, "Select  Layout", false);
+        selectColorTemplate = initButton(workSpace, "Select Color Theme",  false);
+        selectFont = initButton(workSpace, "Select Font",  false);
+        addComponent = initButton(workSpace, "Add Component", false);
+        removeComponent = initButton(workSpace, "Remove Component", false);
+        setFooter = initButton(workSpace, "Set Footer", false);
         
     }
     
@@ -269,8 +270,9 @@ public class EPortfolioGenerator extends Application {
     }
     
     public static void initHandlers(){
+        ArrayList<String> components = new ArrayList<>();
         addComponent.setOnAction(e -> {
-            ArrayList<String> components = new ArrayList<>();
+            components.clear();
             components.add("Paragraph");
             components.add("Image");
             components.add("Video");
@@ -280,6 +282,60 @@ public class EPortfolioGenerator extends Application {
             SelectDialog dia = new SelectDialog(components);
             dia.display("Add Component", "Select Type of"
                     + " Component");
+        });
+        
+        selectFont.setOnAction(e ->{
+            components.clear();
+            components.add("Font 1");
+            components.add("Font 2");
+            components.add("Font 3");
+            components.add("Font 4");
+            components.add("Font 5");
+            
+            SelectDialog dia = new SelectDialog(components);
+            dia.display("Select Font", "Select Font for the Page to use");
+        });
+        
+        selectBannerImage.setOnAction(e ->{
+            AddImageDialog d = new AddImageDialog();
+            d.display("Add Banner Image");
+        });
+        
+        selectColorTemplate.setOnAction(e -> {
+            components.clear();
+            components.add("Blue");
+            components.add("Red");
+            components.add("Orange");
+            components.add("Gray");
+            components.add("Yellow");
+            SelectDialog dia = new SelectDialog(components);
+            dia.display("Select Color", "Select Color Template for the Page");
+        });
+        selectLayout.setOnAction(e -> {
+            components.clear();
+            components.add("Layout 1");
+            components.add("Layout 2");
+            components.add("Layout 3");
+            components.add("Layout 4");
+            components.add("Layout 5");
+            SelectDialog dia = new SelectDialog(components);
+            dia.display("Select Layout", "Select Layout for the Page to use");
+        });
+        setTitle.setOnAction(e -> {
+            SetDialog d = new SetDialog();
+            d.display("Enter Title", "Enter Title");
+        });  
+        setName.setOnAction(e -> {
+            SetDialog d = new SetDialog();
+            d.display("Enter Banner Text", "Enter Banner Text");
+        });  
+        removeComponent.setOnAction(e -> {
+            RemoveComponentDialog d = new RemoveComponentDialog();
+            d.display("Remove Component");
+        });
+        setFooter.setOnAction(e -> {
+            SetDialog d = new SetDialog();
+            d.display("Enter Footer Text", "Enter Footer Text");
         });
     }
 }

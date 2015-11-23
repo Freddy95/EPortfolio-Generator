@@ -63,3 +63,7 @@
     -fx-alignment: center;
 }
 
+.slideEditView{
+    -fx-background-color: white;
+}
+

@@ -54,14 +54,14 @@ public class SlideEditView extends HBox {
 	imageSelectionView = new ImageView();
         Image image = new Image("file:image.jpg");
         imageSelectionView.setImage(image);
-        imageSelectionView.setFitWidth(100);
+        imageSelectionView.setFitWidth(200);
         imageSelectionView.setPreserveRatio(true);
         imageSelectionView.setSmooth(true);
         imageSelectionView.setCache(true);
 	//updateSlideImage();
-        
+        setSpacing(20);
 	// SETUP THE CAPTION CONTROLS
-	captionVBox = new VBox();
+	captionVBox = new VBox(15);
 	//PropertiesManager props = PropertiesManager.getPropertiesManager();
 	captionLabel = new Label("Enter Caption");
 	captionTextField = new TextField();
@@ -90,6 +90,7 @@ public class SlideEditView extends HBox {
 //            }
 //	});
 //        isSelected = true;
+        getStyleClass().add("slideEditView");
     }
     
 //     public static void setModel(SlideShowModel model) {

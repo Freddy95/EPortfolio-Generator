@@ -39,7 +39,9 @@ public class SelectDialog{
         layout.setPadding(new Insets(10,10,10,10));
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(label, box, okBtn);
-        scene = new Scene(layout, 300, 200);   
+        scene = new Scene(layout, 300, 200);  
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        layout.getStyleClass().add("dialog");
         window.setScene(scene);
         window.show();
         okBtn.setOnAction(e ->{
