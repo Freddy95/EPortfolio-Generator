@@ -9,6 +9,15 @@ public class Component {
     //Type of Component.
     String type;
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+    boolean selected;
+
     public String getType() {
         return type;
     }

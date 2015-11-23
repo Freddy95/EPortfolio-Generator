@@ -4,13 +4,16 @@ import Components.Component;
 import Components.ImageComponent;
 import Components.ParagraphComponent;
 import eportfoliogenerator.EPortfolioGenerator;
+import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -20,11 +23,13 @@ public class ComponentEditView extends HBox {
 
     Component component;
     Button editComponent;
+    boolean selected;
+    static ArrayList<Component> comps = new ArrayList<>();
 
     public ComponentEditView(Component comp) {
         getStyleClass().add("componentEditView");
+        
         setSpacing(30);
-        System.out.println(EPortfolioGenerator.getWidth());
         setMaxWidth(EPortfolioGenerator.getWidth()* 1);
         editComponent = new Button("Edit");
         editComponent.getStyleClass().add("editButton");
@@ -35,6 +40,10 @@ public class ComponentEditView extends HBox {
         if (component.getType().equals("Image")) {
             initImage();
         }
+        setOnMouseClicked( e -> {
+            select();
+            EPortfolioGenerator.reloadPane();
+        });
     }
 
     public void initParagraph() {
@@ -71,5 +80,42 @@ public class ComponentEditView extends HBox {
         img.getChildren().addAll(cap, view);
         getChildren().addAll(img, editComponent);
     }
+    
+    public void select(){
+        for(Component c : comps){
+            c.setSelected(false);
+        }
+        DropShadow ds = new DropShadow();
+        ds.setColor(Color.RED);
+        ds.setOffsetX(2.0);
+        ds.setOffsetY(2.0);
+        setEffect(ds);
+        setSelected(true);
+    }    
 
+    public static ArrayList<Component> getComps() {
+        return comps;
+    }
+
+    public boolean isSelected() {
+        return component.isSelected();
+    }
+
+    public void setSelected(boolean selected) {
+        component.setSelected(selected);
+    }
+    
+    public void deselect(){
+        DropShadow ds = new DropShadow();
+        ds.setColor(Color.WHITE);
+        ds.setOffsetX(0.0);
+        ds.setOffsetY(0.0);
+        setEffect(ds);
+    }
+    
+    public void addComponent(Component c){
+        comps.add(c);
+    }
+    
+    
 }

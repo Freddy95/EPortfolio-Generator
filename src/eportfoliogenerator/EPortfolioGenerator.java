@@ -62,6 +62,7 @@ public class EPortfolioGenerator extends Application {
     static ScrollPane pageEditorScrollPane;
     static Label currentPage;
     static ArrayList<Label> pages;
+    static ArrayList<Component> comps;
     static WebView webView;
     static WebEngine engine;
     static double width;
@@ -88,6 +89,7 @@ public class EPortfolioGenerator extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        comps = new ArrayList<>();
         initFileToolbar();
         initSiteToolbar();
         initPageEditView();
@@ -205,10 +207,11 @@ public class EPortfolioGenerator extends Application {
           ComponentEditView v = new ComponentEditView(a);
           ImageComponent b = new ImageComponent("Cool heading", "file:image.jpg", "Image");
           ComponentEditView w = new ComponentEditView(b);
-          ComponentEditView x = new ComponentEditView(a);
+          comps = ComponentEditView.getComps();
           pageEditor.addComponent(v);
           pageEditor.addComponent(w);
-          pageEditor.addComponent(x);
+          w.addComponent(a);
+          w.addComponent(b);
           pageEditor.setMinWidth(getWidth()*.785);
 //        webView = new WebView();
 //        engine = webView.getEngine();
@@ -250,8 +253,17 @@ public class EPortfolioGenerator extends Application {
         width = bounds.getWidth();
         return width;
     }
-    public void initComponents(){
+    public static void reloadPane(){
        // components = new VBox();
-        
+        pageEditor.getChildren().clear();
+        for (Component b : comps) {
+            ComponentEditView view = new ComponentEditView(b);
+            pageEditor.getChildren().add(view);
+            if (b.isSelected()) {
+                view.select();
+            } else {
+                view.deselect();
+            }
+        }
     }
 }
