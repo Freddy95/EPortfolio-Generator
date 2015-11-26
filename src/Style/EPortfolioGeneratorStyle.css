@@ -71,6 +71,7 @@
 }
 
 .currentPage{
-    
+    -fx-bordor-color: blue;
     -fx-background-color: white;
+    -fx-border-width: 3px;
 }

@@ -57,11 +57,10 @@ import javafx.stage.Stage;
  * @author Freddy Estevez
  */
 public class EPortfolioGenerator extends Application {
-
+   
     static FlowPane fileToolbar;
     static VBox siteToolbar;
     static VBox workSpace;
-    static VBox top;
     static PageEditView pageEditor;
     static ScrollPane pageEditorScrollPane;
     static Label currentPage;
@@ -97,12 +96,11 @@ public class EPortfolioGenerator extends Application {
         comps = new ArrayList<>();
         initFileToolbar();
         initSiteToolbar();
-        initPageEditView();
+        
         initWorkSpace();
         BorderPane pane = new BorderPane();
         pane.setTop(fileToolbar);
         pane.setLeft(siteToolbar);
-        pane.setCenter(pageEditorScrollPane);
         pane.setRight(workSpace);
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
@@ -111,6 +109,9 @@ public class EPortfolioGenerator extends Application {
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
         initHandlers();
+        initPageEditView();
+        pane.setCenter(pageEditorScrollPane);
+
     }
 
     /**
@@ -201,13 +202,17 @@ public class EPortfolioGenerator extends Application {
         addPages();
         
     }
-    
+    /**
+    * Adds some pages to view
+    */
     public static void addPages(){
         for (int i = 0; i < pages.size(); i++) {
             siteToolbar.getChildren().add(pages.get(i));
         }
     }
-    
+    /**
+    * Initializes the window size
+    */
     public static void initWindow(Stage primaryStage){
         // GET THE SIZE OF THE SCREEN
         Screen screen = Screen.getPrimary();
@@ -221,7 +226,10 @@ public class EPortfolioGenerator extends Application {
         primaryStage.show();
     }
     
-    
+    /**
+     * initializes the page edit view which different components the user can add
+     * onto.
+     */
     public static void initPageEditView(){
           pageEditor = new PageEditView();
           pageEditor.getStyleClass().add("pageEditView");
@@ -236,14 +244,17 @@ public class EPortfolioGenerator extends Application {
           pageEditor.addComponent(w);
           w.addComponent(a);
           w.addComponent(b);
-          pageEditor.setMinWidth(getWidth()*.773);
+          pageEditor.setMinWidth(getWidth());
 //        
 //       
                     pageEditorScrollPane = new ScrollPane(pageEditor);
 
     }
     
-    
+    /**
+     * initializes the workspace/buttons to use to edit the current page of the
+     * Eportfolio.
+     */
     public static void initWorkSpace(){
         workSpace = new VBox(10);
         workSpace.getStyleClass().add("workSpace");
@@ -258,13 +269,20 @@ public class EPortfolioGenerator extends Application {
         setFooter = initButton(workSpace, "Set Footer", false);
         
     }
-    
+    /**
+    * Return width of the workspace.
+    */
     public static double getWidth(){
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-        width = bounds.getWidth();
+        width = bounds.getWidth() - siteToolbar.getWidth();
+        width -= workSpace.getWidth();
         return width;
     }
+    
+    /**
+     * when a change is made to the content reload the workspace.
+     */
     public static void reloadPane(){
        // components = new VBox();
         pageEditor.getChildren().clear();
@@ -278,7 +296,9 @@ public class EPortfolioGenerator extends Application {
             }
         }
     }
-    
+    /**
+     * initialize handlers of buttons
+     */
     public static void initHandlers(){
         ArrayList<String> components = new ArrayList<>();
         addComponent.setOnAction(e -> {
