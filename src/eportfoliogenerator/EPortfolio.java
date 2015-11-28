@@ -5,10 +5,32 @@
  */
 package eportfoliogenerator;
 
+import EPortfolioGeneratorUI.Page;
+import java.util.ArrayList;
+
 /**
- *
+ * Holds information on each eportfolio such as the pages and their content, as 
+ * well as the eportfolio title.
  * @author andrewestevez
  */
 public class EPortfolio {
+    String title;
+    ArrayList<Page> pages;
+
+    public ArrayList<Page> getPages() {
+        return pages;
+    }
+    
+    public void addPage(Page c){
+        pages.add(c);
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String s){
+        title = s;
+    }
     
 }

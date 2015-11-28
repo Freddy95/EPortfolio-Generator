@@ -41,4 +41,16 @@ public class SetDialog {
         window.show();
        
     }
+    
+    public Button getButton(){
+        return okBtn;
+    }
+    
+    public String getValue(){
+        return heading.getText();
+    }
+    
+    public Stage getWindow(){
+        return window;
+    }
 }

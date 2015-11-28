@@ -57,28 +57,36 @@ import javafx.stage.Stage;
  * @author Freddy Estevez
  */
 public class EPortfolioGenerator extends Application {
-   
+    static EPortfolio currentEPortfolio;
+    static BorderPane pane;
     static FlowPane fileToolbar;
     static VBox siteToolbar;
     static VBox workSpace;
     static PageEditView pageEditor;
     static ScrollPane pageEditorScrollPane;
+    
     static Label currentPage;
     static ArrayList<Label> pages;
     static ArrayList<Component> comps;
+    
     static WebView webView;
     static WebEngine engine;
+    
     static double width;
     
     static Button addPage;
     static Button removePage;
-    static Button newEportfolio;
+    
+    static Button newEPortfolio;
     static Button save;
     static Button saveAs;
     static Button export;
     static Button exit;
     static Button load;
-    static Button setTitle;
+    static Button changeTitle;
+    static Label ePortfolioTitle;
+    
+    static Button changePageTitle;
     static Button setName;
     static Button addComponent;
     static Button removeComponent;
@@ -98,20 +106,26 @@ public class EPortfolioGenerator extends Application {
         initSiteToolbar();
         
         initWorkSpace();
-        BorderPane pane = new BorderPane();
+        pane = new BorderPane();
         pane.setTop(fileToolbar);
-        pane.setLeft(siteToolbar);
-        pane.setRight(workSpace);
+        //pane.setLeft(siteToolbar);
+        //pane.setRight(workSpace);
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Eportfolio Generator");
+        primaryStage.setTitle("EPortfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
         initHandlers();
         initPageEditView();
-        pane.setCenter(pageEditorScrollPane);
+        //pane.setCenter(pageEditorScrollPane);
 
+    }
+    
+    public static void makeUI(){
+        pane.setLeft(siteToolbar);
+        pane.setRight(workSpace);
+        pane.setCenter(pageEditorScrollPane);
     }
 
     /**
@@ -159,14 +173,16 @@ public class EPortfolioGenerator extends Application {
 
         fileToolbar.getStyleClass().add("fileToolbar");
         fileToolbar.setHgap(20);
-        newEportfolio = initChildButton(fileToolbar, "icons/new.png", "New Eportfolio", false);
-        load = initChildButton(fileToolbar, "icons/load.png", "Load Eportfolio", false);
+        newEPortfolio = initChildButton(fileToolbar, "icons/new.png", "New EPortfolio", false);
+        load = initChildButton(fileToolbar, "icons/load.png", "Load EPortfolio", false);
         save = initChildButton(fileToolbar, "icons/save.png", "Save", false);
         saveAs = initChildButton(fileToolbar, "icons/saveAs.png", "Save As", false);
-        export = initChildButton(fileToolbar, "icons/export.png", "Export Eportfolio", false);
+        changeTitle = initChildButton(fileToolbar, "icons/editTitle.png", "Change EPortfolio Title", false);
+        export = initChildButton(fileToolbar, "icons/export.png", "Export EPortfolio", false);
         toggleView = initChildButton(fileToolbar, "icons/site.png", "Site View", false);
         exit = initChildButton(fileToolbar, "icons/exit.png", "Exit", false);
-        exit.setAlignment(Pos.TOP_RIGHT);
+        ePortfolioTitle = new Label("");
+        fileToolbar.getChildren().add(ePortfolioTitle);
     }
     
     public static void initSiteToolbar(){
@@ -179,31 +195,11 @@ public class EPortfolioGenerator extends Application {
         currentPage.getStyleClass().add("currentPage");
         
         pages = new ArrayList<>();
-        pages.add(currentPage);
-        pages.add(new Label("Page 1"));
-        pages.add(new Label("Page 2"));
-        pages.get(0).setOnMouseClicked(e -> {
-            pages.get(0).getStyleClass().add("currentPage");
-            pages.get(1).getStyleClass().clear();
-            pages.get(2).getStyleClass().clear();
-        });
-        pages.get(1).setOnMouseClicked(e -> {
-            pages.get(1).getStyleClass().add("currentPage");
-            pages.get(2).getStyleClass().clear();
-            pages.get(0).getStyleClass().clear();
-        });
-        pages.get(2).setOnMouseClicked(e -> {
-            pages.get(2).getStyleClass().add("currentPage");
-            pages.get(0).getStyleClass().clear();
-            pages.get(1).getStyleClass().clear();
-        });
-        
-        //pages.add(currentPage);
-        addPages();
+
         
     }
     /**
-    * Adds some pages to view
+    * Adds some pages to siteToolbar
     */
     public static void addPages(){
         for (int i = 0; i < pages.size(); i++) {
@@ -233,32 +229,22 @@ public class EPortfolioGenerator extends Application {
     public static void initPageEditView(){
           pageEditor = new PageEditView();
           pageEditor.getStyleClass().add("pageEditView");
-          ParagraphComponent a = new ParagraphComponent("This is a heading",
-                  "My paragraph consists on many many things. Its pretty cool to"
-                          + " be honest. I wonder how wide i can get this to be lets see how wide i can get this to be shoulc be pretty intereting i hope its not too wide but it should still be funny.", "Paragraph");
-          ComponentEditView v = new ComponentEditView(a);
-          ImageComponent b = new ImageComponent("Cool heading", "file:image.jpg", "Image");
-          ComponentEditView w = new ComponentEditView(b);
-          comps = ComponentEditView.getComps();
-          pageEditor.addComponent(v);
-          pageEditor.addComponent(w);
-          w.addComponent(a);
-          w.addComponent(b);
+          
           pageEditor.setMinWidth(getWidth());
 //        
 //       
-                    pageEditorScrollPane = new ScrollPane(pageEditor);
+          pageEditorScrollPane = new ScrollPane(pageEditor);
 
     }
     
     /**
      * initializes the workspace/buttons to use to edit the current page of the
-     * Eportfolio.
+     * EPortfolio.
      */
     public static void initWorkSpace(){
         workSpace = new VBox(10);
         workSpace.getStyleClass().add("workSpace");
-        setTitle = initButton(workSpace, "Set Title", false);
+        changePageTitle = initButton(workSpace, "Set Page Title", false);
         setName = initButton(workSpace, "Set Name",  false);
         selectBannerImage = initButton(workSpace, "Select Banner Image",  false);
         selectLayout = initButton(workSpace, "Select  Layout", false);
@@ -301,6 +287,22 @@ public class EPortfolioGenerator extends Application {
      */
     public static void initHandlers(){
         ArrayList<String> components = new ArrayList<>();
+        
+        newEPortfolio.setOnAction(e ->{
+            if(currentEPortfolio != null){
+                promptToSave();
+            }
+            SetDialog d = new SetDialog();
+            d.display("Create EPortfolio", "Set title of EPortfolio");
+            d.getButton().setOnAction(c -> {
+                currentEPortfolio = new EPortfolio();
+                currentEPortfolio.setTitle(d.getValue());
+                makeUI();
+                ePortfolioTitle.setText(d.getValue());
+                d.getWindow().close();            
+            });
+            
+        });
         addComponent.setOnAction(e -> {
             components.clear();
             components.add("Paragraph");
@@ -347,9 +349,9 @@ public class EPortfolioGenerator extends Application {
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Layout", "Select Layout for the Page to use");
         });
-        setTitle.setOnAction(e -> {
+        changePageTitle.setOnAction(e -> {
             SetDialog d = new SetDialog();
-            d.display("Enter Title", "Enter Title");
+            d.display("Enter Title", "Enter Title of Page");
         });  
         setName.setOnAction(e -> {
             SetDialog d = new SetDialog();
@@ -373,5 +375,18 @@ public class EPortfolioGenerator extends Application {
             v.display();
         });
         
+    }
+    
+    
+    public static void promptToSave(){
+        
+    }
+    
+    public static boolean isSaveEnabled(){
+        return save.isDisabled();
+    }
+    
+    public static EPortfolio getEPortfolio(){
+        return currentEPortfolio;
     }
 }

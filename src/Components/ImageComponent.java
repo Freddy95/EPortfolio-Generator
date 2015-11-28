@@ -9,10 +9,13 @@ public class ImageComponent extends Component{
     String path;
     String caption;
 
-    public ImageComponent(String caption, String path, String type) {
+    
+    String fileName;
+
+    public ImageComponent(String caption, String path) {
         this.path = path;
         this.caption = caption;
-        super.setType(type);
+        super.setType("Image");
     }
     
     public String getPath() {
@@ -31,5 +34,11 @@ public class ImageComponent extends Component{
         this.caption = caption;
     }
     
+    public String getFileName() {
+        return fileName;
+    }
 
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 }

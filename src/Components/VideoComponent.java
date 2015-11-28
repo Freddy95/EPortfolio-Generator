@@ -8,11 +8,12 @@ package Components;
 public class VideoComponent extends Component{
     String path;
     String caption;
+    String fileName;
 
-    public VideoComponent(String path, String caption, String type) {
+    public VideoComponent(String path, String caption) {
         this.path = path;
         this.caption = caption;
-        super.setType(type);
+        super.setType("Video");
     }
     
     public String getPath() {
@@ -29,6 +30,14 @@ public class VideoComponent extends Component{
 
     public void setCaption(String caption) {
         this.caption = caption;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
     
 
