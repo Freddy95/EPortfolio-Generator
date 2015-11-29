@@ -9,10 +9,10 @@ public class ParagraphComponent extends Component{
     String header;
     String text;
 
-    public ParagraphComponent(String header, String text, String type) {
+    public ParagraphComponent(String header, String text) {
         this.header = header;
         this.text = text;
-        super.setType(type);
+        super.setType("Paragraph");
     }
 
     public String getHeader() {

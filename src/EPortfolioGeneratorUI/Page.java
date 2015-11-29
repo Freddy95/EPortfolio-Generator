@@ -15,6 +15,12 @@ public class Page {
     String URL;
     String bannerImagePath;
     String bannerTitle;
+
+    public Page() {
+        components = new ArrayList<>();
+    }
+    
+    
     public String getURL() {
         return URL;
     }

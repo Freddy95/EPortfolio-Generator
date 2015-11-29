@@ -72,7 +72,7 @@ public class FileController {
             if (continueToMakeNew) {
                 // RESET THE DATA, WHICH SHOULD TRIGGER A RESET OF THE UI
                 EPortfolio ePortfolio = ui.getEPortfolio();
-                ePortfolio.reset();
+               // ePortfolio.reset();
 
                 saved = false;
                 ePortfolio.setTitle(getNewTitle());
@@ -84,7 +84,7 @@ public class FileController {
                 // @todo
             }
         } catch (IOException ioe) {
-            ErrorHandler eH = ui.getErrorHandler();
+            //ErrorHandler eH = ui.getErrorHandler();
             // @todo provide error message
         }
     }
@@ -118,7 +118,7 @@ public class FileController {
      * This method will save the current eportfolio to a file. Note that we
      * already know the name of the file, so we won't need to prompt the user.
      */
-    public boolean handleSaveSlideShowRequest() {
+    public boolean handleSaveEPortfolioRequest() {
         try {
             // GET THE SLIDE SHOW TO SAVE
             EPortfolio ePortfolioToSave = ui.getEPortfolio();
@@ -220,7 +220,7 @@ public class FileController {
 
         // IF THE USER SAID YES, THEN SAVE BEFORE MOVING ON
         if (saveWork) {
-            EPortfolio eportfolio = ui.getEPortfolio();
+            EPortfolio ePortfolio = ui.getEPortfolio();
             //ui.saveCaps();
             ePortfolioIO.saveEPortfolio(ePortfolio);
             saved = true;

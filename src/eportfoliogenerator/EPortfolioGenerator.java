@@ -16,11 +16,14 @@ import EPortfolioGeneratorUI.AddParagraphDialog;
 import EPortfolioGeneratorUI.AddSlideShowDialog;
 import EPortfolioGeneratorUI.AddVideoDialog;
 import EPortfolioGeneratorUI.ComponentEditView;
+import EPortfolioGeneratorUI.Page;
 import EPortfolioGeneratorUI.PageEditView;
 import EPortfolioGeneratorUI.RemoveComponentDialog;
 import EPortfolioGeneratorUI.SelectDialog;
 import EPortfolioGeneratorUI.SetDialog;
 import EPortfolioGeneratorUI.SiteView;
+import File.FileController;
+import File.FileManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -57,6 +60,8 @@ import javafx.stage.Stage;
  * @author Freddy Estevez
  */
 public class EPortfolioGenerator extends Application {
+    static FileController controller;
+    
     static EPortfolio currentEPortfolio;
     static BorderPane pane;
     static FlowPane fileToolbar;
@@ -64,6 +69,7 @@ public class EPortfolioGenerator extends Application {
     static VBox workSpace;
     static PageEditView pageEditor;
     static ScrollPane pageEditorScrollPane;
+    static Stage primaryStage;
     
     static Label currentPage;
     static ArrayList<Label> pages;
@@ -104,7 +110,7 @@ public class EPortfolioGenerator extends Application {
         comps = new ArrayList<>();
         initFileToolbar();
         initSiteToolbar();
-        
+        controller = new FileController(this, new FileManager());
         initWorkSpace();
         pane = new BorderPane();
         pane.setTop(fileToolbar);
@@ -118,6 +124,7 @@ public class EPortfolioGenerator extends Application {
         initWindow(primaryStage);
         initHandlers();
         initPageEditView();
+        initStuff();
         //pane.setCenter(pageEditorScrollPane);
 
     }
@@ -128,12 +135,23 @@ public class EPortfolioGenerator extends Application {
         pane.setCenter(pageEditorScrollPane);
     }
 
+    public static void initStuff(){
+        currentEPortfolio = new EPortfolio();
+        currentEPortfolio.setTitle("NEW TITLE");
+        Page p = new Page();
+        p.setTitle("My title");
+        p.setBannerTitle("My title");
+        p.setPath("COULD BE A PATH");
+        p.addComponent(new ParagraphComponent("", "My stuff"));
+        currentEPortfolio.addPage(p);
+    }
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
+
     /**
      * 
      * @param toolbar - toolbar in which to add button to.
@@ -213,7 +231,8 @@ public class EPortfolioGenerator extends Application {
         // GET THE SIZE OF THE SCREEN
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-        
+        EPortfolioGenerator.primaryStage = primaryStage;
+
         // AND USE IT TO SIZE THE WINDOW
         primaryStage.setX(bounds.getMinX());     
         primaryStage.setY(bounds.getMinY());
@@ -287,7 +306,9 @@ public class EPortfolioGenerator extends Application {
      */
     public static void initHandlers(){
         ArrayList<String> components = new ArrayList<>();
-        
+        save.setOnAction(e->{
+            controller.handleSaveEPortfolioRequest();
+        });
         newEPortfolio.setOnAction(e ->{
             if(currentEPortfolio != null){
                 promptToSave();
@@ -388,5 +409,9 @@ public class EPortfolioGenerator extends Application {
     
     public static EPortfolio getEPortfolio(){
         return currentEPortfolio;
+    }
+    
+    public static Stage getWindow(){
+        return primaryStage;
     }
 }

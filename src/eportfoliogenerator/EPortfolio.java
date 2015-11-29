@@ -17,6 +17,10 @@ public class EPortfolio {
     String title;
     ArrayList<Page> pages;
 
+    public EPortfolio() {
+        pages = new ArrayList<>();
+    }
+
     public ArrayList<Page> getPages() {
         return pages;
     }
