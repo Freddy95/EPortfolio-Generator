@@ -2,10 +2,12 @@
 package File;
 
 import Components.Component;
+import Components.HyperLinkComponent;
 import Components.ImageComponent;
 import Components.ListComponent;
 import Components.ParagraphComponent;
 import Components.Slide;
+import Components.SlideShowComponent;
 import Components.VideoComponent;
 import EPortfolioGeneratorUI.Page;
 import eportfoliogenerator.EPortfolio;
@@ -15,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +47,11 @@ public class FileManager {
     public static String JSON_PAGES = "pages";
     public static String JSON_CAPTION = "caption";
     public static String JSON_NAME= "name";
-    public static String JSON_URL = "URL";
+    public static String JSON_LINKS = "links";
     public static String JSON_TYPE = "type";
     public static String JSON_HEADING = "heading";
     public static String JSON_BANNER = "banner";
+    public static String JSON_BANNER_IMAGE = "banner_image";
     public static String JSON_CONTENT= "content";
     public static String JSON_SLIDES = "slides";
     public static String JSON_TEXT = "text";
@@ -57,20 +61,21 @@ public class FileManager {
     public static String JSON_VIDEO_FILE_NAME = "file_name";
     public static String JSON_IMAGE_CAPTION="caption";
     public static String JSON_EXT = ".json";
+    public static String JSON_ELEMENTS = "elements";
     public static String SLASH = "/";
 
     /**
      * This method saves all the data associated with a slide show to
      * a JSON file.
      * 
-     * @param EPortfoloToSave The course whose data we are saving.
+     * @param ePortfolio The course whose data we are saving.
      * 
      * @throws IOException Thrown when there are issues writing
      * to the JSON file.
      */
     public void saveEPortfolio(EPortfolio ePortfolio) throws IOException {
         // BUILD THE FILE PATH
-        String title = "" + eportfolio.getTitle();
+        String title = "" + ePortfolio.getTitle();
         String jsonFilePath = "EPortfolios" + SLASH + title + JSON_EXT;
         
         // INIT THE WRITER
@@ -78,15 +83,12 @@ public class FileManager {
         JsonWriter jsonWriter = Json.createWriter(os);  
            
         // BUILD THE SLIDES ARRAY
-        JsonArray contentJsonArray =  makeContentArray(ePortfolio);
         ArrayList<Page> pages = ePortfolio.getPages();
-        for(Page p: pages){
-            makeContentArray(p);
-        }
+        JsonArray pageArray = makePageArray(pages);
         // NOW BUILD THE COURSE USING EVERYTHING WE'VE ALREADY MADE
         JsonObject courseJsonObject = Json.createObjectBuilder()
-                                    .add(JSON_TITLE, eportfolio.getTitle())
-                                    .add(JSON_SLIDES, contentJsonArray)
+                                    .add(JSON_TITLE, ePortfolio.getTitle())
+                                    .add(JSON_PAGES, pageArray)
                                     
                 .build();
         
@@ -94,6 +96,25 @@ public class FileManager {
         jsonWriter.writeObject(courseJsonObject);
     }
     
+    private JsonObject makePageObject(Page p){
+        
+        JsonObject js = Json.createObjectBuilder()
+                .add(JSON_TITLE, p.getTitle())
+                .add(JSON_BANNER, p.getBannerTitle())
+                .add(JSON_BANNER_IMAGE, p.getPath())
+                .add(JSON_CONTENT, makeContentArray(p))
+                .build();
+        return js;
+    }
+    
+    private JsonArray makePageArray(List<Page> pages){
+        JsonArrayBuilder jsb = Json.createArrayBuilder();
+        for(Page p : pages){
+            jsb.add(makePageObject(p));
+        }
+        JsonArray jA = jsb.build();
+       return jA;
+    }
     /**
      * This method loads the contents of a JSON file representing a slide show
      * into a SlideSShowModel object.
@@ -102,7 +123,7 @@ public class FileManager {
      * @param jsonFilePath The JSON file to load.
      * @throws IOException 
      */
-    public void loadEPortfolio(EPortfolio EPortfoloToLoad, String jsonFilePath) throws IOException {
+    public void loadEPortfolio(EPortfolio ePortfoloToLoad, String jsonFilePath) throws IOException {
         // LOAD THE JSON FILE WITH ALL THE DATA
         JsonObject json = loadJSONFile(jsonFilePath);
         
@@ -158,49 +179,6 @@ public class FileManager {
 	return null;
     }
     
-     /**
-     * This helper method asks the user for a file to open. The user-selected
-     * file is then loaded and the GUI updated. Note that if the user cancels
-     * the open process, nothing is done. If an error occurs loading the file, a
-     * message is displayed, but nothing changes.
-     */
-    private void promptToOpen() {
-        // AND NOW ASK THE USER FOR THE COURSE TO OPEN
-        FileChooser ePortfoloFileChooser = new FileChooser();
-        ePortfoloFileChooser.setInitialDirectory(new File(PATH_SLIDE_SHOWS));
-        File selectedFile = ePortfoloFileChooser.showOpenDialog(ui.getWindow());
-
-        // ONLY OPEN A NEW FILE IF THE USER SAYS OK
-        if (selectedFile != null) {
-            try {
-                SlideShowModel ePortfoloToLoad = ui.getSlideShow();
-                ePortfoloIO.loadSlideShow(ePortfoloToLoad, selectedFile.getAbsolutePath());
-                ui.reloadSlideShowPane(ePortfoloToLoad);
-                saved = true;
-                ui.updateToolbarControls(saved);
-            } catch (Exception e) {
-                PropertiesManager props = PropertiesManager.getPropertiesManager();
-                ErrorHandler eH = ui.getErrorHandler();
-                Stage stage = new Stage();
-                VBox layout = new VBox(10);
-                layout.setPadding(new Insets(10, 10, 10, 10));
-                layout.getStyleClass().add(CSS_CLASS_PROMPT_LANG);
-                Label errorLabel = new Label(props.getProperty(ERROR_MESSAGE));
-                Button btn = new Button("OK");
-                btn.setAlignment(Pos.CENTER);
-                layout.getChildren().addAll(errorLabel, btn); 
-                layout.setAlignment(Pos.CENTER);
-                btn.setOnAction(d -> stage.close());
-                Scene scene = new Scene(layout);
-                scene.getStylesheets().add(STYLE_SHEET_UI);
-                stage.setScene(scene);
-                stage.showAndWait();
-                promptToOpen();
-                // @todo
-            }
-
-        }
-    }
     
     private JsonArray makeContentArray(Page p){
         ArrayList<Component> comps = p.getComponents();
@@ -216,7 +194,7 @@ public class FileManager {
             else if(c.getType().equals("Video"))
                 jsb.add(makeVideoObject(c));
             else if(c.getType().equals("SlideShow"))
-                jsb.add(makeVideoObject(c));
+                jsb.add(makeSlideShowObject(c));
             else if(c.getType().equals("List"))
                 jsb.add(makeListObject(c));
         }
@@ -259,9 +237,43 @@ public class FileManager {
         JsonObject js = Json.createObjectBuilder()
                 .add(JSON_TYPE, comp.getType())
                 .add(JSON_TITLE, comp.getTitle())
-                .add(JSON_VIDEO_FILE_NAME, createListArray(comp.getElements()))
+                .add(JSON_ELEMENTS, createListArray(comp.getElements()))
                 .build();
         return js;
-    } 
+    } //create json array list from elements
+    
+    
+    private JsonArray createListArray(ArrayList<String> elements){
+       JsonArrayBuilder jsb = Json.createArrayBuilder();
+       for(String s : elements){
+           jsb.add(s);
+       }
+       JsonArray jA = jsb.build();
+       return jA;
+    }
+    
+    
+     private JsonObject makeHyperLinkObject(Component c){
+        HyperLinkComponent comp = (HyperLinkComponent) c;
+        JsonObject js = Json.createObjectBuilder()
+                .add(JSON_TYPE, comp.getType())
+                .add(JSON_HEADING, comp.getHeader())
+                .add(JSON_TEXT, comp.getText())
+                .add(JSON_LINKS, createListArray(comp.getURL()))
+                .build();
+        return js;
+    }
+     
+     private JsonObject makeSlideShowObject(Component c){
+        SlideShowComponent comp = (SlideShowComponent) c;
+        JsonObject js = Json.createObjectBuilder()
+                .add(JSON_TYPE, comp.getType())
+                .add(JSON_TITLE, comp.getTitle())
+                .add(JSON_SLIDES, makeSlidesJsonArray(comp.getSlides()))
+                .build();
+        return js;
+    }
+    
+    
     
 }

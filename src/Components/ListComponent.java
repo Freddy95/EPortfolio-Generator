@@ -1,20 +1,36 @@
 
 package Components;
 
+import java.util.ArrayList;
 import javax.json.JsonValue;
 
 /**
  *
  * @author Freddy Estevez
  */
-public class ListComponent {
+public class ListComponent extends Component{
 
-    public JsonValue getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String title;
+    ArrayList<String> elements;
+
+    public ListComponent(String title) {
+        this.title = title;
+        elements = new ArrayList<>();
+        super.setType("List");
     }
-
-    public JsonValue getTitle() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public ArrayList<String> getElements(){
+        return elements;
+    }
+    
+    public void addElements(String s){
+        elements.add(s);
     }
 
 }
