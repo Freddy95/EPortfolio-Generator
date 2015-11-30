@@ -75,3 +75,7 @@
     -fx-background-color: white;
     -fx-border-width: 3px;
 }
+
+.font1{
+    -fx-font-family: Times New Roman;
+}

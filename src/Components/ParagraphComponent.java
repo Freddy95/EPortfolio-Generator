@@ -8,10 +8,12 @@ package Components;
 public class ParagraphComponent extends Component{
     String header;
     String text;
+    String font;
 
-    public ParagraphComponent(String header, String text) {
+    public ParagraphComponent(String header, String text, String font) {
         this.header = header;
         this.text = text;
+        this.font = font;
         super.setType("Paragraph");
     }
 
@@ -21,6 +23,14 @@ public class ParagraphComponent extends Component{
 
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    public String getFont() {
+        return font;
+    }
+
+    public void setFont(String font) {
+        this.font = font;
     }
 
     public String getText() {

@@ -1,6 +1,7 @@
 
 package EPortfolioGeneratorUI;
 
+import Components.ImageComponent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,6 +26,11 @@ public class AddImageDialog {
     TextField heading;
     Button okBtn;
     Button addImage;
+    Page page;
+    
+    public AddImageDialog(Page p){
+        page = p;
+    }
     
     
     public void display(String title){
@@ -51,5 +57,11 @@ public class AddImageDialog {
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialogImage");
         window.show();
+        
+        okBtn.setOnAction(e -> {
+           // String fileName = view.getImage();
+            //ImageComponent img = new ImageComponent();
+        });
+        
     }
 }

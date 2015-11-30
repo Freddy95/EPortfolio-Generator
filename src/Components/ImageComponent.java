@@ -12,9 +12,10 @@ public class ImageComponent extends Component{
     
     String fileName;
 
-    public ImageComponent(String caption, String path) {
+    public ImageComponent(String caption, String path, String fileName) {
         this.path = path;
         this.caption = caption;
+        this.fileName = fileName;
         super.setType("Image");
     }
     

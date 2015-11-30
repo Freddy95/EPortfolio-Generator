@@ -44,28 +44,17 @@ public class SelectDialog{
         layout.getStyleClass().add("dialog");
         window.setScene(scene);
         window.show();
-        okBtn.setOnAction(e ->{
-            if(box.getValue().equals("Paragraph")){
-                AddParagraphDialog d = new AddParagraphDialog();
-                d.display("Add Paragraph");
-            }else if(box.getValue().equals("Image")){
-                AddImageDialog d = new AddImageDialog();
-                d.display("Add Image");
-            }else if(box.getValue().equals("Video")){
-                AddVideoDialog d = new AddVideoDialog();
-                d.display("Add Video");
-            }else if(box.getValue().equals("Slide Show")){
-                AddSlideShowDialog d = new AddSlideShowDialog();
-                d.display("Add Slide Show");
-            }else if(box.getValue().equals("HyperLink Text")){
-                AddHyperLinkDialog d = new AddHyperLinkDialog();
-                d.display("Add HyperLink Text");
-            }else if(box.getValue().equals("List")){
-                AddListDialog d = new AddListDialog();
-                d.display("Add List");
-            }
-        });
+        
+    }
+    public Button getButton(){
+        return okBtn;
+    }
+    public String getValue(){
+        return box.getValue();
     }
     
+    public void close(){
+        window.close();
+    }
     
 }

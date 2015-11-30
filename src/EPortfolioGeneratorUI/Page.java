@@ -18,6 +18,10 @@ public class Page {
 
     public Page() {
         components = new ArrayList<>();
+        URL = "";
+        bannerImagePath = "";
+        bannerTitle = "";
+        title = "";
     }
     
     

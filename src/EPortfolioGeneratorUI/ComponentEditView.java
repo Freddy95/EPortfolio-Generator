@@ -4,6 +4,7 @@ import Components.Component;
 import Components.ImageComponent;
 import Components.ParagraphComponent;
 import eportfoliogenerator.EPortfolioGenerator;
+import eportfoliogenerator.EPortfolioGeneratorView;
 import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,12 +26,13 @@ public class ComponentEditView extends HBox {
     Button editComponent;
     boolean selected;
     static ArrayList<Component> comps = new ArrayList<>();
+    Page page;
+    EPortfolioGeneratorView ui;
 
-    public ComponentEditView(Component comp) {
+    public ComponentEditView(Component comp, Page p, EPortfolioGeneratorView initUi) {
         getStyleClass().add("componentEditView");
-        
+        page = p;
         setSpacing(30);
-        setMaxWidth(EPortfolioGenerator.getWidth()* 1);
         editComponent = new Button("Edit");
         editComponent.getStyleClass().add("editButton");
         component = comp;
@@ -42,14 +44,16 @@ public class ComponentEditView extends HBox {
         }
         setOnMouseClicked( e -> {
             select();
-            EPortfolioGenerator.reloadPane();
         });
+        
+        ui = initUi;
     }
 
     public void initParagraph() {
         ParagraphComponent c = (ParagraphComponent) component;
         VBox para = new VBox(15);
         Label heading = new Label(c.getHeader());
+        
         heading.getStyleClass().add("heading");
         TextArea text = new TextArea(c.getText());
         text.setEditable(false);
@@ -57,11 +61,23 @@ public class ComponentEditView extends HBox {
         text.setMinHeight(100);
         text.setMaxHeight(500);
         text.setWrapText(true);
+        switch(c.getFont()){
+            case "Font 1":
+                heading.getStyleClass().add("font1");
+                text.getStyleClass().add("font1");
+                break;
+            case "Font 2":
+                getStyleClass().add("font2");
+                break;
+            default:
+                break;
+        }
         para.getChildren().addAll(heading, text);
         getChildren().add(para);
         getChildren().add(editComponent);
         editComponent.setOnAction(e -> {
-            
+            AddParagraphDialog dia = new AddParagraphDialog(page, ui);
+            dia.editDisplay(c);
         });
     }
 

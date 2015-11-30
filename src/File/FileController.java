@@ -3,6 +3,7 @@ package File;
 
 import eportfoliogenerator.EPortfolio;
 import eportfoliogenerator.EPortfolioGenerator;
+import eportfoliogenerator.EPortfolioGeneratorView;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Platform;
@@ -30,7 +31,7 @@ public class FileController {
     static boolean cont;
 
     // THE APP UI
-    private EPortfolioGenerator ui;
+    private EPortfolioGeneratorView ui;
 
     // THIS GUY KNOWS HOW TO READ AND WRITE SLIDE SHOW DATA
     private FileManager ePortfolioIO;
@@ -42,7 +43,7 @@ public class FileController {
      * @param ePortfolio The object that will be reading and writing slide
      * show data.
      */
-    public FileController(EPortfolioGenerator initUI, FileManager initEPortfolio) {
+    public FileController(EPortfolioGeneratorView initUI, FileManager initEPortfolio) {
         // NOTHING YET
         saved = true;
         ui = initUI;
