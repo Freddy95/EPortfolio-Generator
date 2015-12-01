@@ -2,7 +2,6 @@
 package File;
 
 import Components.Component;
-import Components.HyperLinkComponent;
 import Components.ImageComponent;
 import Components.ListComponent;
 import Components.ParagraphComponent;
@@ -189,8 +188,7 @@ public class FileManager {
                jsb.add(makeParagraphObject(c));
             else if(c.getType().equals("Image"))
                 jsb.add(makeImageObject(c));
-            else if(c.getType().equals("HyperLink Text"))
-                jsb.add(makeHyperLinkObject(c));
+          
             else if(c.getType().equals("Video"))
                 jsb.add(makeVideoObject(c));
             else if(c.getType().equals("SlideShow"))
@@ -253,16 +251,7 @@ public class FileManager {
     }
     
     
-     private JsonObject makeHyperLinkObject(Component c){
-        HyperLinkComponent comp = (HyperLinkComponent) c;
-        JsonObject js = Json.createObjectBuilder()
-                .add(JSON_TYPE, comp.getType())
-                .add(JSON_HEADING, comp.getHeader())
-                .add(JSON_TEXT, comp.getText())
-                .add(JSON_LINKS, createListArray(comp.getURL()))
-                .build();
-        return js;
-    }
+  
      
      private JsonObject makeSlideShowObject(Component c){
         SlideShowComponent comp = (SlideShowComponent) c;

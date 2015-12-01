@@ -3,7 +3,6 @@ package eportfoliogenerator;
 
 import Components.Component;
 import EPortfolioGeneratorUI.AddBannerImageDialog;
-import EPortfolioGeneratorUI.AddHyperLinkDialog;
 import EPortfolioGeneratorUI.AddImageDialog;
 import EPortfolioGeneratorUI.AddListDialog;
 import EPortfolioGeneratorUI.AddParagraphDialog;
@@ -24,11 +23,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -47,7 +49,8 @@ public class EPortfolioGeneratorView {
      BorderPane pane;
      FlowPane fileToolbar;
      VBox siteToolbar;
-     VBox workSpace;
+     VBox workSpaceToolbar;
+     HBox workSpace;
      PageEditView pageEditor;
      ScrollPane pageEditorScrollPane;
      Stage primaryStage;
@@ -85,6 +88,7 @@ public class EPortfolioGeneratorView {
      Button pageEditView;
      Button siteEditView;
      Button toggleView;
+     TabPane pageEditorPane;
     public EPortfolioGeneratorView(){
         
     }
@@ -99,9 +103,14 @@ public class EPortfolioGeneratorView {
         pane = new BorderPane();
         pane.setTop(fileToolbar);
         //pane.setLeft(siteToolbar);
-        //pane.setRight(workSpace);
+        //pane.setRight(workSpaceToolbar);
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Oxygen");
+        scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Ubuntu");
+        scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Dosis");
+        scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Average");
+        scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Courgette");
         primaryStage.setScene(scene);
         primaryStage.setTitle("EPortfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
@@ -113,9 +122,22 @@ public class EPortfolioGeneratorView {
 
     }
     public void makeUI(){
+                System.out.println("left Width: " + siteToolbar.getWidth());
+
         pane.setLeft(siteToolbar);
-        pane.setRight(workSpace);
-        pane.setCenter(pageEditorScrollPane);
+                System.out.println("left Width: " + siteToolbar.getWidth());
+
+
+        
+    }
+    
+    public void addedPage(){
+        
+        pane.setCenter(pageEditorPane);
+        pageEditor.setPrefWidth(getWidth() * .79);
+        workSpace.getChildren().add(0,pageEditorScrollPane);
+
+        
     }
 
     public void initStuff(){
@@ -183,8 +205,11 @@ public class EPortfolioGeneratorView {
     public void initSiteToolbar(){
         siteToolbar = new VBox(20);
         siteToolbar.getStyleClass().add("siteToolbar");
+        siteToolbar.setPrefWidth(getWidth() * .08);
         addPage = initChildButton(siteToolbar, "icons/add.png", "Add Page", false);
+        addPage.getStyleClass().add("siteToolbarButton");
         removePage = initChildButton(siteToolbar, "icons/Remove.png", "Remove Current Page", false);
+        removePage.getStyleClass().add("siteToolbarButton");
         
         pages = new ArrayList<>();
 
@@ -220,13 +245,26 @@ public class EPortfolioGeneratorView {
      * onto.
      */
     public void initPageEditView(){
+          workSpace = new HBox();
           pageEditor = new PageEditView();
           pageEditor.getStyleClass().add("pageEditView");
           
-          pageEditor.setMinWidth(getWidth());
+          //pageEditor.setMinWidth(getWidth());
+          //pageEditor.setPrefWidth(getWidth());
 //        
 //       
+          pageEditorPane = new TabPane();
+          Tab pageEditorTab = new Tab();
+          pageEditorTab.setText("Edit Page");
+          Tab pageViewerTab = new Tab();
+          pageViewerTab.setText("View Page");
+          pageEditorPane.getTabs().add(pageEditorTab);
+          pageEditorPane.getTabs().add(pageViewerTab);
           pageEditorScrollPane = new ScrollPane(pageEditor);
+          workSpaceToolbar.setPrefWidth(getWidth() * .13);
+          workSpace.getChildren().add(workSpaceToolbar);
+          pageEditorTab.setContent(workSpace);
+         
 
     }
     
@@ -235,17 +273,17 @@ public class EPortfolioGeneratorView {
      * EPortfolio.
      */
     public void initWorkSpace(){
-        workSpace = new VBox(10);
-        workSpace.getStyleClass().add("workSpace");
-        changePageTitle = initButton(workSpace, "Set Page Title", false);
-        setName = initButton(workSpace, "Set Name",  false);
-        selectBannerImage = initButton(workSpace, "Select Banner Image",  false);
-        selectLayout = initButton(workSpace, "Select  Layout", false);
-        selectColorTemplate = initButton(workSpace, "Select Color Theme",  false);
-        selectFont = initButton(workSpace, "Select Font",  false);
-        addComponent = initButton(workSpace, "Add Component", false);
-        removeComponent = initButton(workSpace, "Remove Component", false);
-        setFooter = initButton(workSpace, "Set Footer", false);
+        workSpaceToolbar = new VBox(10);
+        workSpaceToolbar.getStyleClass().add("workSpaceToolbar");
+        changePageTitle = initButton(workSpaceToolbar, "Set Page Title", false);
+        setName = initButton(workSpaceToolbar, "Set Name",  false);
+        selectBannerImage = initButton(workSpaceToolbar, "Select Banner Image",  false);
+        selectLayout = initButton(workSpaceToolbar, "Select  Layout", false);
+        selectColorTemplate = initButton(workSpaceToolbar, "Select Color Theme",  false);
+        selectFont = initButton(workSpaceToolbar, "Select Font",  false);
+        addComponent = initButton(workSpaceToolbar, "Add Component", false);
+        removeComponent = initButton(workSpaceToolbar, "Remove Component", false);
+        setFooter = initButton(workSpaceToolbar, "Set Footer", false);
         
     }
     /**
@@ -254,8 +292,17 @@ public class EPortfolioGeneratorView {
     public double getWidth(){
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-        width = bounds.getWidth() - siteToolbar.getWidth();
-        width -= workSpace.getWidth();
+//        System.out.println("Width: " + bounds.getWidth());
+//        System.out.println("left Width: " + siteToolbar.getMaxWidth());
+//        workSpaceToolbar.maxWidthProperty();
+// 
+//        System.out.println("right Width: " + workSpaceToolbar.getMaxWidth());
+//        
+//        width = bounds.getWidth() - (siteToolbar.getWidth()*4.3);
+//        width -= workSpaceToolbar.getWidth();
+//        System.out.println("Width: " + width);
+//        width = bounds.getWidth() * .8;
+        width = bounds.getWidth();
         return width;
     }
     
@@ -335,6 +382,8 @@ public class EPortfolioGeneratorView {
             currentPage.setTitle("My page");
             pages.add(new Label(currentPage.getTitle()));
             addPages();
+            addedPage();
+
         });
         
         selectColorTemplate.setOnAction(e -> {
@@ -405,8 +454,7 @@ public class EPortfolioGeneratorView {
     public void addComponent(String type){
          if(type.equals("Paragraph")){
                 AddParagraphDialog d = new AddParagraphDialog(currentPage, this);
-                d.display("Add Paragraph");
-                
+                d.display("Add Paragraph");          
             }else if(type.equals("Image")){
                 AddImageDialog d = new AddImageDialog(currentPage);
                 d.display("Add Image");
@@ -416,9 +464,6 @@ public class EPortfolioGeneratorView {
             }else if(type.equals("Slide Show")){
                 AddSlideShowDialog d = new AddSlideShowDialog();
                 d.display("Add Slide Show");
-            }else if(type.equals("HyperLink Text")){
-                AddHyperLinkDialog d = new AddHyperLinkDialog();
-                d.display("Add HyperLink Text");
             }else if(type.equals("List")){
                 AddListDialog d = new AddListDialog();
                 d.display("Add List");
@@ -426,3 +471,5 @@ public class EPortfolioGeneratorView {
             }//add eportfolio generator into paragraph component
     }
 }
+
+

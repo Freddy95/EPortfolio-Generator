@@ -25,7 +25,6 @@ public class ComponentEditView extends HBox {
     Component component;
     Button editComponent;
     boolean selected;
-    static ArrayList<Component> comps = new ArrayList<>();
     Page page;
     EPortfolioGeneratorView ui;
 
@@ -53,10 +52,11 @@ public class ComponentEditView extends HBox {
         ParagraphComponent c = (ParagraphComponent) component;
         VBox para = new VBox(15);
         Label heading = new Label(c.getHeader());
-        
+        heading.getStyleClass().clear();
         heading.getStyleClass().add("heading");
         TextArea text = new TextArea(c.getText());
         text.setEditable(false);
+        text.getStyleClass().clear();
         text.setMaxWidth(700);
         text.setMinHeight(100);
         text.setMaxHeight(500);
@@ -67,7 +67,20 @@ public class ComponentEditView extends HBox {
                 text.getStyleClass().add("font1");
                 break;
             case "Font 2":
-                getStyleClass().add("font2");
+                heading.getStyleClass().add("font2");
+                text.getStyleClass().add("font2");
+                break;
+            case "Font 3":
+                heading.getStyleClass().add("font3");
+                text.getStyleClass().add("font3");
+                break;
+            case "Font 4":
+                heading.getStyleClass().add("font4");
+                text.getStyleClass().add("font4");
+                break;
+             case "Font 5":
+                heading.getStyleClass().add("font5");
+                text.getStyleClass().add("font5");
                 break;
             default:
                 break;
@@ -101,9 +114,7 @@ public class ComponentEditView extends HBox {
     }
     
     public void select(){
-        for(Component c : comps){
-            c.setSelected(false);
-        }
+       
         DropShadow ds = new DropShadow();
         ds.setColor(Color.RED);
         ds.setOffsetX(2.0);
@@ -112,9 +123,7 @@ public class ComponentEditView extends HBox {
         setSelected(true);
     }    
 
-    public static ArrayList<Component> getComps() {
-        return comps;
-    }
+  
 
     public boolean isSelected() {
         return component.isSelected();
@@ -132,9 +141,6 @@ public class ComponentEditView extends HBox {
         setEffect(ds);
     }
     
-    public void addComponent(Component c){
-        comps.add(c);
-    }
-    
+  
     
 }

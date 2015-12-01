@@ -14,7 +14,11 @@
     -fx-alignment: center;
     -fx-font-size: 15px;
 }
-.workSpace{// workspace or right side buttons
+
+.siteToolbarButton{
+    -fx-font-size: 15px;
+}
+.workSpaceToolbar{// workspace or right side buttons
     -fx-background-color: #b3d9ff;
     -fx-padding: 5px 10px 5px 10px;
     -fx-alignment: CENTER_LEFT;
@@ -77,5 +81,21 @@
 }
 
 .font1{
-    -fx-font-family: Times New Roman;
+    -fx-font-family: Courgette;
+}
+
+.font2{
+    -fx-font-family: Ubuntu;
+}
+
+.font3{
+    -fx-font-family:Dosis;
+}
+
+.font4{
+    -fx-font-family: Average;
+}
+
+.font5{
+    -fx-font-family: Oxygen;
 }

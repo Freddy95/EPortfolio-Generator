@@ -32,6 +32,7 @@ public class AddParagraphDialog {
     Label labelParagraph;
     TextField heading;
     TextArea paragraph;
+    Button addLinkButton;
     Button okBtn;
     ChoiceBox<String> box;
     Page page;
@@ -85,6 +86,9 @@ public class AddParagraphDialog {
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialog");
         window.setScene(scene);
+        addLinkButton.setOnAction(e -> {
+        
+        });
         okBtn.setOnAction(e->{
            comp = new ParagraphComponent(heading.getText(), paragraph.getText(), box.getValue());
            page.addComponent(comp);
@@ -121,6 +125,7 @@ public class AddParagraphDialog {
         box.getItems().add("Font 3");
         box.getItems().add("Font 4");
         box.getItems().add("Font 5");
+
         box.setValue("Select Font");
         paragraph.setText(p.getText());
         heading.setText(p.getHeader());
@@ -138,6 +143,7 @@ public class AddParagraphDialog {
         okBtn.setOnAction(e->{
             p.setText(paragraph.getText());
             p.setHeader(heading.getText());
+            p.setFont(box.getValue());
             ui.reloadPane();
            window.close();
        });
