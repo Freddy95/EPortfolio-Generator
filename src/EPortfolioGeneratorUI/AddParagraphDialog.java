@@ -4,17 +4,20 @@ package EPortfolioGeneratorUI;
 import Components.ParagraphComponent;
 import eportfoliogenerator.EPortfolio;
 import eportfoliogenerator.EPortfolioGeneratorView;
+import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -32,13 +35,13 @@ public class AddParagraphDialog {
     Label labelParagraph;
     TextField heading;
     TextArea paragraph;
-    Button addLinkButton;
     Button okBtn;
     ChoiceBox<String> box;
+    ArrayList<String> urls;
     Page page;
     
     ParagraphComponent comp;
-    
+  
     EPortfolioGeneratorView ui;
     
     public AddParagraphDialog(Page p, EPortfolioGeneratorView initUi){
@@ -53,6 +56,9 @@ public class AddParagraphDialog {
      * @param title - title of window
      */
     public void display(String title) {
+        urls = new ArrayList<>();
+     
+        
         HBox elems = new HBox(15);
         window = new Stage();
         box = new ChoiceBox<>();
@@ -86,15 +92,16 @@ public class AddParagraphDialog {
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialog");
         window.setScene(scene);
-        addLinkButton.setOnAction(e -> {
-        
-        });
+
         okBtn.setOnAction(e->{
            comp = new ParagraphComponent(heading.getText(), paragraph.getText(), box.getValue());
            page.addComponent(comp);
            ui.reloadPane();
            window.close();
        });
+       
+       
+       
         window.showAndWait();
        
     }
@@ -157,4 +164,6 @@ public class AddParagraphDialog {
     public ParagraphComponent getComponent(){
         return comp;
     }
+    
+  
 }

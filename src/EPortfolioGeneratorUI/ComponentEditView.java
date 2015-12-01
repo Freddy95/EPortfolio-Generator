@@ -7,6 +7,7 @@ import eportfoliogenerator.EPortfolioGenerator;
 import eportfoliogenerator.EPortfolioGeneratorView;
 import java.util.ArrayList;
 import javafx.scene.control.Button;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.DropShadow;
@@ -49,6 +50,9 @@ public class ComponentEditView extends HBox {
     }
 
     public void initParagraph() {
+        VBox btns = new VBox(10);
+        Button addLink = new Button("Add Link");
+        Button removeLink = new Button("Remove Link");
         ParagraphComponent c = (ParagraphComponent) component;
         VBox para = new VBox(15);
         Label heading = new Label(c.getHeader());
@@ -87,11 +91,32 @@ public class ComponentEditView extends HBox {
         }
         para.getChildren().addAll(heading, text);
         getChildren().add(para);
-        getChildren().add(editComponent);
+        btns.getChildren().add(editComponent);
+        btns.getChildren().add(addLink);
+        getChildren().add(btns);
         editComponent.setOnAction(e -> {
             AddParagraphDialog dia = new AddParagraphDialog(page, ui);
             dia.editDisplay(c);
         });
+        
+        addLink.setOnAction(e -> {
+            if(text.getSelectedText()== "" || text.getSelectedText() == null)
+                return;
+            LinkDialog dia = new LinkDialog(c, text.getSelection());
+            dia.addDisplay();
+            ui.reloadPane();
+            removeLink.setDisable(!(c.getLinks().size() > 0));
+        });
+        
+        removeLink.setOnAction(e -> {
+            if(text.getSelectedText().equals("") || text.getSelectedText() == null)
+                return;
+            
+           
+            removeLink.setDisable(!(c.getLinks().size() > 0));
+        });
+        
+           
     }
 
     public void initImage() {
@@ -140,7 +165,12 @@ public class ComponentEditView extends HBox {
         ds.setOffsetY(0.0);
         setEffect(ds);
     }
+     
     
+    public IndexRange findIndexRange(String s, int val){
+        IndexRange ret = new IndexRange(0,0);
+        return ret;
+    }
   
     
 }

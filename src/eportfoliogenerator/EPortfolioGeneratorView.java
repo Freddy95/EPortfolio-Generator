@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
@@ -470,6 +471,8 @@ public class EPortfolioGeneratorView {
                 
             }//add eportfolio generator into paragraph component
     }
+    
+    
 }
 
 

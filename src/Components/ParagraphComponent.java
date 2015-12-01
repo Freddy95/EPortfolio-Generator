@@ -49,4 +49,12 @@ public class ParagraphComponent extends Component{
         links.add(l);
     }
     
+    public void removeLink(String s){
+        links.remove(s);
+    }
+    
+    public ArrayList<String> getLinks(){
+        return links;
+    }
+    
 }
