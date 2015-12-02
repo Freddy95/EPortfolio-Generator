@@ -3,7 +3,7 @@ package File;
 
 import eportfoliogenerator.EPortfolio;
 import eportfoliogenerator.EPortfolioGenerator;
-import eportfoliogenerator.EPortfolioGeneratorView;
+import View.EPortfolioGeneratorView;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Platform;

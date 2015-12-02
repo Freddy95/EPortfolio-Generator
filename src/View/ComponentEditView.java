@@ -1,10 +1,13 @@
-package EPortfolioGeneratorUI;
+package View;
 
+import Dialog.LinkDialog;
+import Dialog.AddParagraphDialog;
 import Components.Component;
 import Components.ImageComponent;
 import Components.ParagraphComponent;
 import eportfoliogenerator.EPortfolioGenerator;
-import eportfoliogenerator.EPortfolioGeneratorView;
+import Page.Page;
+import View.EPortfolioGeneratorView;
 import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
@@ -31,6 +34,7 @@ public class ComponentEditView extends HBox {
 
     public ComponentEditView(Component comp, Page p, EPortfolioGeneratorView initUi) {
         getStyleClass().add("componentEditView");
+        getStyleClass().add(p.getFont());
         page = p;
         setSpacing(30);
         editComponent = new Button("Edit");
@@ -65,30 +69,14 @@ public class ComponentEditView extends HBox {
         text.setMinHeight(100);
         text.setMaxHeight(500);
         text.setWrapText(true);
-        switch(c.getFont()){
-            case "Font 1":
-                heading.getStyleClass().add("font1");
-                text.getStyleClass().add("font1");
-                break;
-            case "Font 2":
-                heading.getStyleClass().add("font2");
-                text.getStyleClass().add("font2");
-                break;
-            case "Font 3":
-                heading.getStyleClass().add("font3");
-                text.getStyleClass().add("font3");
-                break;
-            case "Font 4":
-                heading.getStyleClass().add("font4");
-                text.getStyleClass().add("font4");
-                break;
-             case "Font 5":
-                heading.getStyleClass().add("font5");
-                text.getStyleClass().add("font5");
-                break;
-            default:
-                break;
+        if(c.getFont() != null || c.getFont() != ""){
+            heading.getStyleClass().add(c.getFont());
+            text.getStyleClass().add(c.getFont());       
+        }else{
+            heading.getStyleClass().add(page.getFont());
+            text.getStyleClass().add(page.getFont()); 
         }
+        
         para.getChildren().addAll(heading, text);
         getChildren().add(para);
         btns.getChildren().add(editComponent);

@@ -1,5 +1,5 @@
 
-package EPortfolioGeneratorUI;
+package Page;
 
 import Components.Component;
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ public class Page {
     String bannerTitle;
     String layout;
     String colorTheme;
+    String font;
 
     public Page() {
         components = new ArrayList<>();
@@ -24,6 +25,9 @@ public class Page {
         bannerImagePath = "";
         bannerTitle = "";
         title = "";
+        layout = "";
+        font = "";
+        colorTheme = "";
     }
     
     
@@ -81,6 +85,22 @@ public class Page {
 
     public void setColorTheme(String colorTheme) {
         this.colorTheme = colorTheme;
+    }
+
+    public String getBannerImagePath() {
+        return bannerImagePath;
+    }
+
+    public void setBannerImagePath(String bannerImagePath) {
+        this.bannerImagePath = bannerImagePath;
+    }
+
+    public String getFont() {
+        return font;
+    }
+
+    public void setFont(String font) {
+        this.font = font;
     }
     
     

@@ -1,8 +1,8 @@
 
-package EPortfolioGeneratorUI;
+package Dialog;
 
 import Components.ParagraphComponent;
-import eportfoliogenerator.EPortfolioGeneratorView;
+import View.EPortfolioGeneratorView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

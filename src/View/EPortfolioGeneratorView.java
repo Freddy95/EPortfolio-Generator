@@ -1,22 +1,20 @@
 
-package eportfoliogenerator;
+package View;
 
 import Components.Component;
-import EPortfolioGeneratorUI.AddBannerImageDialog;
-import EPortfolioGeneratorUI.AddImageDialog;
-import EPortfolioGeneratorUI.AddListDialog;
-import EPortfolioGeneratorUI.AddParagraphDialog;
-import EPortfolioGeneratorUI.AddSlideShowDialog;
-import EPortfolioGeneratorUI.AddVideoDialog;
-import EPortfolioGeneratorUI.ComponentEditView;
-import EPortfolioGeneratorUI.Page;
-import EPortfolioGeneratorUI.PageEditView;
-import EPortfolioGeneratorUI.RemoveComponentDialog;
-import EPortfolioGeneratorUI.SelectDialog;
-import EPortfolioGeneratorUI.SetDialog;
-import EPortfolioGeneratorUI.SiteView;
+import Dialog.AddBannerImageDialog;
+import Dialog.AddImageDialog;
+import Dialog.AddListDialog;
+import Dialog.AddParagraphDialog;
+import Dialog.AddSlideShowDialog;
+import Dialog.AddVideoDialog;
+import Page.Page;
+import Dialog.RemoveComponentDialog;
+import Dialog.SelectDialog;
+import Dialog.SetDialog;
 import File.FileController;
 import File.FileManager;
+import eportfoliogenerator.EPortfolio;
 import java.util.ArrayList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -338,7 +336,9 @@ public class EPortfolioGeneratorView {
                 for(int i = 0; i < pages.size(); i++){
                     pages.get(i).getStyleClass().clear();
                 }
+                
                 l.getStyleClass().add("currentPage");
+                currentLabelPage = l;
                 currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
                 reloadPane();
             });
@@ -399,14 +399,21 @@ public class EPortfolioGeneratorView {
         
         selectFont.setOnAction(e ->{
             components.clear();
-            components.add("Font 1");
-            components.add("Font 2");
-            components.add("Font 3");
-            components.add("Font 4");
-            components.add("Font 5");
+            components.add("Courgette");
+            components.add("Ubuntu");
+            components.add("Dosis");
+            components.add("Average");
+            components.add("Oxygen");
             
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Font", "Select Font for the Page to use");
+            dia.getButton().setOnAction(b -> {
+                currentPage.setFont(dia.getValue());
+                pageEditor.getStyleClass().add(dia.getValue());
+                reloadPane();
+                dia.close();
+            });
+            
         });
           
         selectColorTemplate.setOnAction(e -> {
@@ -418,6 +425,10 @@ public class EPortfolioGeneratorView {
             components.add("Yellow");
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Color", "Select Color Template for the Page");
+            dia.getButton().setOnAction(a -> {
+                currentPage.setBannerTitle(dia.getValue());
+                dia.close();
+            });
         });
         selectLayout.setOnAction(e -> {
             components.clear();
@@ -430,7 +441,7 @@ public class EPortfolioGeneratorView {
             dia.display("Select Layout", "Select Layout for the Page to use");
             dia.getButton().setOnAction(x -> {
                 currentPage.setLayout(dia.getValue());
-               
+                dia.close();
             });
         }); 
         changePageTitle.setOnAction(e -> {

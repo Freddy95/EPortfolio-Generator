@@ -8,7 +8,7 @@ import Components.ParagraphComponent;
 import Components.Slide;
 import Components.SlideShowComponent;
 import Components.VideoComponent;
-import EPortfolioGeneratorUI.Page;
+import Page.Page;
 import eportfoliogenerator.EPortfolio;
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,6 +54,9 @@ public class FileManager {
     public static String JSON_CONTENT= "content";
     public static String JSON_SLIDES = "slides";
     public static String JSON_TEXT = "text";
+    public static String JSON_FONT = "font";
+    public static String JSON_COLOR = "color_theme";
+    public static String JSON_LAYOUT = "layout";
     public static String JSON_IMAGE_FILE_NAME = "image_file_name";
     public static String JSON_IMAGE_PATH = "image_path";
     public static String JSON_VIDEO_PATH = "file_path";
@@ -101,6 +104,9 @@ public class FileManager {
                 .add(JSON_TITLE, p.getTitle())
                 .add(JSON_BANNER, p.getBannerTitle())
                 .add(JSON_BANNER_IMAGE, p.getPath())
+                .add(JSON_LAYOUT, p.getLayout())
+                .add(JSON_FONT, p.getLayout())
+                .add(JSON_COLOR, p.getColorTheme())
                 .add(JSON_CONTENT, makeContentArray(p))
                 .build();
         return js;

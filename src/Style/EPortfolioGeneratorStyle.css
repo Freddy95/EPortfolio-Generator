@@ -80,22 +80,22 @@
     -fx-border-width: 3px;
 }
 
-.font1{
+.Courgette{
     -fx-font-family: Courgette;
 }
 
-.font2{
+.Ubuntu{
     -fx-font-family: Ubuntu;
 }
 
-.font3{
+.Dosis{
     -fx-font-family:Dosis;
 }
 
-.font4{
+.Average{
     -fx-font-family: Average;
 }
 
-.font5{
+.Oxygen{
     -fx-font-family: Oxygen;
 }

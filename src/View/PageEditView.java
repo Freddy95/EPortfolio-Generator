@@ -1,5 +1,5 @@
 
-package EPortfolioGeneratorUI;
+package View;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;

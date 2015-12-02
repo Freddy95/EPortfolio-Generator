@@ -5,7 +5,7 @@
  */
 package eportfoliogenerator;
 
-import EPortfolioGeneratorUI.Page;
+import Page.Page;
 import java.util.ArrayList;
 
 /**

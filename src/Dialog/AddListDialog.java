@@ -1,5 +1,5 @@
 
-package EPortfolioGeneratorUI;
+package Dialog;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,10 +17,12 @@ import javafx.stage.Stage;
  *
  * @author Freddy Estevez
  */
-public class RemoveComponentDialog {
+public class AddListDialog {
     Stage window;
     Scene scene;
+    Label labelHeading;
     Label createList;
+    TextField heading;
     ListView list;
     Button addBtn;
     Button removeBtn;
@@ -31,24 +33,26 @@ public class RemoveComponentDialog {
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        
+        labelHeading = new Label();
+        labelHeading.setText("Enter title of list");
+        heading = new TextField();
         createList = new Label();
-        createList.setText("Components: ");
+        createList.setText("List: ");
         list = new ListView();
         list.setMinSize(300, 300);
-        list.getItems().add("My Paragraph");
-        list.getItems().add("My Image");
-        
+        list.getItems().add("I like pie");
+        list.getItems().add("I Like cookies");
+        addBtn = new Button("Add Element");
         removeBtn = new Button("Remove Element");
         HBox btns = new HBox(15);
+        btns.getChildren().addAll(addBtn, removeBtn);
         okBtn = new Button("OK");
-        btns.getChildren().addAll(removeBtn, okBtn);
         btns.setAlignment(Pos.CENTER);
         VBox layout = new VBox(25);
         layout.setPadding(new Insets(10,10,10,10));
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll( createList, list, btns);
-        scene = new Scene(layout, 400, 500);
+        layout.getChildren().addAll(labelHeading, heading, createList, list, btns, okBtn);
+        scene = new Scene(layout, 400, 600);
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialogList");
         window.setScene(scene);

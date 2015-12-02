@@ -1,5 +1,5 @@
 
-package EPortfolioGeneratorUI;
+package Dialog;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;

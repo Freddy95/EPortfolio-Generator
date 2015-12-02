@@ -1,12 +1,13 @@
 
-package EPortfolioGeneratorUI;
+package Dialog;
 
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,42 +16,45 @@ import javafx.stage.Stage;
  *
  * @author Freddy Estevez
  */
-public class SetDialog {
- Stage window;
+public class SelectDialog{
+    Stage window;
     Scene scene;
-    Label labelHeading;
-    TextField heading;
+    Label label;
+    ChoiceBox<String> box;
     Button okBtn;
-
-    public void display(String title, String message) {
+    
+    public SelectDialog(List<String> strings){
+        box = new ChoiceBox<>();
+        box.getItems().addAll(strings);
+    }
+    public  void display(String title, String message){
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        labelHeading = new Label();
-        labelHeading.setText(message);
-        heading = new TextField();
+        label = new Label();
+        label.setText(message);
         okBtn = new Button("OK");
-        VBox layout = new VBox(15);
-        layout.setPadding(new Insets(10, 10, 10, 10));
+        VBox layout = new VBox(25);
+        
+        layout.setPadding(new Insets(10,10,10,10));
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(labelHeading, heading, okBtn);
-        scene = new Scene(layout, 400, 250);
+        layout.getChildren().addAll(label, box, okBtn);
+        scene = new Scene(layout, 300, 200);  
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialog");
         window.setScene(scene);
         window.show();
-       
+        
     }
-    
     public Button getButton(){
         return okBtn;
     }
-    
     public String getValue(){
-        return heading.getText();
+        return box.getValue();
     }
     
-    public Stage getWindow(){
-        return window;
+    public void close(){
+        window.close();
     }
+    
 }

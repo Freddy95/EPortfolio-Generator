@@ -1,5 +1,5 @@
 
-package EPortfolioGeneratorUI;
+package View;
 
 import java.io.File;
 import java.net.URL;
