@@ -58,6 +58,7 @@ public class EPortfolioGeneratorView {
     
      Page currentPage;
      ArrayList<Label> pages;
+     Label currentLabelPage;
      ArrayList<Component> comps;
     
      WebView webView;
@@ -99,7 +100,7 @@ public class EPortfolioGeneratorView {
         comps = new ArrayList<>();
         initFileToolbar();
         initSiteToolbar();
-        //controller = new FileController(this, new FileManager());
+        controller = new FileController(this, new FileManager());
         initWorkSpace();
         pane = new BorderPane();
         pane.setTop(fileToolbar);
@@ -116,7 +117,9 @@ public class EPortfolioGeneratorView {
         primaryStage.setTitle("EPortfolio Generator");
         primaryStage.getIcons().add(new Image("file:icons/icon.png"));
         initWindow(primaryStage);
-        initHandlers();
+        initFileToolbarHandlers();
+        initSiteToolbarHandlers();
+        initPageEditorHandlers();
         initPageEditView();
         initStuff();
         //pane.setCenter(pageEditorScrollPane);
@@ -132,11 +135,11 @@ public class EPortfolioGeneratorView {
         
     }
     
-    public void addedPage(){
+    public void setPageWorkSpace(){
         
         pane.setCenter(pageEditorPane);
         pageEditor.setPrefWidth(getWidth() * .79);
-        workSpace.getChildren().add(0,pageEditorScrollPane);
+        
 
         
     }
@@ -209,7 +212,7 @@ public class EPortfolioGeneratorView {
         siteToolbar.setPrefWidth(getWidth() * .08);
         addPage = initChildButton(siteToolbar, "icons/add.png", "Add Page", false);
         addPage.getStyleClass().add("siteToolbarButton");
-        removePage = initChildButton(siteToolbar, "icons/Remove.png", "Remove Current Page", false);
+        removePage = initChildButton(siteToolbar, "icons/Remove.png", "Remove Current Page", true);
         removePage.getStyleClass().add("siteToolbarButton");
         
         pages = new ArrayList<>();
@@ -219,10 +222,8 @@ public class EPortfolioGeneratorView {
     /**
     * Adds some pages to siteToolbar
     */
-    public void addPages(){
-        for (int i = 0; i < pages.size(); i++) {
-            siteToolbar.getChildren().add(pages.get(i));
-        }
+    public void addPages(Label p){
+        siteToolbar.getChildren().add(p);
     }
     /**
     * Initializes the window size
@@ -263,6 +264,7 @@ public class EPortfolioGeneratorView {
           pageEditorPane.getTabs().add(pageViewerTab);
           pageEditorScrollPane = new ScrollPane(pageEditor);
           workSpaceToolbar.setPrefWidth(getWidth() * .13);
+          workSpace.getChildren().add(pageEditorScrollPane);
           workSpace.getChildren().add(workSpaceToolbar);
           pageEditorTab.setContent(workSpace);
          
@@ -324,30 +326,60 @@ public class EPortfolioGeneratorView {
             }
         }
     }
-    /**
-     * initialize handlers of buttons
-     */
-    public void initHandlers(){
-        ArrayList<String> components = new ArrayList<>();
-        save.setOnAction(e->{
-            controller.handleSaveEPortfolioRequest();
-        });
-        newEPortfolio.setOnAction(e ->{
-            if(currentEPortfolio != null){
-                promptToSave();
-            }
-            SetDialog d = new SetDialog();
-            d.display("Create EPortfolio", "Set title of EPortfolio");
-            d.getButton().setOnAction(c -> {
-                currentEPortfolio = new EPortfolio();
-                currentEPortfolio.setTitle(d.getValue());
-                makeUI();
-                ePortfolioTitle.setText(d.getValue());
-                d.getWindow().close();  
-               
+    
+    public void initSiteToolbarHandlers(){
+         addPage.setOnAction(e -> {
+            removePage.setDisable(false);
+            currentPage = new Page();
+            currentEPortfolio.addPage(currentPage);
+            currentPage.setTitle("Page " + (pages.size()+1));
+            Label l = new Label(currentPage.getTitle());
+            l.setOnMouseClicked(d -> {
+                for(int i = 0; i < pages.size(); i++){
+                    pages.get(i).getStyleClass().clear();
+                }
+                l.getStyleClass().add("currentPage");
+                currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
+                reloadPane();
             });
-            
+            pages.add(l);
+            for(int i = 0; i < pages.size(); i++){
+                    pages.get(i).getStyleClass().clear();
+                }
+            l.getStyleClass().add("currentPage");
+            currentLabelPage = l;
+            addPages(l);
+            if(pane.getCenter() == null)
+                setPageWorkSpace();
+            reloadPane();
         });
+         
+       removePage.setOnAction(e -> {
+           int ind = currentEPortfolio.getPages().indexOf(currentPage);
+           siteToolbar.getChildren().remove(pages.get(ind));
+           pages.remove(ind);
+           if(ind == pages.size())
+               ind--;
+           
+           
+           currentEPortfolio.getPages().remove(currentPage);
+           if(pages.isEmpty()){
+               pane.setCenter(null);
+               removePage.setDisable(true);
+               return;
+           }
+           pages.get(ind).getStyleClass().add("currentPage");
+           currentLabelPage = pages.get(ind);
+           currentPage = currentEPortfolio.getPages().get(ind);
+           reloadPane();
+           
+       });
+       
+        
+    }
+    
+    public void initPageEditorHandlers(){
+        ArrayList<String> components = new ArrayList<>();
         addComponent.setOnAction(e -> {
             components.clear();
             components.add("Paragraph");
@@ -376,17 +408,7 @@ public class EPortfolioGeneratorView {
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Font", "Select Font for the Page to use");
         });
-        
-        addPage.setOnAction(e -> {
-            currentPage = new Page();
-            currentEPortfolio.addPage(currentPage);
-            currentPage.setTitle("My page");
-            pages.add(new Label(currentPage.getTitle()));
-            addPages();
-            addedPage();
-
-        });
-        
+          
         selectColorTemplate.setOnAction(e -> {
             components.clear();
             components.add("Blue");
@@ -406,14 +428,28 @@ public class EPortfolioGeneratorView {
             components.add("Layout 5");
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Layout", "Select Layout for the Page to use");
-        });
+            dia.getButton().setOnAction(x -> {
+                currentPage.setLayout(dia.getValue());
+               
+            });
+        }); 
         changePageTitle.setOnAction(e -> {
             SetDialog d = new SetDialog();
             d.display("Enter Title", "Enter Title of Page");
+            d.getButton().setOnAction(b -> {
+                currentLabelPage.setText(d.getValue());
+                currentPage.setTitle(d.getValue());
+                d.getWindow().close();
+            });
         });  
         setName.setOnAction(e -> {
             SetDialog d = new SetDialog();
             d.display("Enter Banner Text", "Enter Banner Text");
+            d.getButton().setOnAction(a -> {
+                currentPage.setBannerTitle(d.getValue());
+                d.getWindow().close();
+            });
+            
         });  
         removeComponent.setOnAction(e -> {
             RemoveComponentDialog d = new RemoveComponentDialog();
@@ -427,6 +463,34 @@ public class EPortfolioGeneratorView {
             AddBannerImageDialog d = new AddBannerImageDialog();
             d.display("Add Banner Image");
         });
+    }
+    /**
+     * initialize handlers of buttons on file toolbar.
+     */
+    public void initFileToolbarHandlers(){
+        save.setOnAction(e->{
+            controller.handleSaveEPortfolioRequest();
+        });
+        newEPortfolio.setOnAction(e ->{
+            if(currentEPortfolio != null){
+                promptToSave();
+            }
+            SetDialog d = new SetDialog();
+            d.display("Create EPortfolio", "Set title of EPortfolio");
+            d.getButton().setOnAction(c -> {
+                currentEPortfolio = new EPortfolio();
+                currentEPortfolio.setTitle(d.getValue());
+                makeUI();
+                ePortfolioTitle.setText(d.getValue());
+                d.getWindow().close();  
+               
+            });
+            
+        });
+        
+        
+       
+      
         
         toggleView.setOnAction(e -> {
             SiteView v = new SiteView();

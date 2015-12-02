@@ -93,6 +93,7 @@ public class ComponentEditView extends HBox {
         getChildren().add(para);
         btns.getChildren().add(editComponent);
         btns.getChildren().add(addLink);
+        btns.getChildren().add(removeLink);
         getChildren().add(btns);
         editComponent.setOnAction(e -> {
             AddParagraphDialog dia = new AddParagraphDialog(page, ui);
@@ -102,7 +103,7 @@ public class ComponentEditView extends HBox {
         addLink.setOnAction(e -> {
             if(text.getSelectedText()== "" || text.getSelectedText() == null)
                 return;
-            LinkDialog dia = new LinkDialog(c, text.getSelection());
+            LinkDialog dia = new LinkDialog(c, text.getSelection(), ui);
             dia.addDisplay();
             ui.reloadPane();
             removeLink.setDisable(!(c.getLinks().size() > 0));
@@ -111,9 +112,24 @@ public class ComponentEditView extends HBox {
         removeLink.setOnAction(e -> {
             if(text.getSelectedText().equals("") || text.getSelectedText() == null)
                 return;
+            String t = text.getSelectedText();
+            if(t.indexOf("***") != 0 || t.lastIndexOf("***") != t.length()-3){
+               
+                return;
+                
+            }
+            StringBuilder s = new StringBuilder();
+            IndexRange r = text.getSelection();
             
-           
+            s.append(text.getText().substring(0, r.getStart()));
+            System.out.println(r.getStart() + " " + r.getEnd());
+            s.append(text.getText().substring(r.getStart()+3, r.getEnd()-3));
+            
+            s.append(text.getText().substring(r.getEnd()));
+            c.setText(s.toString());
+            c.getLinks().remove(getIndexOfLink(r.getStart(), text.getText()));
             removeLink.setDisable(!(c.getLinks().size() > 0));
+            ui.reloadPane();
         });
         
            
@@ -167,10 +183,18 @@ public class ComponentEditView extends HBox {
     }
      
     
-    public IndexRange findIndexRange(String s, int val){
-        IndexRange ret = new IndexRange(0,0);
-        return ret;
+    public int getIndexOfLink(int start, String text){
+        int i = 0;
+        while(text.lastIndexOf("***", start-1) != -1){
+            start = text.lastIndexOf("***", start-1);
+            start = text.lastIndexOf("***", start-1);
+            i++;
+        }
+        
+        return i;
     }
+    
+   
   
     
 }

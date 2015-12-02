@@ -2,6 +2,7 @@
 package EPortfolioGeneratorUI;
 
 import Components.ParagraphComponent;
+import eportfoliogenerator.EPortfolioGeneratorView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,10 +23,12 @@ import javafx.stage.Stage;
 public class LinkDialog {
     ParagraphComponent comp;
     IndexRange range;
+    EPortfolioGeneratorView ui;
     
-    public LinkDialog(ParagraphComponent c, IndexRange range) {
+    public LinkDialog(ParagraphComponent c, IndexRange range, EPortfolioGeneratorView initUi) {
         comp = c;
         this.range = range;
+        ui = initUi;
     }
     
     public void addDisplay(){
@@ -68,7 +71,7 @@ public class LinkDialog {
     }
     
     
-    public void removeDisplay(){
+    public void editDisplay(){
         Stage window;
          Scene scene;
         Label labelHeading;
@@ -78,7 +81,7 @@ public class LinkDialog {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Remove Link");
         labelHeading = new Label();
-        labelHeading.setText("Enter URL here");
+        labelHeading.setText("Change URL");
         links = new ListView();
         removeLink = new Button("Remove Link");
         VBox layout = new VBox(15);
@@ -94,8 +97,12 @@ public class LinkDialog {
             comp.getLinks().remove((links.getSelectionModel().getSelectedIndex()));
             links.getItems().clear();
             links.getItems().addAll(comp.getLinks());
-            window.close();
+            
         });
+        window.setOnCloseRequest(e -> {
+            ui.reloadPane();
+        });
+        
         window.showAndWait();
     }
 

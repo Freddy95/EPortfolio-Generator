@@ -15,6 +15,8 @@ public class Page {
     String URL;
     String bannerImagePath;
     String bannerTitle;
+    String layout;
+    String colorTheme;
 
     public Page() {
         components = new ArrayList<>();
@@ -64,4 +66,22 @@ public class Page {
     public void setPath(String s){
         bannerImagePath = s;
     }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
+    }
+
+    public String getColorTheme() {
+        return colorTheme;
+    }
+
+    public void setColorTheme(String colorTheme) {
+        this.colorTheme = colorTheme;
+    }
+    
+    
 }
