@@ -14,7 +14,6 @@ public class Page {
     ArrayList<Component> components;
     String URL;
     String bannerImagePath;
-    String bannerTitle;
     String layout;
     String colorTheme;
     String font;
@@ -23,7 +22,6 @@ public class Page {
         components = new ArrayList<>();
         URL = "";
         bannerImagePath = "";
-        bannerTitle = "";
         title = "";
         layout = "";
         font = "";
@@ -39,13 +37,7 @@ public class Page {
         this.URL = URL;
     }
 
-    public String getBannerTitle() {
-        return bannerTitle;
-    }
-
-    public void setBannerTitle(String bannerTitle) {
-        this.bannerTitle = bannerTitle;
-    }
+   
 
     public String getTitle() {
         return title;

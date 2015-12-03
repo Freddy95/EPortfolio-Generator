@@ -49,7 +49,15 @@
     -fx-alignment: center;
     -fx-font-size: 15px;
 }
-
+.bannerImage{
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+    -fx-background-color: white;
+}
+.studentName{
+    -fx-font-size: 20px;
+    -fx-text-alignment: center;
+}
 .dialogButton{
     -fx-alignment: center;
 }

@@ -1,6 +1,8 @@
 
 package File;
 
+import Components.Component;
+import Components.ImageComponent;
 import eportfoliogenerator.EPortfolio;
 import eportfoliogenerator.EPortfolioGenerator;
 import View.EPortfolioGeneratorView;
@@ -338,4 +340,5 @@ public class FileController {
     public void getSaved(Boolean saveButton){
         saved = !saveButton;
     }
+  
 }

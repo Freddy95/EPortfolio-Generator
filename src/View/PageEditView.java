@@ -1,7 +1,7 @@
 
 package View;
 
-import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
 /**
@@ -17,6 +17,10 @@ public class PageEditView extends VBox{
     
     public void addComponent(ComponentEditView v){
         getChildren().add(v);
+    }
+    
+    public void add(Node e){
+        getChildren().add(e);
     }
 
 }

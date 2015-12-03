@@ -50,13 +50,16 @@ public class EPortfolioGeneratorView {
      VBox siteToolbar;
      VBox workSpaceToolbar;
      HBox workSpace;
-     PageEditView pageEditor;
+     VBox pageEditor;
+     PageEditView pageEditorView;
      ScrollPane pageEditorScrollPane;
      Stage primaryStage;
     
      Page currentPage;
      ArrayList<Label> pages;
      Label currentLabelPage;
+     Label studentName;
+     ImageView bannerImage;
      ArrayList<Component> comps;
     
      WebView webView;
@@ -77,7 +80,6 @@ public class EPortfolioGeneratorView {
      Label ePortfolioTitle;
     
      Button changePageTitle;
-     Button setName;
      Button addComponent;
      Button removeComponent;
      Button selectFont;
@@ -119,7 +121,7 @@ public class EPortfolioGeneratorView {
         initSiteToolbarHandlers();
         initPageEditorHandlers();
         initPageEditView();
-        initStuff();
+      
         //pane.setCenter(pageEditorScrollPane);
 
     }
@@ -136,22 +138,12 @@ public class EPortfolioGeneratorView {
     public void setPageWorkSpace(){
         
         pane.setCenter(pageEditorPane);
-        pageEditor.setPrefWidth(getWidth() * .79);
+        pageEditorView.setPrefWidth(getWidth() * .79);
         
 
         
     }
 
-    public void initStuff(){
-        currentEPortfolio = new EPortfolio();
-        currentEPortfolio.setTitle("NEW TITLE");
-        Page p = new Page();
-        p.setTitle("My title");
-        p.setBannerTitle("My title");
-        p.setPath("COULD BE A PATH");
-       // p.addComponent(new ParagraphComponent("", "My stuff"));
-        currentEPortfolio.addPage(p);
-    }
    
     /**
      * 
@@ -225,6 +217,7 @@ public class EPortfolioGeneratorView {
     }
     /**
     * Initializes the window size
+     * @param primaryStage
     */
     public void initWindow(Stage primaryStage){
         // GET THE SIZE OF THE SCREEN
@@ -246,9 +239,35 @@ public class EPortfolioGeneratorView {
      */
     public void initPageEditView(){
           workSpace = new HBox();
-          pageEditor = new PageEditView();
-          pageEditor.getStyleClass().add("pageEditView");
+          pageEditorView = new PageEditView();
+          pageEditorView.getStyleClass().add("pageEditView");
+          pageEditor = new VBox(10);
+          Image image = new Image("file:image.jpg");
+          bannerImage = new ImageView(image);
+          bannerImage.setFitWidth(getWidth()*.7);
+          bannerImage.setFitHeight(200);
+          pageEditor.getStyleClass().add("bannerImage");
+          //bannerImage.setPreserveRatio(true);
+          studentName = new Label("Add Student Name Here");
+          studentName.getStyleClass().add("studentName");
+          studentName.setOnMouseClicked(e -> {
+              SetDialog d = new SetDialog();
+              d.display("Enter Student Name", "Enter Student Name");
+              d.getButton().setOnAction(a -> {
+                  studentName.setText(d.getValue());
+                  currentEPortfolio.setStudentName(d.getValue());
+                  reloadPane();
+                  d.getWindow().close();
+              });
+          });
           
+          bannerImage.setOnMouseClicked(e -> {
+              AddBannerImageDialog d = new AddBannerImageDialog(currentPage, this);
+              d.display("Add Banner Image");
+          });
+           pageEditor.getChildren().add(studentName);
+           pageEditorView.getChildren().add(pageEditor);
+           
           //pageEditor.setMinWidth(getWidth());
           //pageEditor.setPrefWidth(getWidth());
 //        
@@ -260,11 +279,12 @@ public class EPortfolioGeneratorView {
           pageViewerTab.setText("View Page");
           pageEditorPane.getTabs().add(pageEditorTab);
           pageEditorPane.getTabs().add(pageViewerTab);
-          pageEditorScrollPane = new ScrollPane(pageEditor);
+          pageEditorScrollPane = new ScrollPane(pageEditorView);
           workSpaceToolbar.setPrefWidth(getWidth() * .13);
           workSpace.getChildren().add(pageEditorScrollPane);
           workSpace.getChildren().add(workSpaceToolbar);
           pageEditorTab.setContent(workSpace);
+         
          
 
     }
@@ -277,7 +297,6 @@ public class EPortfolioGeneratorView {
         workSpaceToolbar = new VBox(10);
         workSpaceToolbar.getStyleClass().add("workSpaceToolbar");
         changePageTitle = initButton(workSpaceToolbar, "Set Page Title", false);
-        setName = initButton(workSpaceToolbar, "Set Name",  false);
         selectBannerImage = initButton(workSpaceToolbar, "Select Banner Image",  false);
         selectLayout = initButton(workSpaceToolbar, "Select  Layout", false);
         selectColorTemplate = initButton(workSpaceToolbar, "Select Color Theme",  false);
@@ -312,11 +331,12 @@ public class EPortfolioGeneratorView {
      */
     public void reloadPane(){
        // components = new VBox();
-        pageEditor.getChildren().clear();
+        pageEditorView.getChildren().clear();
+        pageEditorView.getChildren().add(pageEditor);
         for (Component b : currentPage.getComponents()) {
             ComponentEditView view = new ComponentEditView(b, currentPage, this);
-            view.setMaxWidth(pageEditor.getWidth());
-            pageEditor.getChildren().add(view);
+            view.setMaxWidth(pageEditorView.getWidth());
+            pageEditorView.getChildren().add(view);
             if (b.isSelected()) {
                 view.select();
             } else {
@@ -409,7 +429,7 @@ public class EPortfolioGeneratorView {
             dia.display("Select Font", "Select Font for the Page to use");
             dia.getButton().setOnAction(b -> {
                 currentPage.setFont(dia.getValue());
-                pageEditor.getStyleClass().add(dia.getValue());
+                pageEditorView.getStyleClass().add(dia.getValue());
                 reloadPane();
                 dia.close();
             });
@@ -426,7 +446,7 @@ public class EPortfolioGeneratorView {
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Color", "Select Color Template for the Page");
             dia.getButton().setOnAction(a -> {
-                currentPage.setBannerTitle(dia.getValue());
+                currentPage.setColorTheme(dia.getValue());
                 dia.close();
             });
         });
@@ -453,15 +473,7 @@ public class EPortfolioGeneratorView {
                 d.getWindow().close();
             });
         });  
-        setName.setOnAction(e -> {
-            SetDialog d = new SetDialog();
-            d.display("Enter Banner Text", "Enter Banner Text");
-            d.getButton().setOnAction(a -> {
-                currentPage.setBannerTitle(d.getValue());
-                d.getWindow().close();
-            });
-            
-        });  
+        
         removeComponent.setOnAction(e -> {
             RemoveComponentDialog d = new RemoveComponentDialog();
             d.display("Remove Component");
@@ -471,8 +483,16 @@ public class EPortfolioGeneratorView {
             d.display("Enter Footer Text", "Enter Footer Text");
         });
         selectBannerImage.setOnAction(e -> {
-            AddBannerImageDialog d = new AddBannerImageDialog();
+            AddBannerImageDialog d = new AddBannerImageDialog(currentPage, this);
             d.display("Add Banner Image");
+            d.getButton().setOnAction(a->{
+                bannerImage = new ImageView();
+                bannerImage.setImage(d.getImage());
+                pageEditor.getChildren().clear();
+                pageEditor.getChildren().addAll(studentName, bannerImage);
+                d.close();
+                
+            });
         });
     }
     /**

@@ -16,6 +16,9 @@ import java.util.ArrayList;
 public class EPortfolio {
     String title;
     ArrayList<Page> pages;
+    String studentName;
+  String bannerTitle;
+
 
     public EPortfolio() {
         pages = new ArrayList<>();
@@ -35,6 +38,22 @@ public class EPortfolio {
     
     public void setTitle(String s){
         title = s;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+    
+     public String getBannerTitle() {
+        return bannerTitle;
+    }
+
+    public void setBannerTitle(String bannerTitle) {
+        this.bannerTitle = bannerTitle;
     }
     
 }
