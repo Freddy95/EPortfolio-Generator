@@ -107,3 +107,27 @@
 .Oxygen{
     -fx-font-family: Oxygen;
 }
+
+.LeftComponentEditView{
+    -fx-alignment:center-left;
+    -fx-spacing: 50px;
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-font-size: 15px;
+}
+
+.CenterComponentEditView{
+    -fx-alignment:center;
+    -fx-spacing: 50px;
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-font-size: 15px;
+}
+
+.RightComponentEditView{
+    -fx-alignment:center-right;
+    -fx-spacing: 50px;
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-font-size: 15px;
+}

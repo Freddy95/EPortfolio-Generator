@@ -5,10 +5,16 @@ import Dialog.AddParagraphDialog;
 import Components.Component;
 import Components.ImageComponent;
 import Components.ParagraphComponent;
+import Dialog.AddImageDialog;
 import eportfoliogenerator.EPortfolioGenerator;
 import Page.Page;
 import View.EPortfolioGeneratorView;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
@@ -129,17 +135,31 @@ public class ComponentEditView extends HBox {
         img.getStyleClass().add("component2");
         Label cap = new Label(image.getCaption());
         cap.getStyleClass().add("heading");
-        Image im = new Image(image.getPath());
+        File file = new File(image.getPath());
+        URL url;
+        try {
+            url = file.toURI().toURL();
+        
+        Image im = new Image(url.toExternalForm());
         ImageView view = new ImageView(im);
-        double scaledWidth = 500;
-        double perc = scaledWidth / im.getWidth();
-        double scaledHeight = im.getHeight() * perc;
-        view.setFitWidth(scaledWidth);
-        view.setFitHeight(scaledHeight);
+//        double scaledWidth = 500;
+//        double perc = scaledWidth / im.getWidth();
+//        double scaledHeight = im.getHeight() * perc;
+        view.setFitWidth(image.getWidth());
+        view.setFitHeight(image.getHeight());
         view.setSmooth(true);
         view.setCache(true);
+        getStyleClass().add(image.getPosition()+"ComponentEditView");
+        view.getStyleClass().add(image.getPosition());
         img.getChildren().addAll(cap, view);
         getChildren().addAll(img, editComponent);
+        editComponent.setOnAction(e -> {
+            AddImageDialog d = new AddImageDialog(page, ui);
+            d.editDisplay(image);
+        });
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void select(){

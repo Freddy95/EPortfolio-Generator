@@ -67,6 +67,7 @@ public class AddBannerImageDialog {
                     URL fileURL = file.toURI().toURL();
                     image = new Image(fileURL.toExternalForm());
                     view.setImage(image);
+                    page.setBannerImagePath(file.getPath());
 
                 } catch (Exception a) {
                     // @todo - use Error handler to respond to missing image
@@ -75,6 +76,8 @@ public class AddBannerImageDialog {
             }
         });
     }
+    
+   
 
     public Button getButton() {
         return okBtn;

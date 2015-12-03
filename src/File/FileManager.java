@@ -49,7 +49,7 @@ public class FileManager {
     public static String JSON_LINKS = "links";
     public static String JSON_TYPE = "type";
     public static String JSON_HEADING = "heading";
-    public static String JSON_BANNER = "banner";
+    public static String JSON_STUDENT_NAME = "student_name";
     public static String JSON_BANNER_IMAGE = "banner_image";
     public static String JSON_CONTENT= "content";
     public static String JSON_SLIDES = "slides";
@@ -90,6 +90,7 @@ public class FileManager {
         // NOW BUILD THE COURSE USING EVERYTHING WE'VE ALREADY MADE
         JsonObject courseJsonObject = Json.createObjectBuilder()
                                     .add(JSON_TITLE, ePortfolio.getTitle())
+                                    .add(JSON_STUDENT_NAME, ePortfolio.getStudentName())
                                     .add(JSON_PAGES, pageArray)
                                     
                 .build();
@@ -102,7 +103,6 @@ public class FileManager {
         
         JsonObject js = Json.createObjectBuilder()
                 .add(JSON_TITLE, p.getTitle())
-                .add(JSON_BANNER, p.getBannerTitle())
                 .add(JSON_BANNER_IMAGE, p.getPath())
                 .add(JSON_LAYOUT, p.getLayout())
                 .add(JSON_FONT, p.getLayout())

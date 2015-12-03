@@ -48,12 +48,6 @@ public class EPortfolio {
         this.studentName = studentName;
     }
     
-     public String getBannerTitle() {
-        return bannerTitle;
-    }
-
-    public void setBannerTitle(String bannerTitle) {
-        this.bannerTitle = bannerTitle;
-    }
+ 
     
 }
