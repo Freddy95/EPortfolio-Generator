@@ -1,6 +1,9 @@
 
 package Dialog;
 
+import Components.ListComponent;
+import Page.Page;
+import View.EPortfolioGeneratorView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,28 +23,34 @@ import javafx.stage.Stage;
 public class AddListDialog {
     Stage window;
     Scene scene;
-    Label labelHeading;
+    Label labelTitle;
     Label createList;
-    TextField heading;
+    TextField title;
+    TextField element;
     ListView list;
     Button addBtn;
     Button removeBtn;
     Button okBtn;
+    Page page;
+    EPortfolioGeneratorView ui;
     
+    public AddListDialog(Page p, EPortfolioGeneratorView initUi){
+        page = p;
+        ui = initUi;
+    }
     
-    public void display(String title){
+    public void display(){
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
-        labelHeading = new Label();
-        labelHeading.setText("Enter title of list");
-        heading = new TextField();
+        window.setTitle("Add List Component");
+        labelTitle = new Label();
+        labelTitle.setText("Enter title of list");
+        element = new TextField();
+        title = new TextField();
         createList = new Label();
         createList.setText("List: ");
         list = new ListView();
-        list.setMinSize(300, 300);
-        list.getItems().add("I like pie");
-        list.getItems().add("I Like cookies");
+        list.setMinSize(300, 200);    
         addBtn = new Button("Add Element");
         removeBtn = new Button("Remove Element");
         HBox btns = new HBox(15);
@@ -51,11 +60,81 @@ public class AddListDialog {
         VBox layout = new VBox(25);
         layout.setPadding(new Insets(10,10,10,10));
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(labelHeading, heading, createList, list, btns, okBtn);
+        layout.getChildren().addAll(labelTitle, title, createList, list, element, btns, okBtn);
         scene = new Scene(layout, 400, 600);
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialogList");
         window.setScene(scene);
-        window.show();
+        addBtn.setOnAction(e -> {
+            if(!(element.getText().equals("")) && element.getText() != null ){
+                list.getItems().add(element.getText());
+                element.clear();
+            }
+        });
+        removeBtn.setOnAction(e -> {
+            list.getItems().remove(list.getSelectionModel().getSelectedIndex());
+        });
+        
+        okBtn.setOnAction(e -> {
+            ListComponent c = new ListComponent(title.getText());
+            for(int i = 0; i < list.getItems().size(); i++)
+                c.addElements((String) list.getItems().get(i));
+            page.addComponent(c);
+            ui.reloadPane();
+            window.close();
+        });
+        
+        window.showAndWait();
+       
+    }
+    
+    public void editDisplay(ListComponent c){
+         window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Edit List Component");
+        labelTitle = new Label();
+        labelTitle.setText("Enter title of list");
+        element = new TextField();
+        title = new TextField();
+        title.setText(c.getTitle());
+        createList = new Label();
+        createList.setText("List: ");
+        list = new ListView();
+        list.getItems().addAll(c.getElements());
+        list.setMinSize(300, 200);    
+        addBtn = new Button("Add Element");
+        removeBtn = new Button("Remove Element");
+        HBox btns = new HBox(15);
+        btns.getChildren().addAll(addBtn, removeBtn);
+        okBtn = new Button("OK");
+        btns.setAlignment(Pos.CENTER);
+        VBox layout = new VBox(25);
+        layout.setPadding(new Insets(10,10,10,10));
+        layout.setAlignment(Pos.CENTER);
+        layout.getChildren().addAll(labelTitle, title, createList, list, element, btns, okBtn);
+        scene = new Scene(layout, 400, 600);
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        layout.getStyleClass().add("dialogList");
+        window.setScene(scene);
+        addBtn.setOnAction(e -> {
+            if(!(element.getText().equals("")) && element.getText() != null ){
+                list.getItems().add(element.getText());
+                element.clear();
+            }
+        });
+        removeBtn.setOnAction(e -> {
+            list.getItems().remove(list.getSelectionModel().getSelectedIndex());
+        });
+        
+        okBtn.setOnAction(e -> {
+            c.setTitle(title.getText());
+            c.getElements().clear();
+            for(int i = 0; i < list.getItems().size(); i++)
+                c.addElements((String) list.getItems().get(i));
+            ui.reloadPane();
+            window.close();
+        });
+        
+        window.showAndWait();
     }
 }

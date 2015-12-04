@@ -569,8 +569,8 @@ public class EPortfolioGeneratorView {
             AddSlideShowDialog d = new AddSlideShowDialog();
             d.display("Add Slide Show");
         } else if (type.equals("List")) {
-            AddListDialog d = new AddListDialog();
-            d.display("Add List");
+            AddListDialog d = new AddListDialog(currentPage, this);
+            d.display();
 
         }//add eportfolio generator into paragraph component
     }

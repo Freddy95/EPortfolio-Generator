@@ -124,7 +124,7 @@ public class AddParagraphDialog {
         labelHeading.setText("Enter a Heading");
         labelParagraph.setText("Enter Text");
         heading = new TextField();
-        heading.setTooltip(new Tooltip("Enter Heading Here"));
+        
         paragraph = new TextArea();
         paragraph.setTooltip(new Tooltip("Enter Text Here"));
         okBtn = new Button("OK");
@@ -135,6 +135,7 @@ public class AddParagraphDialog {
         box.getItems().add("Font 5");
 
         box.setValue("Select Font");
+        heading.setText(p.getHeader());
         paragraph.setText(p.getText());
         heading.setText(p.getHeader());
         elems.getChildren().addAll(box, okBtn);

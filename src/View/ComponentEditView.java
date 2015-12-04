@@ -4,9 +4,11 @@ import Dialog.LinkDialog;
 import Dialog.AddParagraphDialog;
 import Components.Component;
 import Components.ImageComponent;
+import Components.ListComponent;
 import Components.ParagraphComponent;
 import Components.VideoComponent;
 import Dialog.AddImageDialog;
+import Dialog.AddListDialog;
 import Dialog.AddVideoDialog;
 import eportfoliogenerator.EPortfolioGenerator;
 import Page.Page;
@@ -21,6 +23,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -61,6 +64,8 @@ public class ComponentEditView extends HBox {
         if(component.getType().equals("Video")){
             initVideo();
         }
+        if(component.getType().equals("List"))
+            initList();
         setOnMouseClicked(e -> {
             select();
         });
@@ -217,6 +222,22 @@ public class ComponentEditView extends HBox {
         } catch (MalformedURLException ex) {
             Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void initList(){
+        ListComponent list = (ListComponent) component;
+        ListView listView = new ListView();
+        listView.getItems().addAll(list.getElements());
+        listView.setMaxSize(200, 300);
+        Label title = new Label(list.getTitle());
+        title.getStyleClass().add("heading");
+        VBox content = new VBox(15);
+        content.getChildren().addAll(title, listView);
+        getChildren().addAll(content, editComponent);
+        editComponent.setOnAction(e -> {
+            AddListDialog d = new AddListDialog(page, ui);
+            d.editDisplay(list);
+        });
     }
 
     public void select() {
