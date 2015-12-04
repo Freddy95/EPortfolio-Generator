@@ -1,5 +1,6 @@
 package View;
 
+import Dialog.AddSlideShowDialog;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,7 +42,7 @@ public class SlideEditView extends HBox {
      *
      * @param caption The slide to be edited by this component.
      */
-    public SlideEditView(File f, VBox slideEditorPane) {
+    public SlideEditView(File f, VBox slideEditorPane, AddSlideShowDialog d) {
 	// FIRST SELECT THE CSS STYLE CLASS FOR THIS CONTAINER
         //this.getStyleClass().add(CSS_CLASS_SLIDE_EDIT_VIEW);
 
@@ -80,6 +81,7 @@ public class SlideEditView extends HBox {
                     v.deselect();
                 }
                 select();
+                d.updateButtons();
             });
 
             getStyleClass().add("slideEditView");
@@ -108,7 +110,7 @@ public class SlideEditView extends HBox {
     public void deselect() {
         isSelected = false;
         DropShadow ds = new DropShadow();
-        ds.setColor(Color.AQUA);
+        ds.setColor(Color.WHITE);
         ds.setOffsetX(0);
         ds.setOffsetY(0);
 
