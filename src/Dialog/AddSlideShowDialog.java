@@ -45,14 +45,14 @@ public class AddSlideShowDialog {
        ui = initUi;
    } 
    
-    public void display() {
-        btns = new HBox(15);
+   public void initDisplay(){
+       btns = new HBox(15);
         slideEditorPane = new VBox(15);
         scrollPane = new ScrollPane(slideEditorPane);
         slideEditorPane.setMinHeight(200);
         VBox layout = new VBox(20);
         okBtn = new Button("OK");
-        okBtn.setDisable(true);
+        
         addSlide = new Button("Add Slide");
         removeSlide = new Button("Remove Slide");
         labelTitle = new Label("Enter Slide Show Title");
@@ -67,12 +67,10 @@ public class AddSlideShowDialog {
         window.initModality(Modality.APPLICATION_MODAL);
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialog");
-        window.setTitle("Add Slide Show");
-
-        removeSlide.setDisable(true);
-        
-
-        addSlide.setOnAction(e -> {
+   }
+   
+   public void initHandlers(){
+       addSlide.setOnAction(e -> {
             SelectionController c = new SelectionController();
             file = c.processSelectImage();
             if (file != null) {
@@ -130,9 +128,104 @@ public class AddSlideShowDialog {
             ui.reloadPane();
             window.close();
         });
+   }
+   
+    public void display() {
+        initDisplay();
+        window.setTitle("Add Slide Show");
+        okBtn.setDisable(true);
+        removeSlide.setDisable(true);
+        
+
+        initHandlers();
         
         window.showAndWait();
 
+    }
+    
+    public void editDisplay(SlideShowComponent slideShow){
+        initDisplay();
+        window.setTitle("Edit Slide Show");
+        slideShowTitle.setText(slideShow.getTitle());
+        for(int i = 0; i < slideShow.getSlides().size(); i++){
+            Slide s = slideShow.getSlides().get(i);
+            
+            
+            File file = new File(s.getPath());
+           
+            SlideEditView v =  new SlideEditView(file, slideEditorPane);
+            v.setCaption(s.getCaption());
+            if(i == 0)
+                v.select();
+        }
+        okBtn.setDisable(false);
+        removeSlide.setDisable(false);
+        initEditHandlers(slideShow);
+        window.showAndWait();
+    }
+    
+    
+    public void initEditHandlers(SlideShowComponent slideShow){
+        addSlide.setOnAction(e -> {
+            SelectionController c = new SelectionController();
+            file = c.processSelectImage();
+            if (file != null) {
+                try {
+                    // GET AND SET THE IMAGE
+                    SlideEditView v = new SlideEditView(file, slideEditorPane);
+                    for (int i = 0; i < slideEditorPane.getChildren().size(); i++) {
+                        SlideEditView x = (SlideEditView) slideEditorPane.getChildren().get(i);
+                        x.deselect();
+                    }
+                    v.select();
+                    removeSlide.setDisable(false);
+                    okBtn.setDisable(false);
+                } catch (Exception a) {
+                    // @todo - use Error handler to respond to missing image
+                }
+
+            }
+        });
+
+        removeSlide.setOnAction(e -> {
+            for (int i = 0; i < slideEditorPane.getChildren().size(); i++) {
+                SlideEditView x = (SlideEditView) slideEditorPane.getChildren().get(i);
+                if(x.isSelected()){
+                    slideEditorPane.getChildren().remove(i);
+                    if(slideEditorPane.getChildren().size() == 0){
+                        removeSlide.setDisable(true);
+                        okBtn.setDisable(true);
+                    }
+                    else if(i == slideEditorPane.getChildren().size()){
+                        SlideEditView y = (SlideEditView) slideEditorPane.getChildren().get(i-1);
+                        y.select();
+                    }else{
+                        SlideEditView y = (SlideEditView) slideEditorPane.getChildren().get(i);
+                        y.select();
+                    }
+                               
+                    break;
+                }
+            }
+        });
+        
+        okBtn.setOnAction(e -> {
+            //remove all current slides
+            slideShow.getSlides().clear();
+            slideShow.setTitle(slideShowTitle.getText());
+            //add slides
+             for(int i = 0; i < slideEditorPane.getChildren().size(); i++){
+                SlideEditView v = (SlideEditView) slideEditorPane.getChildren().get(i);
+                Slide slide = new Slide();
+                slide.setCaption(v.getCaption());
+                slide.setPath(v.getImageFilePath());
+                slide.setFileName(v.getImageFileName());
+                slideShow.addSlide(slide);
+            }
+            
+            ui.reloadPane();
+            window.close();
+        });
     }
 
 }

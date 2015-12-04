@@ -11,6 +11,7 @@ import Components.SlideShowComponent;
 import Components.VideoComponent;
 import Dialog.AddImageDialog;
 import Dialog.AddListDialog;
+import Dialog.AddSlideShowDialog;
 import Dialog.AddVideoDialog;
 import eportfoliogenerator.EPortfolioGenerator;
 import Page.Page;
@@ -327,8 +328,13 @@ public class ComponentEditView extends HBox {
                     Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
+            editComponent.setOnAction(e->{
+                AddSlideShowDialog d = new AddSlideShowDialog(page, ui);
+                d.editDisplay(slideShow); 
+            });
             content.getChildren().addAll(title, view, caption, btns);
             getChildren().addAll(content, editComponent);
+            
         } catch (MalformedURLException ex) {
             Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
         }

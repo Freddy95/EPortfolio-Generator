@@ -134,4 +134,5 @@
 
 .caption{
     -fx-font-size: 20;
+    -fx-text-alignment: center;
 }
