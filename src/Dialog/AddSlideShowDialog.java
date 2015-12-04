@@ -1,5 +1,6 @@
 package Dialog;
 
+import Components.Component;
 import Components.Slide;
 import Components.SlideShowComponent;
 import Controller.SelectionController;
@@ -8,6 +9,7 @@ import View.EPortfolioGeneratorView;
 import View.SlideEditView;
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -143,12 +145,13 @@ public class AddSlideShowDialog {
             }
 
             page.addComponent(slideShow);
+            select(slideShow);
             ui.reloadPane();
             window.close();
         });
 
         moveUpButton.setOnAction(e -> {
-            for (int i = 0; i < slideEditorPane.getChildren().size(); i++) {
+            for (int i = 1; i < slideEditorPane.getChildren().size(); i++) {
                 SlideEditView v = (SlideEditView) slideEditorPane.getChildren().get(i);
                 if (v.isSelected()) {
                     SlideEditView u = (SlideEditView) slideEditorPane.getChildren().get(i - 1);
@@ -277,13 +280,13 @@ public class AddSlideShowDialog {
                 slide.setFileName(v.getImageFileName());
                 slideShow.addSlide(slide);
             }
-
+            select(slideShow);
             ui.reloadPane();
             window.close();
         });
 
       moveUpButton.setOnAction(e -> {
-            for (int i = 0; i < slideEditorPane.getChildren().size(); i++) {
+            for (int i = 1; i < slideEditorPane.getChildren().size(); i++) {
                 SlideEditView v = (SlideEditView) slideEditorPane.getChildren().get(i);
                 if (v.isSelected()) {
                     SlideEditView u = (SlideEditView) slideEditorPane.getChildren().get(i - 1);
@@ -298,7 +301,7 @@ public class AddSlideShowDialog {
             }
         });
         moveDownButton.setOnAction(e -> {
-            for (int i = 0; i < slideEditorPane.getChildren().size(); i++) {
+            for (int i = 0; i < slideEditorPane.getChildren().size()-1; i++) {
                 SlideEditView v = (SlideEditView) slideEditorPane.getChildren().get(i);
                 if (v.isSelected()) {
                     SlideEditView u = (SlideEditView) slideEditorPane.getChildren().get(i + 1);
@@ -336,5 +339,13 @@ public class AddSlideShowDialog {
                 }
             }
         }
+    }
+    
+     public void select(Component c){
+        List<Component> views = page.getComponents();
+            for(int i = 0; i < views.size(); i++){
+                views.get(i).setSelected(false);   
+            }
+          c.setSelected(true);
     }
 }

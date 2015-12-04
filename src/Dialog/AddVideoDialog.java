@@ -1,5 +1,6 @@
 package Dialog;
 
+import Components.Component;
 import Components.VideoComponent;
 import Controller.SelectionController;
 import Page.Page;
@@ -7,6 +8,7 @@ import View.EPortfolioGeneratorView;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
@@ -114,6 +116,7 @@ public class AddVideoDialog {
             video.setWidth(width.getText());
             video.setHeight(height.getText());
             page.addComponent(video);
+            select(video);
             ui.reloadPane();
             window.close();
         });
@@ -189,7 +192,7 @@ public class AddVideoDialog {
             videoComponent.setFileName(file.getName());
             videoComponent.setWidth(width.getText());
             videoComponent.setHeight(height.getText());
-  
+            select(videoComponent);
             ui.reloadPane();
             window.close();
         });
@@ -197,4 +200,12 @@ public class AddVideoDialog {
         window.show();
     }
 
+    
+     public void select(Component c){
+        List<Component> views = page.getComponents();
+            for(int i = 0; i < views.size(); i++){
+                views.get(i).setSelected(false);   
+            }
+          c.setSelected(true);
+    }
 }

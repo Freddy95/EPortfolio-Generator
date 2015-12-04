@@ -1,10 +1,12 @@
 package Dialog;
 
+import Components.Component;
 import Controller.SelectionController;
 import Page.Page;
 import View.EPortfolioGeneratorView;
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -90,4 +92,6 @@ public class AddBannerImageDialog {
     public void close() {
         window.close();
     }
+    
+    
 }

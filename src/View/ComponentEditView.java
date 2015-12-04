@@ -20,9 +20,11 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
@@ -47,7 +49,6 @@ public class ComponentEditView extends HBox {
 
     Component component;
     Button editComponent;
-    boolean selected;
     Page page;
     EPortfolioGeneratorView ui;
     int index;
@@ -60,6 +61,8 @@ public class ComponentEditView extends HBox {
         editComponent = new Button("Edit");
         editComponent.getStyleClass().add("editButton");
         component = comp;
+         ui = initUi;
+         
         if (component.getType().equals("Paragraph")) {
             initParagraph();
         }
@@ -78,8 +81,8 @@ public class ComponentEditView extends HBox {
         if (component.getType().equals("Slide Show")) {
            initSlideShow();
         }
-
-        ui = initUi;
+        initHandler();
+       
     }
 
     /**
@@ -347,7 +350,6 @@ public class ComponentEditView extends HBox {
         ds.setOffsetX(2.0);
         ds.setOffsetY(2.0);
         setEffect(ds);
-        setSelected(true);
     }
 
     public boolean isSelected() {
@@ -375,6 +377,26 @@ public class ComponentEditView extends HBox {
         }
 
         return i;
+    }
+    
+    public void initHandler(){
+        setOnMouseClicked(e->{
+            
+            List<Component> views = page.getComponents();
+            for(int i = 0; i < views.size(); i++){
+                views.get(i).setSelected(false);   
+            }
+            component.setSelected(true);
+            ui.reloadPane();
+        });
+    }
+    
+    public void currentComponent(){
+        List<Component> views = page.getComponents();
+            for(int i = 0; i < views.size(); i++){
+                views.get(i).setSelected(false);   
+            }
+            component.setSelected(true);
     }
 
 }

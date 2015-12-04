@@ -1,5 +1,6 @@
 package Dialog;
 
+import Components.Component;
 import Components.ImageComponent;
 import Controller.SelectionController;
 import Page.Page;
@@ -7,6 +8,7 @@ import View.EPortfolioGeneratorView;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
@@ -171,6 +173,7 @@ public class AddImageDialog {
                 imageComponent.setPath(file.getPath());
                 imageComponent.setWidth(width.getText());
                 imageComponent.setHeight(height.getText());
+                select(imageComponent);
                 ui.reloadPane();
             } catch (MalformedURLException ex) {
                 Logger.getLogger(AddImageDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -216,6 +219,7 @@ public class AddImageDialog {
                     position.getValue(), width.getText(), height.getText());
 
             System.out.println("URL: " + url.toExternalForm());
+            select(comp);
             page.addComponent(comp);
 
         } catch (Exception ex) {
@@ -225,5 +229,13 @@ public class AddImageDialog {
 
     public void close() {
         window.close();
+    }
+    
+    public void select(Component c){
+        List<Component> views = page.getComponents();
+            for(int i = 0; i < views.size(); i++){
+                views.get(i).setSelected(false);   
+            }
+          c.setSelected(true);
     }
 }

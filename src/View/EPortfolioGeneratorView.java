@@ -17,7 +17,9 @@ import eportfoliogenerator.EPortfolio;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
@@ -330,16 +332,18 @@ public class EPortfolioGeneratorView {
         if(bannerImage != null)
             pageEditor.getChildren().add(bannerImage);
         pageEditorView.getChildren().add(pageEditor);
+        ComponentEditView view = null;
         for (Component b : currentPage.getComponents()) {
-            ComponentEditView view = new ComponentEditView(b, currentPage, this);
+             view = new ComponentEditView(b, currentPage, this);
             view.setMaxWidth(pageEditorView.getWidth());
             pageEditorView.getChildren().add(view);
-            if (b.isSelected()) {
+            if(view.isSelected())
                 view.select();
-            } else {
+            else
                 view.deselect();
-            }
         }
+        
+        
     }
 
     public void initSiteToolbarHandlers() {
@@ -573,5 +577,9 @@ public class EPortfolioGeneratorView {
 
         }//add slide show component
     }
-
+    
+    
+    public void removeComponents(){
+        pageEditorView.getChildren().clear();
+    }
 }

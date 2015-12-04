@@ -1,9 +1,11 @@
 
 package Dialog;
 
+import Components.Component;
 import Components.ListComponent;
 import Page.Page;
 import View.EPortfolioGeneratorView;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -79,6 +81,7 @@ public class AddListDialog {
             ListComponent c = new ListComponent(title.getText());
             for(int i = 0; i < list.getItems().size(); i++)
                 c.addElements((String) list.getItems().get(i));
+            select(c);
             page.addComponent(c);
             ui.reloadPane();
             window.close();
@@ -131,10 +134,19 @@ public class AddListDialog {
             c.getElements().clear();
             for(int i = 0; i < list.getItems().size(); i++)
                 c.addElements((String) list.getItems().get(i));
+            select(c);
             ui.reloadPane();
             window.close();
         });
         
         window.showAndWait();
+    }
+    
+    public void select(Component c){
+        List<Component> views = page.getComponents();
+            for(int i = 0; i < views.size(); i++){
+                views.get(i).setSelected(false);   
+            }
+          c.setSelected(true);
     }
 }

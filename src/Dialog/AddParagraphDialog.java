@@ -1,11 +1,13 @@
 package Dialog;
 
 
+import Components.Component;
 import Components.ParagraphComponent;
 import Page.Page;
 import eportfoliogenerator.EPortfolio;
 import View.EPortfolioGeneratorView;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -97,6 +99,7 @@ public class AddParagraphDialog {
         okBtn.setOnAction(e->{
            comp = new ParagraphComponent(heading.getText(), paragraph.getText(), box.getValue());
            page.addComponent(comp);
+           select(comp);
            ui.reloadPane();
            window.close();
        });
@@ -153,6 +156,7 @@ public class AddParagraphDialog {
             p.setText(paragraph.getText());
             p.setHeader(heading.getText());
             p.setFont(box.getValue());
+            p.setSelected(true);
             ui.reloadPane();
            window.close();
        });
@@ -166,6 +170,12 @@ public class AddParagraphDialog {
     public ParagraphComponent getComponent(){
         return comp;
     }
-    
+     public void select(Component c){
+        List<Component> views = page.getComponents();
+            for(int i = 0; i < views.size(); i++){
+                views.get(i).setSelected(false);   
+            }
+          c.setSelected(true);
+    }
   
 }
