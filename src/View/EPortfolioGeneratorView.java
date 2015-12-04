@@ -307,16 +307,7 @@ public class EPortfolioGeneratorView {
     public double getWidth() {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-//        System.out.println("Width: " + bounds.getWidth());
-//        System.out.println("left Width: " + siteToolbar.getMaxWidth());
-//        workSpaceToolbar.maxWidthProperty();
-// 
-//        System.out.println("right Width: " + workSpaceToolbar.getMaxWidth());
-//        
-//        width = bounds.getWidth() - (siteToolbar.getWidth()*4.3);
-//        width -= workSpaceToolbar.getWidth();
-//        System.out.println("Width: " + width);
-//        width = bounds.getWidth() * .8;
+
         width = bounds.getWidth();
         return width;
     }
@@ -326,6 +317,7 @@ public class EPortfolioGeneratorView {
      */
     public void reloadPane() {
         // components = new VBox();
+        removeDisabled();
         pageEditorView.getChildren().clear();
         pageEditor.getChildren().clear();
         pageEditor.getChildren().add(studentName);
@@ -430,6 +422,8 @@ public class EPortfolioGeneratorView {
                 addComponent(dia.getValue());
                 dia.close();
             });
+            
+            
         });
 
         selectFont.setOnAction(e -> {
@@ -490,12 +484,28 @@ public class EPortfolioGeneratorView {
         });
 
         removeComponent.setOnAction(e -> {
-            RemoveComponentDialog d = new RemoveComponentDialog();
-            d.display("Remove Component");
+            int size = currentPage.getComponents().size();
+            for(int i = 0; i < size; i++){
+                Component c = currentPage.getComponents().get(i);
+                if(c.isSelected()){
+                    ComponentEditView v = new ComponentEditView(c, currentPage, this);
+                    pageEditorView.getChildren().remove(v);
+                    currentPage.getComponents().remove(c);
+                    size--;
+                    
+                    if(i == size){
+                        i--;
+                    }
+                    if(size == 0);
+                    else
+                        currentPage.getComponents().get(i).setSelected(true);
+                    reloadPane();
+                    
+                }
+            }
         });
         setFooter.setOnAction(e -> {
-            SetDialog d = new SetDialog();
-            d.display("Enter Footer Text", "Enter Footer Text");
+            
         });
         selectBannerImage.setOnAction(e -> {
             AddBannerImageDialog d = new AddBannerImageDialog(currentPage, this);
@@ -581,5 +591,17 @@ public class EPortfolioGeneratorView {
     
     public void removeComponents(){
         pageEditorView.getChildren().clear();
+    }
+    
+    public void removeDisabled(){
+         if(currentPage.getComponents().isEmpty())
+              removeComponent.setDisable(true);
+        for(int i = 0; i < currentPage.getComponents().size(); i++){
+            if(currentPage.getComponents().get(i).isSelected()){
+                removeComponent.setDisable(false);
+                return;
+            }
+        }
+        removeComponent.setDisable(true);
     }
 }
