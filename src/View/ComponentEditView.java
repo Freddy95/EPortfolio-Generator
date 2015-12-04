@@ -6,6 +6,8 @@ import Components.Component;
 import Components.ImageComponent;
 import Components.ListComponent;
 import Components.ParagraphComponent;
+import Components.Slide;
+import Components.SlideShowComponent;
 import Components.VideoComponent;
 import Dialog.AddImageDialog;
 import Dialog.AddListDialog;
@@ -24,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -46,6 +49,7 @@ public class ComponentEditView extends HBox {
     boolean selected;
     Page page;
     EPortfolioGeneratorView ui;
+    int index;
 
     public ComponentEditView(Component comp, Page p, EPortfolioGeneratorView initUi) {
         getStyleClass().add("componentEditView");
@@ -58,20 +62,25 @@ public class ComponentEditView extends HBox {
         if (component.getType().equals("Paragraph")) {
             initParagraph();
         }
+
         if (component.getType().equals("Image")) {
             initImage();
         }
-        if(component.getType().equals("Video")){
+
+        if (component.getType().equals("Video")) {
             initVideo();
         }
-        if(component.getType().equals("List"))
+
+        if (component.getType().equals("List")) {
             initList();
-        setOnMouseClicked(e -> {
-            select();
-        });
+        }
+        if (component.getType().equals("Slide Show")) {
+           initSlideShow();
+        }
 
         ui = initUi;
     }
+
     /**
      * Initialize a paragraph component onto the page edit space.
      */
@@ -91,7 +100,7 @@ public class ComponentEditView extends HBox {
         text.setMinHeight(100);
         text.setMaxHeight(500);
         text.setWrapText(true);
-        if (c.getFont() != null || c.getFont() != "") {
+        if (c.getFont() != null || !(c.getFont().equals(""))) {
             heading.getStyleClass().add(c.getFont());
             text.getStyleClass().add(c.getFont());
         } else {
@@ -145,6 +154,7 @@ public class ComponentEditView extends HBox {
         });
 
     }
+
     /**
      * Initializes an image component onto the page edit space.
      */
@@ -180,51 +190,51 @@ public class ComponentEditView extends HBox {
             Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Initializes a video component onto the page edit space.
      */
     public void initVideo() {
         VideoComponent video = (VideoComponent) component;
         File file = new File(video.getPath());
-        
+
         try {
-            URL url =  file.toURI().toURL();
-        
-        Media media = new Media(url.toExternalForm());
-        MediaPlayer player = new MediaPlayer(media);
-        MediaView view = new MediaView(player);
-        view.setFitWidth(video.getWidth());
-        view.setFitHeight(video.getHeight());
-        VBox play = new VBox(20);
-        Button playPause = new Button();
-        Image playImage = new Image("file:icons/play.png");
-        Image pauseImage = new Image("file:icons/pause.png");
-        playPause.setGraphic(new ImageView(playImage));
-        playPause.setOnAction(e -> {
-           ImageView v = (ImageView) playPause.getGraphic();
-           if(v.getImage().equals(playImage)){
-               player.play();
-               playPause.setGraphic(new ImageView(pauseImage));
-           }else{
-               player.pause();
-               playPause.setGraphic(new ImageView(playImage));
-           }
-        });
-        play.setAlignment(Pos.CENTER);
-        play.getChildren().addAll(view, playPause);
-        editComponent.setOnAction(e -> {
-            AddVideoDialog d = new AddVideoDialog(page, ui);
-            d.editDisplay(video);
-        });
-        
-        getChildren().addAll(play, editComponent);
+            URL url = file.toURI().toURL();
+
+            Media media = new Media(url.toExternalForm());
+            MediaPlayer player = new MediaPlayer(media);
+            MediaView view = new MediaView(player);
+            view.setFitWidth(video.getWidth());
+            view.setFitHeight(video.getHeight());
+            VBox play = new VBox(20);
+            Button playPause = new Button();
+            Image playImage = new Image("file:icons/play.png");
+            Image pauseImage = new Image("file:icons/pause.png");
+            playPause.setGraphic(new ImageView(playImage));
+            playPause.setOnAction(e -> {
+                ImageView v = (ImageView) playPause.getGraphic();
+                if (v.getImage().equals(playImage)) {
+                    player.play();
+                    playPause.setGraphic(new ImageView(pauseImage));
+                } else {
+                    player.pause();
+                    playPause.setGraphic(new ImageView(playImage));
+                }
+            });
+            play.setAlignment(Pos.CENTER);
+            play.getChildren().addAll(view, playPause);
+            editComponent.setOnAction(e -> {
+                AddVideoDialog d = new AddVideoDialog(page, ui);
+                d.editDisplay(video);
+            });
+
+            getChildren().addAll(play, editComponent);
         } catch (MalformedURLException ex) {
             Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void initList(){
+
+    public void initList() {
         ListComponent list = (ListComponent) component;
         ListView listView = new ListView();
         listView.getItems().addAll(list.getElements());
@@ -238,6 +248,90 @@ public class ComponentEditView extends HBox {
             AddListDialog d = new AddListDialog(page, ui);
             d.editDisplay(list);
         });
+    }
+
+    public void initSlideShow() {
+        SlideShowComponent slideShow = (SlideShowComponent) component;
+        final int size = slideShow.getSlides().size();
+        index = 0;
+        ImageView view = new ImageView();
+
+        Slide initSlide = slideShow.getSlides().get(0);
+        File file = new File(initSlide.getPath());
+        Label title = new Label(slideShow.getTitle());
+        title.getStyleClass().add("heading");
+        
+        HBox btns = new HBox(30);
+        URL url;
+        VBox content = new VBox(20);
+        try {
+            url = file.toURI().toURL();
+
+            Image image = new Image(url.toExternalForm());
+            view.setImage(image);
+            view.setFitWidth(500);
+            view.setPreserveRatio(true);
+            Label caption = new Label();
+            caption.setAlignment(Pos.CENTER);
+            caption.getStyleClass().add("caption");
+            caption.setText(initSlide.getCaption());
+            Button nextSlide = new Button();
+            Button previousSlide = new Button();
+            Image next = new Image("file:icons/rightArrow.png");
+            Image previous = new Image("file:icons/leftArrow.png");
+            nextSlide.setGraphic(new ImageView(next));
+            previousSlide.setGraphic(new ImageView(previous));
+            btns.getChildren().addAll(previousSlide, nextSlide);
+            btns.setAlignment(Pos.CENTER);
+            nextSlide.setOnAction(e -> {
+                index++;
+
+                if (index == size) {
+                    index = 0;
+                }
+                view.setImage(null);
+                Slide slide = slideShow.getSlides().get(index);
+                File file2 = new File(slide.getPath());
+                URL url2;
+                try {
+                    url2 = file2.toURI().toURL();
+
+                    Image image2 = new Image(url2.toExternalForm());
+                    view.setImage(image2);
+                    view.setFitWidth(500);
+                    view.setPreserveRatio(true);
+                    caption.setText(slide.getCaption());
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            previousSlide.setOnAction(e -> {
+                index--;
+
+                if (index < 0) {
+                    index = size - 1;
+                }
+
+                Slide slide = slideShow.getSlides().get(index);
+                File file2 = new File(slide.getPath());
+                URL url2;
+                try {
+                    url2 = file2.toURI().toURL();
+
+                    Image image2 = new Image(url2.toExternalForm());
+                    view.setImage(image2);
+                    view.setFitWidth(500);
+                    view.setPreserveRatio(true);
+                    caption.setText(slide.getCaption());
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            content.getChildren().addAll(title, view, caption, btns);
+            getChildren().addAll(content, editComponent);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void select() {

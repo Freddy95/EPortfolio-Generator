@@ -419,7 +419,6 @@ public class EPortfolioGeneratorView {
             components.add("Video");
             components.add("List");
             components.add("Slide Show");
-            components.add("HyperLink Text");
             SelectDialog dia = new SelectDialog(components);
             dia.display("Add Component", "Select Type of"
                     + " Component");
@@ -566,13 +565,13 @@ public class EPortfolioGeneratorView {
             AddVideoDialog d = new AddVideoDialog(currentPage, this);
             d.display("Add Video");
         } else if (type.equals("Slide Show")) {
-            AddSlideShowDialog d = new AddSlideShowDialog();
-            d.display("Add Slide Show");
+            AddSlideShowDialog d = new AddSlideShowDialog(currentPage, this);
+            d.display();
         } else if (type.equals("List")) {
             AddListDialog d = new AddListDialog(currentPage, this);
             d.display();
 
-        }//add eportfolio generator into paragraph component
+        }//add slide show component
     }
 
 }

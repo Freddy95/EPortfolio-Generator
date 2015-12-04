@@ -1,8 +1,10 @@
-
 package View;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -16,135 +18,114 @@ import javafx.scene.paint.Color;
  *
  * @author Freddy Estevez
  */
-
 public class SlideEditView extends HBox {
     // SLIDE THIS COMPONENT EDITS
     //Slide slide;
 
-    
     Boolean isSelected;
     // DISPLAYS THE IMAGE FOR THIS SLIDE
     ImageView imageSelectionView;
     //static SlideShowModel model;
 
-   
-    
     // CONTROLS FOR EDITING THE CAPTION
     VBox captionVBox;
     Label captionLabel;
     TextField captionTextField;
-    
+    File file;
+
     // PROVIDES RESPONSES FOR IMAGE SELECTION
     //ImageSelectionController imageController;
-
     /**
-     * THis constructor initializes the full UI for this component, using
-     * the initSlide data for initializing values./
-     * 
+     * THis constructor initializes the full UI for this component, using the
+     * initSlide data for initializing values./
+     *
      * @param caption The slide to be edited by this component.
      */
-    public SlideEditView(String caption) {
+    public SlideEditView(File f, VBox slideEditorPane) {
 	// FIRST SELECT THE CSS STYLE CLASS FOR THIS CONTAINER
-	//this.getStyleClass().add(CSS_CLASS_SLIDE_EDIT_VIEW);
-	
-	// KEEP THE SLIDE FOR LATER
-	//slide = initSlide;
-	
-	// MAKE SURE WE ARE DISPLAYING THE PROPER IMAGE
-	imageSelectionView = new ImageView();
-        Image image = new Image("file:image.jpg");
-        imageSelectionView.setImage(image);
-        imageSelectionView.setFitWidth(200);
-        imageSelectionView.setPreserveRatio(true);
-        imageSelectionView.setSmooth(true);
-        imageSelectionView.setCache(true);
-	//updateSlideImage();
-        setSpacing(20);
-	// SETUP THE CAPTION CONTROLS
-	captionVBox = new VBox(15);
-	//PropertiesManager props = PropertiesManager.getPropertiesManager();
-	captionLabel = new Label("Enter Caption");
-	captionTextField = new TextField();
-        captionTextField.setText(caption);
-	captionVBox.getChildren().add(captionLabel);
-	captionVBox.getChildren().add(captionTextField);
-//        captionTextField.setOnAction(e -> {
-//            slide.setCaption(captionTextField.getText());
-//        });
-//        captionTextField.setOnKeyTyped(e -> {
-//            model.changed();
-//        });
-	// LAY EVERYTHING OUT INSIDE THIS COMPONENT
-	getChildren().add(imageSelectionView);
-	getChildren().add(captionVBox);
+        //this.getStyleClass().add(CSS_CLASS_SLIDE_EDIT_VIEW);
 
-	// SETUP THE EVENT HANDLERS
-//	imageController = new ImageSelectionController();
-//	imageSelectionView.setOnMousePressed(e -> {
-//            if(!slide.getImageFileName().equals(DEFAULT_SLIDE_IMAGE))
-//                model.setSelectedSlide(slide);
-//            else{
-//             imageController.processSelectImage(slide, this);
-//             model.setSelectedSlide(slide);
-//             model.changed();
-//            }
-//	});
-//        isSelected = true;
-        getStyleClass().add("slideEditView");
+        // KEEP THE SLIDE FOR LATER
+        //slide = initSlide;
+        // MAKE SURE WE ARE DISPLAYING THE PROPER IMAGE
+        this.file = f;
+        imageSelectionView = new ImageView();
+        URL fileURL;
+        try {
+            fileURL = file.toURI().toURL();
+
+            Image image = new Image(fileURL.toExternalForm());
+            imageSelectionView.setImage(image);
+            imageSelectionView.setFitWidth(300);
+            imageSelectionView.setPreserveRatio(true);
+            imageSelectionView.setSmooth(true);
+            imageSelectionView.setCache(true);
+            //updateSlideImage();
+            setSpacing(20);
+            // SETUP THE CAPTION CONTROLS
+            captionVBox = new VBox(15);
+            //PropertiesManager props = PropertiesManager.getPropertiesManager();
+            captionLabel = new Label("Enter Caption");
+            captionTextField = new TextField();
+            captionVBox.getChildren().add(captionLabel);
+            captionVBox.getChildren().add(captionTextField);
+            // LAY EVERYTHING OUT INSIDE THIS COMPONENT
+            getChildren().add(imageSelectionView);
+            getChildren().add(captionVBox);
+
+            // SETUP THE EVENT HANDLERS
+            setOnMouseClicked(e -> {
+                for (int i = 0; i < slideEditorPane.getChildren().size(); i++) {
+                    SlideEditView v = (SlideEditView) slideEditorPane.getChildren().get(i);
+                    v.deselect();
+                }
+                select();
+            });
+
+            getStyleClass().add("slideEditView");
+            slideEditorPane.getChildren().add(this);
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(SlideEditView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void setCaption(String s) {
+        captionTextField.setText(s);
+    }
+    public String getCaption(){
+        return captionTextField.getText();
     }
     
-//     public static void setModel(SlideShowModel model) {
-//        SlideEditView.model = model;
-//    }
-    /**
-     * This function gets the image for the slide and uses it to
-     * update the image displayed.
-     */
-//    public void updateSlideImage() {
-//	String imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
-//	File file = new File(imagePath);
-//	try {
-//	    // GET AND SET THE IMAGE
-//	    URL fileURL = file.toURI().toURL();
-//	    Image slideImage = new Image(fileURL.toExternalForm());
-//	    imageSelectionView.setImage(slideImage);
-//            
-//	    // AND RESIZE IT
-//	    double scaledWidth = DEFAULT_THUMBNAIL_WIDTH;
-//	    double perc = scaledWidth / slideImage.getWidth();
-//	    double scaledHeight = slideImage.getHeight() * perc;
-//	    imageSelectionView.setFitWidth(scaledWidth);
-//	    imageSelectionView.setFitHeight(scaledHeight);
-//	} catch (Exception e) {
-//	    // @todo - use Error handler to respond to missing image
-//	}
-//    }    
-//    
-//    public void saveCaption(){
-//        slide.setCaption(captionTextField.getText());
-//    }
-//    
-//    public void selectAnImage(Slide slide){
-//        DropShadow ds = new DropShadow();
-//        ds.setColor(Color.RED);
-//        ds.setOffsetX(2.0);
-//        ds.setOffsetY(2.0);
-//        imageSelectionView.setEffect(ds);
-//        
-//    }
-//    public void deselect(Slide slide){
-//        DropShadow ds = new DropShadow();
-//        ds.setColor(Color.AQUA);
-//        ds.setOffsetX(0);
-//        ds.setOffsetY(0);
-//        imageSelectionView.setEffect(ds);
-//    }
-//    
-//    public Slide getSlide() {
-//        return slide;
-//    }
-//    
-//    public ImageView getImage(){
-//        return imageSelectionView;
-//    }
+    public String getImageFilePath(){
+        return file.getPath();
+    }
+    public String getImageFileName(){
+        return file.getName();
+    }
+
+    public void deselect() {
+        isSelected = false;
+        DropShadow ds = new DropShadow();
+        ds.setColor(Color.AQUA);
+        ds.setOffsetX(0);
+        ds.setOffsetY(0);
+
+        setEffect(ds);
+
+    }
+
+    public void select() {
+        isSelected = true;
+        DropShadow ds = new DropShadow();
+        ds.setColor(Color.RED);
+        ds.setOffsetX(2);
+        ds.setOffsetY(2);
+        setEffect(ds);
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
 }

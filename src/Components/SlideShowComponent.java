@@ -10,6 +10,12 @@ import java.util.ArrayList;
 public class SlideShowComponent extends Component{
     String title;
     ArrayList<Slide> slides;
+    
+    public SlideShowComponent(String title){
+        slides = new ArrayList<>();
+        this.title = title;
+        super.setType("Slide Show");
+    }
 
     public String getTitle() {
         return title;

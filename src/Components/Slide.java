@@ -14,10 +14,8 @@ public class Slide {
         return path;
     }
     
-    public Slide(String path, String fileName, String caption) {
-        this.path = path;
-        this.caption = caption;
-        this.fileName = fileName;
+    public Slide() {
+        
     }
 
     public void setPath(String path) {
