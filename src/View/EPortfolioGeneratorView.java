@@ -563,7 +563,7 @@ public class EPortfolioGeneratorView {
             AddImageDialog d = new AddImageDialog(currentPage, this);
             d.display("Add Image");
         } else if (type.equals("Video")) {
-            AddVideoDialog d = new AddVideoDialog();
+            AddVideoDialog d = new AddVideoDialog(currentPage, this);
             d.display("Add Video");
         } else if (type.equals("Slide Show")) {
             AddSlideShowDialog d = new AddSlideShowDialog();

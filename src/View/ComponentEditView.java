@@ -5,7 +5,9 @@ import Dialog.AddParagraphDialog;
 import Components.Component;
 import Components.ImageComponent;
 import Components.ParagraphComponent;
+import Components.VideoComponent;
 import Dialog.AddImageDialog;
+import Dialog.AddVideoDialog;
 import eportfoliogenerator.EPortfolioGenerator;
 import Page.Page;
 import View.EPortfolioGeneratorView;
@@ -15,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
@@ -24,6 +27,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 
 /**
@@ -52,13 +58,18 @@ public class ComponentEditView extends HBox {
         if (component.getType().equals("Image")) {
             initImage();
         }
-        setOnMouseClicked( e -> {
+        if(component.getType().equals("Video")){
+            initVideo();
+        }
+        setOnMouseClicked(e -> {
             select();
         });
-        
+
         ui = initUi;
     }
-
+    /**
+     * Initialize a paragraph component onto the page edit space.
+     */
     public void initParagraph() {
         VBox btns = new VBox(10);
         Button addLink = new Button("Add Link");
@@ -75,14 +86,14 @@ public class ComponentEditView extends HBox {
         text.setMinHeight(100);
         text.setMaxHeight(500);
         text.setWrapText(true);
-        if(c.getFont() != null || c.getFont() != ""){
+        if (c.getFont() != null || c.getFont() != "") {
             heading.getStyleClass().add(c.getFont());
-            text.getStyleClass().add(c.getFont());       
-        }else{
+            text.getStyleClass().add(c.getFont());
+        } else {
             heading.getStyleClass().add(page.getFont());
-            text.getStyleClass().add(page.getFont()); 
+            text.getStyleClass().add(page.getFont());
         }
-        
+
         para.getChildren().addAll(heading, text);
         getChildren().add(para);
         btns.getChildren().add(editComponent);
@@ -93,42 +104,45 @@ public class ComponentEditView extends HBox {
             AddParagraphDialog dia = new AddParagraphDialog(page, ui);
             dia.editDisplay(c);
         });
-        
+
         addLink.setOnAction(e -> {
-            if(text.getSelectedText()== "" || text.getSelectedText() == null)
+            if (text.getSelectedText() == "" || text.getSelectedText() == null) {
                 return;
+            }
             LinkDialog dia = new LinkDialog(c, text.getSelection(), ui);
             dia.addDisplay();
             ui.reloadPane();
             removeLink.setDisable(!(c.getLinks().size() > 0));
         });
-        
+
         removeLink.setOnAction(e -> {
-            if(text.getSelectedText().equals("") || text.getSelectedText() == null)
+            if (text.getSelectedText().equals("") || text.getSelectedText() == null) {
                 return;
+            }
             String t = text.getSelectedText();
-            if(t.indexOf("***") != 0 || t.lastIndexOf("***") != t.length()-3){
-               
+            if (t.indexOf("***") != 0 || t.lastIndexOf("***") != t.length() - 3) {
+
                 return;
-                
+
             }
             StringBuilder s = new StringBuilder();
             IndexRange r = text.getSelection();
-            
+
             s.append(text.getText().substring(0, r.getStart()));
             System.out.println(r.getStart() + " " + r.getEnd());
-            s.append(text.getText().substring(r.getStart()+3, r.getEnd()-3));
-            
+            s.append(text.getText().substring(r.getStart() + 3, r.getEnd() - 3));
+
             s.append(text.getText().substring(r.getEnd()));
             c.setText(s.toString());
             c.getLinks().remove(getIndexOfLink(r.getStart(), text.getText()));
             removeLink.setDisable(!(c.getLinks().size() > 0));
             ui.reloadPane();
         });
-        
-           
-    }
 
+    }
+    /**
+     * Initializes an image component onto the page edit space.
+     */
     public void initImage() {
         ImageComponent image = (ImageComponent) component;
         VBox img = new VBox(15);
@@ -139,40 +153,81 @@ public class ComponentEditView extends HBox {
         URL url;
         try {
             url = file.toURI().toURL();
-        
-        Image im = new Image(url.toExternalForm());
-        ImageView view = new ImageView(im);
+
+            Image im = new Image(url.toExternalForm());
+            ImageView view = new ImageView(im);
 //        double scaledWidth = 500;
 //        double perc = scaledWidth / im.getWidth();
 //        double scaledHeight = im.getHeight() * perc;
-        view.setFitWidth(image.getWidth());
-        view.setFitHeight(image.getHeight());
-        view.setSmooth(true);
-        view.setCache(true);
-        getStyleClass().add(image.getPosition()+"ComponentEditView");
-        view.getStyleClass().add(image.getPosition());
-        img.getChildren().addAll(cap, view);
-        getChildren().addAll(img, editComponent);
-        editComponent.setOnAction(e -> {
-            AddImageDialog d = new AddImageDialog(page, ui);
-            d.editDisplay(image);
-        });
+            view.setFitWidth(image.getWidth());
+            view.setFitHeight(image.getHeight());
+            view.setSmooth(true);
+            view.setCache(true);
+            getStyleClass().add(image.getPosition() + "ComponentEditView");
+            view.getStyleClass().add(image.getPosition());
+            img.getChildren().addAll(cap, view);
+            getChildren().addAll(img, editComponent);
+            editComponent.setOnAction(e -> {
+                AddImageDialog d = new AddImageDialog(page, ui);
+                d.editDisplay(image);
+            });
         } catch (MalformedURLException ex) {
             Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void select(){
-       
+    /**
+     * Initializes a video component onto the page edit space.
+     */
+    public void initVideo() {
+        VideoComponent video = (VideoComponent) component;
+        File file = new File(video.getPath());
+        
+        try {
+            URL url =  file.toURI().toURL();
+        
+        Media media = new Media(url.toExternalForm());
+        MediaPlayer player = new MediaPlayer(media);
+        MediaView view = new MediaView(player);
+        view.setFitWidth(video.getWidth());
+        view.setFitHeight(video.getHeight());
+        VBox play = new VBox(20);
+        Button playPause = new Button();
+        Image playImage = new Image("file:icons/play.png");
+        Image pauseImage = new Image("file:icons/pause.png");
+        playPause.setGraphic(new ImageView(playImage));
+        playPause.setOnAction(e -> {
+           ImageView v = (ImageView) playPause.getGraphic();
+           if(v.getImage().equals(playImage)){
+               player.play();
+               playPause.setGraphic(new ImageView(pauseImage));
+           }else{
+               player.pause();
+               playPause.setGraphic(new ImageView(playImage));
+           }
+        });
+        play.setAlignment(Pos.CENTER);
+        play.getChildren().addAll(view, playPause);
+        editComponent.setOnAction(e -> {
+            AddVideoDialog d = new AddVideoDialog(page, ui);
+            d.editDisplay(video);
+        });
+        
+        getChildren().addAll(play, editComponent);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ComponentEditView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void select() {
+
         DropShadow ds = new DropShadow();
         ds.setColor(Color.RED);
         ds.setOffsetX(2.0);
         ds.setOffsetY(2.0);
         setEffect(ds);
         setSelected(true);
-    }    
-
-  
+    }
 
     public boolean isSelected() {
         return component.isSelected();
@@ -181,28 +236,24 @@ public class ComponentEditView extends HBox {
     public void setSelected(boolean selected) {
         component.setSelected(selected);
     }
-    
-    public void deselect(){
+
+    public void deselect() {
         DropShadow ds = new DropShadow();
         ds.setColor(Color.WHITE);
         ds.setOffsetX(0.0);
         ds.setOffsetY(0.0);
         setEffect(ds);
     }
-     
-    
-    public int getIndexOfLink(int start, String text){
+
+    public int getIndexOfLink(int start, String text) {
         int i = 0;
-        while(text.lastIndexOf("***", start-1) != -1){
-            start = text.lastIndexOf("***", start-1);
-            start = text.lastIndexOf("***", start-1);
+        while (text.lastIndexOf("***", start - 1) != -1) {
+            start = text.lastIndexOf("***", start - 1);
+            start = text.lastIndexOf("***", start - 1);
             i++;
         }
-        
+
         return i;
     }
-    
-   
-  
-    
+
 }

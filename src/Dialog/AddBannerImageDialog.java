@@ -1,6 +1,6 @@
 package Dialog;
 
-import Controller.ImageSelectionController;
+import Controller.SelectionController;
 import Page.Page;
 import View.EPortfolioGeneratorView;
 import java.io.File;
@@ -59,7 +59,7 @@ public class AddBannerImageDialog {
         layout.getStyleClass().add("dialogImage");
         window.show();
         addImage.setOnAction(e -> {
-            ImageSelectionController c = new ImageSelectionController();
+            SelectionController c = new SelectionController();
             File file = c.processSelectImage();
             if (file != null) {
                 try {

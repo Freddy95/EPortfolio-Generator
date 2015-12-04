@@ -1,7 +1,7 @@
 package Dialog;
 
 import Components.ImageComponent;
-import Controller.ImageSelectionController;
+import Controller.SelectionController;
 import Page.Page;
 import View.EPortfolioGeneratorView;
 import java.io.File;
@@ -103,7 +103,7 @@ public class AddImageDialog {
         layout.getStyleClass().add("dialogImage");
 
         addImage.setOnAction(e -> {
-            ImageSelectionController c = new ImageSelectionController();
+            SelectionController c = new SelectionController();
             file = c.processSelectImage();
             if (file != null) {
                 try {
@@ -144,7 +144,7 @@ public class AddImageDialog {
         layout.getStyleClass().add("dialogImage");
 
         addImage.setOnAction(e -> {
-            ImageSelectionController c = new ImageSelectionController();
+            SelectionController c = new SelectionController();
             file = c.processSelectImage();
             if (file != null) {
                 try {
