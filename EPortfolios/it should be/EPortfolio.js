@@ -71,8 +71,6 @@ function addVideo(div, component){
 
    
     videlem.setAttribute('controls','');
-    videlem.setAttribute('width', component.width);
-    videlem.setAttribute('height', component.height);
     var sourceMP4 = document.createElement("source"); 
     sourceMP4.type = "video/mp4";
     sourceMP4.src = component.file_path;

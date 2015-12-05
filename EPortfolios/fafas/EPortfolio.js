@@ -71,8 +71,6 @@ function addVideo(div, component){
 
    
     videlem.setAttribute('controls','');
-    videlem.setAttribute('width', component.width);
-    videlem.setAttribute('height', component.height);
     var sourceMP4 = document.createElement("source"); 
     sourceMP4.type = "video/mp4";
     sourceMP4.src = component.file_path;
@@ -102,10 +100,9 @@ function makePages(pages){
 
 function addImage(div, component){
     var picElem = document.createElement('img');
-    picElem.setAttribute('src', component.image_path);
-    picElem.setAttribute('class', component.position + 'Content');
-    picElem.setAttribute('width', component.width);
-    picElem.setAttribute('height', component.height);
+    picElem.setAttribute('src', component.image_file_path);
+        picElem.setAttribute('class', 'content');
+
     picElem.setAttribute('alt', 'picture');
     var caps = document.createElement('p');
     caps.innerHTML = component.caption;

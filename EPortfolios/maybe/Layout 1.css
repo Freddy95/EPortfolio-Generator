@@ -77,33 +77,6 @@ and open the template in the editor.
     padding-bottom: 10%;
 }
 
-.RightContent{
-    position: relative;
-   
-    
-    margin-left: 50%;
-    padding:3%;
-    width: 70%;
-    height: auto;
-    max-height: 8%;
-    max-width: 70%;
-    padding-bottom: 10%;
-}
-
-.CenterContent{
-    position: relative;
-   
-    margin-left: 12%;
-    margin-right: 50%;
-    padding:3%;
-    width: 70%;
-    height: auto;
-    max-height: 8%;
-    max-width: 70%;
-    padding-bottom: 10%;
-
-}
-
 .link{
     margin-left: 1%;
 }
