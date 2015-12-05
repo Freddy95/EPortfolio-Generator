@@ -215,13 +215,14 @@ public class EPortfolioGeneratorView {
     public void addPage(Label p) {
         siteToolbar.getChildren().add(p);
     }
-    
-    public void addMultiplePages(ArrayList<Page> pages){
-        Iterator<Page> iter = pages.iterator();
-        while(iter.hasNext()){
+
+    public void addMultiplePages(ArrayList<Page> ePortfolioPages) {
+        this.pages.clear();
+        Iterator<Page> iter = ePortfolioPages.iterator();
+        while (iter.hasNext()) {
             currentPage = iter.next();
             removePage.setDisable(false);
-            
+
             Label l = new Label(currentPage.getTitle());
             l.setOnMouseClicked(d -> {
                 for (int i = 0; i < pages.size(); i++) {
@@ -230,15 +231,15 @@ public class EPortfolioGeneratorView {
 
                 l.getStyleClass().add("currentPage");
                 currentLabelPage = l;
-                
+                currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
                 if (!currentPage.getBannerImagePath().equals("")) {
-                    
+
                     try {
                         File file = new File(currentPage.getBannerImagePath());
 
                         URL url = file.toURI().toURL();
                         bannerImage = new ImageView(new Image(url.toExternalForm()));
-                        
+
                     } catch (Exception x) {
                     }
                 } else {
@@ -251,12 +252,26 @@ public class EPortfolioGeneratorView {
             for (int i = 0; i < this.pages.size(); i++) {
                 this.pages.get(i).getStyleClass().clear();
             }
+            
             l.getStyleClass().add("currentPage");
             currentLabelPage = l;
             addPage(l);
             if (pane.getCenter() == null) {
                 setPageWorkSpace();
             }
+             if (!currentPage.getBannerImagePath().equals("")) {
+
+                    try {
+                        File file = new File(currentPage.getBannerImagePath());
+
+                        URL url = file.toURI().toURL();
+                        bannerImage = new ImageView(new Image(url.toExternalForm()));
+
+                    } catch (Exception x) {
+                    }
+                } else {
+                    bannerImage = null;
+                }
             reloadPane();
         }
     }
@@ -289,7 +304,7 @@ public class EPortfolioGeneratorView {
         pageEditorView = new PageEditView();
         pageEditorView.getStyleClass().add("pageEditView");
         pageEditor = new VBox(10);
-       
+
         pageEditor.getStyleClass().add("bannerImage");
         //bannerImage.setPreserveRatio(true);
         studentName = new Label("Add Student Name Here");
@@ -305,11 +320,10 @@ public class EPortfolioGeneratorView {
             });
         });
 
-     
         pageEditor.getChildren().add(studentName);
         pageEditorView.getChildren().add(pageEditor);
 
-          //pageEditor.setMinWidth(getWidth());
+        //pageEditor.setMinWidth(getWidth());
         //pageEditor.setPrefWidth(getWidth());
 //        
 //       
@@ -366,21 +380,24 @@ public class EPortfolioGeneratorView {
         pageEditorView.getChildren().clear();
         pageEditor.getChildren().clear();
         pageEditor.getChildren().add(studentName);
-        if(bannerImage != null)
+        if (bannerImage != null) {
             pageEditor.getChildren().add(bannerImage);
+        }
         pageEditorView.getChildren().add(pageEditor);
         ComponentEditView view = null;
-        for (Component b : currentPage.getComponents()) {
-             view = new ComponentEditView(b, currentPage, this);
-            view.setMaxWidth(pageEditorView.getWidth());
+        
+        for (int i = 0; i < currentPage.getComponents().size(); i++) {
+            Component b = currentPage.getComponents().get(i);
+            view = new ComponentEditView(b, currentPage, this);
+            view.setMaxWidth(getWidth() * .79);
             pageEditorView.getChildren().add(view);
-            if(view.isSelected())
+            if (view.isSelected()) {
                 view.select();
-            else
+            } else {
                 view.deselect();
+            }
         }
-        
-        
+
     }
 
     public void initSiteToolbarHandlers() {
@@ -398,15 +415,15 @@ public class EPortfolioGeneratorView {
                 l.getStyleClass().add("currentPage");
                 currentLabelPage = l;
                 currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
-                
+
                 if (!currentPage.getBannerImagePath().equals("")) {
-                    
+
                     try {
                         File file = new File(currentPage.getBannerImagePath());
 
                         URL url = file.toURI().toURL();
                         bannerImage = new ImageView(new Image(url.toExternalForm()));
-                        
+
                     } catch (Exception x) {
                     }
                 } else {
@@ -467,8 +484,7 @@ public class EPortfolioGeneratorView {
                 addComponent(dia.getValue());
                 dia.close();
             });
-            
-            
+
         });
 
         selectFont.setOnAction(e -> {
@@ -530,27 +546,27 @@ public class EPortfolioGeneratorView {
 
         removeComponent.setOnAction(e -> {
             int size = currentPage.getComponents().size();
-            for(int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 Component c = currentPage.getComponents().get(i);
-                if(c.isSelected()){
+                if (c.isSelected()) {
                     ComponentEditView v = new ComponentEditView(c, currentPage, this);
                     pageEditorView.getChildren().remove(v);
                     currentPage.getComponents().remove(c);
                     size--;
-                    
-                    if(i == size){
+
+                    if (i == size) {
                         i--;
                     }
-                    if(size == 0);
-                    else
+                    if (size == 0); else {
                         currentPage.getComponents().get(i).setSelected(true);
+                    }
                     reloadPane();
-                    
+
                 }
             }
         });
         setFooter.setOnAction(e -> {
-            
+
         });
         selectBannerImage.setOnAction(e -> {
             AddBannerImageDialog d = new AddBannerImageDialog(currentPage, this);
@@ -589,15 +605,18 @@ public class EPortfolioGeneratorView {
             });
 
         });
-        
+
         load.setOnAction(e -> {
             currentEPortfolio = new EPortfolio();
             controller.handleLoadEPortfolioRequest();
             makeUI();
             ePortfolioTitle.setText(currentEPortfolio.getTitle());
+            studentName.setText(currentEPortfolio.getStudentName());
+            this.pages.clear();
+            siteToolbar.getChildren().clear();
+            siteToolbar.getChildren().addAll(addPage, removePage);
             addMultiplePages(currentEPortfolio.getPages());
-            
-            
+            reloadPane();
         });
 
         toggleView.setOnAction(e -> {
@@ -642,17 +661,17 @@ public class EPortfolioGeneratorView {
 
         }//add slide show component
     }
-    
-    
-    public void removeComponents(){
+
+    public void removeComponents() {
         pageEditorView.getChildren().clear();
     }
-    
-    public void removeDisabled(){
-         if(currentPage.getComponents().isEmpty())
-              removeComponent.setDisable(true);
-        for(int i = 0; i < currentPage.getComponents().size(); i++){
-            if(currentPage.getComponents().get(i).isSelected()){
+
+    public void removeDisabled() {
+        if (currentPage.getComponents().isEmpty()) {
+            removeComponent.setDisable(true);
+        }
+        for (int i = 0; i < currentPage.getComponents().size(); i++) {
+            if (currentPage.getComponents().get(i).isSelected()) {
                 removeComponent.setDisable(false);
                 return;
             }

@@ -48,10 +48,12 @@ import javax.json.JsonWriter;
 public class FileManager {
 
     // JSON FILE READING AND WRITING CONSTANTS
+    public static String JSON_EPORTFOLIO_TITLE = "ePortfolio_title";
     public static String JSON_TITLE = "title";
     public static String JSON_PAGES = "pages";
     public static String JSON_CAPTION = "caption";
     public static String JSON_NAME = "name";
+    public static String JSON_PAGE_TITLE = "page_title";
     public static String JSON_LINKS = "links";
     public static String JSON_URL = "url";
     public static String JSON_TYPE = "type";
@@ -111,13 +113,13 @@ public class FileManager {
             OutputStream os = new FileOutputStream(jsonFilePath);
             JsonWriter jsonWriter = Json.createWriter(os);
 
-            // BUILD THE SLIDES ARRAY
             ArrayList<Page> pages = ePortfolio.getPages();
             JsonArray pageArray = makePageArray(pages);
             // NOW BUILD THE COURSE USING EVERYTHING WE'VE ALREADY MADE
             JsonObject courseJsonObject = Json.createObjectBuilder()
-                    .add(JSON_TITLE, ePortfolio.getTitle())
+                    .add(JSON_EPORTFOLIO_TITLE, ePortfolio.getTitle())
                     .add(JSON_STUDENT_NAME, ePortfolio.getStudentName())
+                    .add(JSON_PAGE_TITLE, p.getTitle())
                     .add(JSON_PAGES, pageArray)
                     .add(JSON_PAGE_INFO, makePageInfoObject(p))
                     .build();
@@ -142,7 +144,7 @@ public class FileManager {
     private JsonObject makePageObject(Page p, int i) {
 
         JsonObject js = Json.createObjectBuilder()
-                .add(JSON_TITLE, p.getTitle())
+                .add(JSON_PAGE_TITLE, p.getTitle())
                 .add(JSON_URL, "page" + i + ".html")
                 .build();
         return js;
@@ -170,6 +172,7 @@ public class FileManager {
         // LOAD THE JSON FILE WITH ALL THE DATA
         ePortfolio = ePortfolioToLoad;
         String ePortfolioPath = ePortfolioFile.getPath();
+        ePortfolio.setTitle(ePortfolioFile.getName().substring(0, ePortfolioFile.getName().indexOf(".txt")));
          try {
             // FileReader reads text files in the default encoding.
             FileReader fileReader = 
@@ -186,7 +189,7 @@ public class FileManager {
                 p.setTitle(line);
                 loadPage(js, p);
             }   
-
+            
             // Always close files.
             bufferedReader.close();         
         } catch (Exception e){
@@ -207,8 +210,9 @@ public class FileManager {
     }
     
     private void loadPage(JsonObject js, Page page){
-        
+        ePortfolio.setStudentName(js.getString(JSON_STUDENT_NAME));
         JsonObject pageInfo = js.getJsonObject(JSON_PAGE_INFO);
+        page.setTitle(js.getString(JSON_PAGE_TITLE));
         page.setBannerImagePath(pageInfo.getString(JSON_BANNER_IMAGE));
         page.setFont(pageInfo.getString(JSON_FONT));
         page.setColorTheme(pageInfo.getString(JSON_COLOR));
@@ -216,6 +220,8 @@ public class FileManager {
         for(int i = 0; i < content.size(); i++){
             JsonObject jo = content.getJsonObject(i);
             addComponent(page, jo);
+            
+            
         }
         ePortfolio.addPage(page);
     }

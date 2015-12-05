@@ -397,6 +397,7 @@ public class ComponentEditView extends HBox {
                 views.get(i).setSelected(false);   
             }
             component.setSelected(true);
+            //ui.reloadPane();
     }
 
 }
