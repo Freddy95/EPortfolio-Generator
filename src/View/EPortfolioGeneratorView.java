@@ -14,10 +14,13 @@ import File.FileController;
 import File.FileManager;
 import eportfoliogenerator.EPortfolio;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -126,7 +129,7 @@ public class EPortfolioGeneratorView {
         initSiteToolbarHandlers();
         initPageEditorHandlers();
         initPageEditView();
-
+        saveDisabled(true);
         //pane.setCenter(pageEditorScrollPane);
     }
 
@@ -134,6 +137,7 @@ public class EPortfolioGeneratorView {
         System.out.println("left Width: " + siteToolbar.getWidth());
 
         pane.setLeft(siteToolbar);
+        saveDisabled(false);
         System.out.println("left Width: " + siteToolbar.getWidth());
 
     }
@@ -232,19 +236,7 @@ public class EPortfolioGeneratorView {
                 l.getStyleClass().add("currentPage");
                 currentLabelPage = l;
                 currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
-                if (!currentPage.getBannerImagePath().equals("")) {
-
-                    try {
-                        File file = new File(currentPage.getBannerImagePath());
-
-                        URL url = file.toURI().toURL();
-                        bannerImage = new ImageView(new Image(url.toExternalForm()));
-
-                    } catch (Exception x) {
-                    }
-                } else {
-                    bannerImage = null;
-                }
+                setBannerImage();
 
                 reloadPane();
             });
@@ -252,26 +244,26 @@ public class EPortfolioGeneratorView {
             for (int i = 0; i < this.pages.size(); i++) {
                 this.pages.get(i).getStyleClass().clear();
             }
-            
+
             l.getStyleClass().add("currentPage");
             currentLabelPage = l;
             addPage(l);
             if (pane.getCenter() == null) {
                 setPageWorkSpace();
             }
-             if (!currentPage.getBannerImagePath().equals("")) {
+            if (!currentPage.getBannerImagePath().equals("")) {
 
-                    try {
-                        File file = new File(currentPage.getBannerImagePath());
+                try {
+                    File file = new File(currentPage.getBannerImagePath());
 
-                        URL url = file.toURI().toURL();
-                        bannerImage = new ImageView(new Image(url.toExternalForm()));
+                    URL url = file.toURI().toURL();
+                    bannerImage = new ImageView(new Image(url.toExternalForm()));
 
-                    } catch (Exception x) {
-                    }
-                } else {
-                    bannerImage = null;
+                } catch (Exception x) {
                 }
+            } else {
+                bannerImage = null;
+            }
             reloadPane();
         }
     }
@@ -385,7 +377,7 @@ public class EPortfolioGeneratorView {
         }
         pageEditorView.getChildren().add(pageEditor);
         ComponentEditView view = null;
-        
+
         for (int i = 0; i < currentPage.getComponents().size(); i++) {
             Component b = currentPage.getComponents().get(i);
             view = new ComponentEditView(b, currentPage, this);
@@ -398,6 +390,8 @@ public class EPortfolioGeneratorView {
             }
         }
 
+        saveDisabled(false);
+
     }
 
     public void initSiteToolbarHandlers() {
@@ -405,6 +399,7 @@ public class EPortfolioGeneratorView {
             removePage.setDisable(false);
             currentPage = new Page();
             currentEPortfolio.addPage(currentPage);
+            bannerImage = null;
             currentPage.setTitle("Page " + (pages.size() + 1));
             Label l = new Label(currentPage.getTitle());
             l.setOnMouseClicked(d -> {
@@ -416,19 +411,7 @@ public class EPortfolioGeneratorView {
                 currentLabelPage = l;
                 currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
 
-                if (!currentPage.getBannerImagePath().equals("")) {
-
-                    try {
-                        File file = new File(currentPage.getBannerImagePath());
-
-                        URL url = file.toURI().toURL();
-                        bannerImage = new ImageView(new Image(url.toExternalForm()));
-
-                    } catch (Exception x) {
-                    }
-                } else {
-                    bannerImage = null;
-                }
+                setBannerImage();
 
                 reloadPane();
             });
@@ -462,6 +445,7 @@ public class EPortfolioGeneratorView {
             pages.get(ind).getStyleClass().add("currentPage");
             currentLabelPage = pages.get(ind);
             currentPage = currentEPortfolio.getPages().get(ind);
+            setBannerImage();
             reloadPane();
 
         });
@@ -587,11 +571,28 @@ public class EPortfolioGeneratorView {
      */
     public void initFileToolbarHandlers() {
         save.setOnAction(e -> {
-            controller.handleSaveEPortfolioRequest();
+            save.setDisable(controller.handleSaveEPortfolioRequest());
+        });
+        saveAs.setOnAction(e -> {
+
+            SetDialog d = new SetDialog();
+            d.display("Save EPortfolio", "Save EPortfolio As");
+            d.getButton().setOnAction(x -> {
+                currentEPortfolio.setTitle(d.getValue());
+                ePortfolioTitle.setText(d.getValue());
+                if (!save.isDisabled()) {
+                    save.setDisable(controller.handleSaveEPortfolioRequest());
+                }
+                d.getWindow().close();
+            });
         });
         newEPortfolio.setOnAction(e -> {
-            if (currentEPortfolio != null) {
-                promptToSave();
+            if (!save.isDisabled()) {
+                try {
+                    controller.promptToSave();
+                } catch (IOException ex) {
+                    Logger.getLogger(EPortfolioGeneratorView.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             SetDialog d = new SetDialog();
             d.display("Create EPortfolio", "Set title of EPortfolio");
@@ -606,6 +607,19 @@ public class EPortfolioGeneratorView {
 
         });
 
+        changeTitle.setOnAction(e -> {
+            SetDialog d = new SetDialog();
+            d.display("Set Title", "Set title of EPortfolio");
+            d.getButton().setOnAction(c -> {
+                currentEPortfolio = new EPortfolio();
+                currentEPortfolio.setTitle(d.getValue());
+                saveDisabled(false);
+                ePortfolioTitle.setText(d.getValue());
+                d.getWindow().close();
+
+            });
+        });
+
         load.setOnAction(e -> {
             currentEPortfolio = new EPortfolio();
             controller.handleLoadEPortfolioRequest();
@@ -617,6 +631,8 @@ public class EPortfolioGeneratorView {
             siteToolbar.getChildren().addAll(addPage, removePage);
             addMultiplePages(currentEPortfolio.getPages());
             reloadPane();
+            saveDisabled(true);
+
         });
 
         toggleView.setOnAction(e -> {
@@ -626,12 +642,8 @@ public class EPortfolioGeneratorView {
 
     }
 
-    public void promptToSave() {
-
-    }
-
     public boolean isSaveEnabled() {
-        return save.isDisabled();
+        return !save.isDisabled();
     }
 
     public EPortfolio getEPortfolio() {
@@ -677,5 +689,35 @@ public class EPortfolioGeneratorView {
             }
         }
         removeComponent.setDisable(true);
+    }
+
+    public void saveDisabled(boolean saved) {
+        if (currentEPortfolio == null) {
+            save.setDisable(true);
+            saveAs.setDisable(true);
+            changeTitle.setDisable(true);
+            export.setDisable(true);
+
+        } else {
+            saveAs.setDisable(false);
+            changeTitle.setDisable(false);
+            export.setDisable(false);
+            save.setDisable(saved);
+        }
+    }
+
+    public void setBannerImage() {
+        if (!currentPage.getBannerImagePath().equals("")) {
+            try {
+                File file = new File(currentPage.getBannerImagePath());
+
+                URL url = file.toURI().toURL();
+                bannerImage = new ImageView(new Image(url.toExternalForm()));
+
+            } catch (Exception x) {
+            }
+        } else {
+            bannerImage = null;
+        }
     }
 }

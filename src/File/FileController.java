@@ -184,7 +184,7 @@ public class FileController {
      * presses the NO option to not save, false if the user presses the CANCEL
      * option to not continue.
      */
-    private boolean promptToSave() throws IOException {
+    public boolean promptToSave() throws IOException {
         // PROMPT THE USER TO SAVE UNSAVED WORK
         saveWork = true;
         Stage stage = new Stage();
@@ -203,7 +203,8 @@ public class FileController {
         layout.setAlignment(Pos.CENTER);
         layout.getStyleClass().add("dialog");
         Scene scene = new Scene(layout);
-        scene.getStylesheets().add("EPortfolioGeneratorStyle.css");
+        scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
+        layout.getStyleClass().add("dialog");
         stage.setScene(scene);
         stage.setTitle("Save EPortfolio");
         ok.setOnAction(e -> {
