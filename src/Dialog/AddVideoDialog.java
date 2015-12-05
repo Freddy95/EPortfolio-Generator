@@ -112,7 +112,10 @@ public class AddVideoDialog {
             if (file == null) {
                 return;
             }
-            VideoComponent video = new VideoComponent(file.getPath(), caption.getText());
+            VideoComponent video = new VideoComponent();
+            video.setCaption(caption.getText());
+            video.setPath(file.getPath());
+            video.setFileName(file.getName());
             video.setWidth(width.getText());
             video.setHeight(height.getText());
             page.addComponent(video);

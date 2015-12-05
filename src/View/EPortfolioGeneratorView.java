@@ -494,7 +494,7 @@ public class EPortfolioGeneratorView {
             components.clear();
             components.add("Blue");
             components.add("Red");
-            components.add("Orange");
+            components.add("Green");
             components.add("Gray");
             components.add("Yellow");
             SelectDialog dia = new SelectDialog(components);

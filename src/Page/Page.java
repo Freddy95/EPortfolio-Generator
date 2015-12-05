@@ -23,9 +23,9 @@ public class Page {
         URL = "";
         bannerImagePath = "";
         title = "";
-        layout = "";
-        font = "";
-        colorTheme = "";
+        layout = "Layout 1";
+        font = "Courgette";
+        colorTheme = "Blue";
     }
     
     

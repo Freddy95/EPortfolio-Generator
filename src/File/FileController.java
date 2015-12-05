@@ -8,6 +8,8 @@ import eportfoliogenerator.EPortfolioGenerator;
 import View.EPortfolioGeneratorView;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -209,6 +211,11 @@ public class FileController {
         stage.setTitle("Save EPortfolio");
         ok.setOnAction(e -> {
             saveWork = true;
+            try {
+                ePortfolioIO.saveEPortfolio(ui.getEPortfolio());
+            } catch (IOException ex) {
+                Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             stage.close();
         });
         cancel.setOnAction(e -> {

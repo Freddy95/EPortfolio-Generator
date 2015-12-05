@@ -39,7 +39,7 @@ function init(data){
 function getTitle(){
     var path = window.location.pathname;
     var page = path.split("/").pop();
-    console.log(page + "THIS IS THE PAGE");
+    console.log(page);
    return page;
 }
 

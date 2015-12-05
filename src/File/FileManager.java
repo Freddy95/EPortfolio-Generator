@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -21,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -126,8 +128,29 @@ public class FileManager {
 
             // AND SAVE EVERYTHING AT ONCE
             jsonWriter.writeObject(courseJsonObject);
+            File html = new File("./src/sites/index.html");
+            File newHtml = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH+p.getTitle() + ".html");
+            copyFile(html, newHtml);
+            
+            File layout = new File("./src/sites/Layouts/" + p.getLayout()+".css");
+            File newLayout = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + p.getLayout() + ".css");
+            if(!(newLayout.exists()))
+                copyFile(layout, newLayout);
+            
+            File colorTheme = new File("./src/sites/Styles/" + p.getColorTheme()+".css");
+            File newColorTheme = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + p.getColorTheme() + ".css");
+            if(!(newColorTheme.exists()))
+                copyFile(colorTheme, newColorTheme);
+            
+            File font =  new File("./src/sites/Fonts/" + p.getFont()+".css");
+            File newFont = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + p.getFont() + ".css");
+            if(!(newFont.exists()))
+                copyFile(font, newFont);
         }
         writer.close();
+        File js = new File("./src/sites/EPortfolio.js");
+        File newJs = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + "EPortfolio.js");
+        copyFile(js, newJs);
     }
 
     private JsonObject makePageInfoObject(Page p) {
@@ -145,7 +168,7 @@ public class FileManager {
 
         JsonObject js = Json.createObjectBuilder()
                 .add(JSON_PAGE_TITLE, p.getTitle())
-                .add(JSON_URL, "page" + i + ".html")
+                .add(JSON_URL, p.getTitle() + ".html")
                 .build();
         return js;
     }
@@ -414,4 +437,17 @@ public class FileManager {
         return s;
     }
 
+    
+     public void copyFile(File source, File target) {
+        OutputStream stream;
+        try {
+            stream = new FileOutputStream(target);
+        } catch (FileNotFoundException ex) {
+            return;
+        }
+        try {
+            Files.copy(source.toPath(), stream);
+        } catch (IOException ex) {
+        }
+    }
 }
