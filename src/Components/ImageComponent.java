@@ -33,6 +33,15 @@ public class ImageComponent extends Component {
             this.height = 200;
         }
     }
+    
+    public ImageComponent(){
+        path = "";
+        caption = "";
+        fileName = "";
+        width = 500;
+        height = 200;
+        super.setType("Image");
+    }
 
     public String getPath() {
         return path;

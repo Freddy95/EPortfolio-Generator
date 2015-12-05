@@ -61,7 +61,7 @@ public class FileController {
      * This method starts the process of editing a new eportfolio. If a pose is
      * already being edited, it will prompt the user to save it first.
      */
-    public void handleNewSlideShowRequest() {
+    public void handleEPortfolioShowRequest() {
         getSaved(ui.isSaveEnabled());
         try {
             // WE MAY HAVE TO SAVE CURRENT WORK
@@ -96,7 +96,7 @@ public class FileController {
      * This method lets the user open a eportfolio saved to a file. It will also
      * make sure data for the current eportfolio is not lost.
      */
-    public void handleLoadSlideShowRequest() {
+    public void handleLoadEPortfolioRequest() {
         getSaved(ui.isSaveEnabled());
         try {
             // WE MAY HAVE TO SAVE CURRENT WORK
@@ -248,6 +248,8 @@ public class FileController {
     private void promptToOpen() {
         // AND NOW ASK THE USER FOR THE COURSE TO OPEN
         FileChooser ePortfolioFileChooser = new FileChooser();
+        FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.TXT");
+	ePortfolioFileChooser.getExtensionFilters().addAll(txtFilter);
         ePortfolioFileChooser.setInitialDirectory(new File("EPortfolios/"));
         File selectedFile = ePortfolioFileChooser.showOpenDialog(ui.getWindow());
 
@@ -255,7 +257,7 @@ public class FileController {
         if (selectedFile != null) {
             try {
                 EPortfolio ePortfolioToLoad = ui.getEPortfolio();
-                ePortfolioIO.loadEPortfolio(ePortfolioToLoad, selectedFile.getAbsolutePath());
+                ePortfolioIO.loadEPortfolio(ePortfolioToLoad, selectedFile);
                 //ui.reloadPane(ePortfolioToLoad);
                 saved = true;
                 //ui.updateToolbarControls(saved);

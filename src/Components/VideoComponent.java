@@ -17,6 +17,12 @@ public class VideoComponent extends Component{
         this.caption = caption;
         super.setType("Video");
     }
+
+    public VideoComponent() {
+        path = "";
+        caption = "";
+        super.setType("Video");
+    }
     
     public String getPath() {
         return path;

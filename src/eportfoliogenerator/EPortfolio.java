@@ -17,11 +17,12 @@ public class EPortfolio {
     String title;
     ArrayList<Page> pages;
     String studentName;
-  String bannerTitle;
 
 
     public EPortfolio() {
         pages = new ArrayList<>();
+        studentName = "";
+        title = "";
     }
 
     public ArrayList<Page> getPages() {

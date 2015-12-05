@@ -17,6 +17,12 @@ public class SlideShowComponent extends Component{
         super.setType("Slide Show");
     }
 
+    public SlideShowComponent() {
+        title = "";
+        slides = new ArrayList<>();
+        super.setType("Slide Show");
+    }
+
     public String getTitle() {
         return title;
     }

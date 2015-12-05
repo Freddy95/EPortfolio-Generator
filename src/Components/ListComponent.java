@@ -18,6 +18,12 @@ public class ListComponent extends Component{
         elements = new ArrayList<>();
         super.setType("List");
     }
+
+    public ListComponent() {
+        super.setType("List");
+        title = "";
+        elements = new ArrayList<>();
+    }
     
     
     
@@ -30,6 +36,10 @@ public class ListComponent extends Component{
     
     public ArrayList<String> getElements(){
         return elements;
+    }
+    
+    public void setElements(ArrayList<String> elements){
+        this.elements = elements;
     }
     
     public void addElements(String s){

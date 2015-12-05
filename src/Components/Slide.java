@@ -15,7 +15,9 @@ public class Slide {
     }
     
     public Slide() {
-        
+        path = "";
+        caption = "";
+        fileName = "";
     }
 
     public void setPath(String path) {

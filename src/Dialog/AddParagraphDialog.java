@@ -97,7 +97,10 @@ public class AddParagraphDialog {
         window.setScene(scene);
 
         okBtn.setOnAction(e->{
-           comp = new ParagraphComponent(heading.getText(), paragraph.getText(), box.getValue());
+           comp = new ParagraphComponent();
+           comp.setHeader(heading.getText());
+           comp.setFont( box.getValue());
+           comp.setText(paragraph.getText());
            page.addComponent(comp);
            select(comp);
            ui.reloadPane();

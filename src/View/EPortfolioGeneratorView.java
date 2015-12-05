@@ -8,7 +8,6 @@ import Dialog.AddParagraphDialog;
 import Dialog.AddSlideShowDialog;
 import Dialog.AddVideoDialog;
 import Page.Page;
-import Dialog.RemoveComponentDialog;
 import Dialog.SelectDialog;
 import Dialog.SetDialog;
 import File.FileController;
@@ -17,6 +16,7 @@ import eportfoliogenerator.EPortfolio;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -210,10 +210,55 @@ public class EPortfolioGeneratorView {
     }
 
     /**
-     * Adds some pages to siteToolbar
+     * Adds a pages to siteToolbar
      */
-    public void addPages(Label p) {
+    public void addPage(Label p) {
         siteToolbar.getChildren().add(p);
+    }
+    
+    public void addMultiplePages(ArrayList<Page> pages){
+        Iterator<Page> iter = pages.iterator();
+        while(iter.hasNext()){
+            currentPage = iter.next();
+            removePage.setDisable(false);
+            
+            Label l = new Label(currentPage.getTitle());
+            l.setOnMouseClicked(d -> {
+                for (int i = 0; i < pages.size(); i++) {
+                    this.pages.get(i).getStyleClass().clear();
+                }
+
+                l.getStyleClass().add("currentPage");
+                currentLabelPage = l;
+                
+                if (!currentPage.getBannerImagePath().equals("")) {
+                    
+                    try {
+                        File file = new File(currentPage.getBannerImagePath());
+
+                        URL url = file.toURI().toURL();
+                        bannerImage = new ImageView(new Image(url.toExternalForm()));
+                        
+                    } catch (Exception x) {
+                    }
+                } else {
+                    bannerImage = null;
+                }
+
+                reloadPane();
+            });
+            this.pages.add(l);
+            for (int i = 0; i < this.pages.size(); i++) {
+                this.pages.get(i).getStyleClass().clear();
+            }
+            l.getStyleClass().add("currentPage");
+            currentLabelPage = l;
+            addPage(l);
+            if (pane.getCenter() == null) {
+                setPageWorkSpace();
+            }
+            reloadPane();
+        }
     }
 
     /**
@@ -376,7 +421,7 @@ public class EPortfolioGeneratorView {
             }
             l.getStyleClass().add("currentPage");
             currentLabelPage = l;
-            addPages(l);
+            addPage(l);
             if (pane.getCenter() == null) {
                 setPageWorkSpace();
             }
@@ -543,6 +588,16 @@ public class EPortfolioGeneratorView {
 
             });
 
+        });
+        
+        load.setOnAction(e -> {
+            currentEPortfolio = new EPortfolio();
+            controller.handleLoadEPortfolioRequest();
+            makeUI();
+            ePortfolioTitle.setText(currentEPortfolio.getTitle());
+            addMultiplePages(currentEPortfolio.getPages());
+            
+            
         });
 
         toggleView.setOnAction(e -> {

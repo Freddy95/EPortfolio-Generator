@@ -13,10 +13,10 @@ public class ParagraphComponent extends Component{
     String font;
     ArrayList<String> links;
 
-    public ParagraphComponent(String header, String text, String font) {
-        this.header = header;
-        this.text = text;
-        this.font = font;
+    public ParagraphComponent() {
+        header = "";
+        text = "";
+        font = "";
         super.setType("Paragraph");
         links = new ArrayList<>();
     }
