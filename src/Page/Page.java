@@ -15,6 +15,7 @@ public class Page {
     String URL;
     String bannerImagePath;
     String layout;
+    String footer;
     String colorTheme;
     String font;
 
@@ -93,6 +94,14 @@ public class Page {
 
     public void setFont(String font) {
         this.font = font;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
     }
     
     

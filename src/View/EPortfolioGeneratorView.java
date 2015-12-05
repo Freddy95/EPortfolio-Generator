@@ -66,6 +66,7 @@ public class EPortfolioGeneratorView {
     ArrayList<Label> pages;
     Label currentLabelPage;
     Label studentName;
+    Label footer;
     ImageView bannerImage;
     ArrayList<Component> comps;
 
@@ -197,6 +198,7 @@ public class EPortfolioGeneratorView {
         toggleView = initChildButton(fileToolbar, "icons/site.png", "Site View", false);
         exit = initChildButton(fileToolbar, "icons/exit.png", "Exit", false);
         ePortfolioTitle = new Label("");
+        ePortfolioTitle.getStyleClass().add("ePortfolioTitle");
         fileToolbar.getChildren().add(ePortfolioTitle);
     }
 
@@ -225,6 +227,7 @@ public class EPortfolioGeneratorView {
         Iterator<Page> iter = ePortfolioPages.iterator();
         while (iter.hasNext()) {
             currentPage = iter.next();
+            footer.setText(currentPage.getFooter());
             removePage.setDisable(false);
 
             Label l = new Label(currentPage.getTitle());
@@ -236,6 +239,7 @@ public class EPortfolioGeneratorView {
                 l.getStyleClass().add("currentPage");
                 currentLabelPage = l;
                 currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
+                footer.setText(currentPage.getFooter());
                 setBannerImage();
 
                 reloadPane();
@@ -300,7 +304,8 @@ public class EPortfolioGeneratorView {
         pageEditor.getStyleClass().add("bannerImage");
         //bannerImage.setPreserveRatio(true);
         studentName = new Label("Add Student Name Here");
-        
+        footer = new Label();
+        footer.getStyleClass().add("footer");
         studentName.getStyleClass().add("studentName");
         studentName.setOnMouseClicked(e -> {
             SetDialog d = new SetDialog();
@@ -312,9 +317,9 @@ public class EPortfolioGeneratorView {
                 d.getWindow().close();
             });
         });
-
+        pageEditor.getChildren().add(pageEditorView);
         pageEditor.getChildren().add(studentName);
-        pageEditorView.getChildren().add(pageEditor);
+        
 
         //pageEditor.setMinWidth(getWidth());
         //pageEditor.setPrefWidth(getWidth());
@@ -327,7 +332,7 @@ public class EPortfolioGeneratorView {
         pageViewerTab.setText("View Page");
         pageEditorPane.getTabs().add(pageEditorTab);
         pageEditorPane.getTabs().add(pageViewerTab);
-        pageEditorScrollPane = new ScrollPane(pageEditorView);
+        pageEditorScrollPane = new ScrollPane(pageEditor);
         workSpaceToolbar.setPrefWidth(getWidth() * .13);
         workSpace.getChildren().add(pageEditorScrollPane);
         workSpace.getChildren().add(workSpaceToolbar);
@@ -375,10 +380,11 @@ public class EPortfolioGeneratorView {
         pageEditorView.getChildren().clear();
         pageEditor.getChildren().clear();
         pageEditor.getChildren().add(studentName);
+        
         if (bannerImage != null) {
             pageEditor.getChildren().add(bannerImage);
         }
-        pageEditorView.getChildren().add(pageEditor);
+        pageEditor.getChildren().add(pageEditorView);
         ComponentEditView view = null;
 
         for (int i = 0; i < currentPage.getComponents().size(); i++) {
@@ -392,7 +398,7 @@ public class EPortfolioGeneratorView {
                 view.deselect();
             }
         }
-
+        pageEditor.getChildren().add(footer);
         saveDisabled(false);
 
     }
@@ -403,6 +409,7 @@ public class EPortfolioGeneratorView {
             currentPage = new Page();
             currentEPortfolio.addPage(currentPage);
             bannerImage = null;
+            footer.setText("");
             currentPage.setTitle("Page " + (pages.size() + 1));
             Label l = new Label(currentPage.getTitle());
             l.setOnMouseClicked(d -> {
@@ -413,7 +420,7 @@ public class EPortfolioGeneratorView {
                 l.getStyleClass().add("currentPage");
                 currentLabelPage = l;
                 currentPage = currentEPortfolio.getPages().get(pages.indexOf(l));
-
+                footer.setText(currentPage.getFooter());
                 setBannerImage();
 
                 reloadPane();
@@ -553,7 +560,15 @@ public class EPortfolioGeneratorView {
             }
         });
         setFooter.setOnAction(e -> {
-
+            SetDialog d = new SetDialog();
+            d.display("Set Footer", "Enter Footer Text");
+            d.getButton().setOnAction(s -> {
+                currentPage.setFooter(d.getValue());
+                footer.setText(currentPage.getFooter());
+                reloadPane();
+                d.getWindow().close();
+            });
+            
         });
         selectBannerImage.setOnAction(e -> {
             AddBannerImageDialog d = new AddBannerImageDialog(currentPage, this);

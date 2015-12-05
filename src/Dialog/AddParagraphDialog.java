@@ -134,11 +134,11 @@ public class AddParagraphDialog {
         paragraph = new TextArea();
         paragraph.setTooltip(new Tooltip("Enter Text Here"));
         okBtn = new Button("OK");
-        box.getItems().add("Font 1");
-        box.getItems().add("Font 2");
-        box.getItems().add("Font 3");
-        box.getItems().add("Font 4");
-        box.getItems().add("Font 5");
+        box.getItems().add("Courgette");
+        box.getItems().add("Ubuntu");
+        box.getItems().add("Dosis");
+        box.getItems().add("Average");
+        box.getItems().add("Oxygen");
 
         box.setValue("Select Font");
         heading.setText(p.getHeader());

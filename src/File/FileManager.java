@@ -57,6 +57,7 @@ public class FileManager {
     public static String JSON_EPORTFOLIO_TITLE = "ePortfolio_title";
     public static String JSON_TITLE = "title";
     public static String JSON_PAGES = "pages";
+    public static String JSON_FOOTER = "footer";
     public static String JSON_CAPTION = "caption";
     public static String JSON_NAME = "name";
     public static String JSON_PAGE_TITLE = "page_title";
@@ -177,6 +178,7 @@ public class FileManager {
                 .add(JSON_LAYOUT, p.getLayout())
                 .add(JSON_FONT, p.getFont())
                 .add(JSON_COLOR, p.getColorTheme())
+                .add(JSON_FOOTER, p.getFooter())
                 .add(JSON_CONTENT, makeContentArray(p))
                 .build();
         return js;
@@ -257,12 +259,14 @@ public class FileManager {
         page.setBannerImagePath(pageInfo.getString(JSON_BANNER_IMAGE));
         page.setFont(pageInfo.getString(JSON_FONT));
         page.setColorTheme(pageInfo.getString(JSON_COLOR));
+        page.setFooter(pageInfo.getString(JSON_FOOTER));
         JsonArray content = pageInfo.getJsonArray(JSON_CONTENT);
         for (int i = 0; i < content.size(); i++) {
             JsonObject jo = content.getJsonObject(i);
             addComponent(page, jo);
 
         }
+        
         ePortfolio.addPage(page);
     }
 
