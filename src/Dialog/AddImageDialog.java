@@ -215,8 +215,13 @@ public class AddImageDialog {
         try {
             url = file.toURI().toURL();
 
-            ImageComponent comp = new ImageComponent(caption.getText(), file.getPath(), file.getName(),
-                    position.getValue(), width.getText(), height.getText());
+            ImageComponent comp = new ImageComponent();
+            comp.setCaption(caption.getText());
+            comp.setPath(file.getPath());
+            comp.setFileName(file.getName());
+            comp.setWidth( width.getText());
+            comp.setHeight(height.getText());
+            comp.setPosition(position.getValue());
 
             System.out.println("URL: " + url.toExternalForm());
             select(comp);

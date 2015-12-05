@@ -63,7 +63,7 @@ public class FileController {
      * This method starts the process of editing a new eportfolio. If a pose is
      * already being edited, it will prompt the user to save it first.
      */
-    public void handleEPortfolioShowRequest() {
+    public void handleEPortfolioRequest() {
         getSaved(ui.isSaveEnabled());
         try {
             // WE MAY HAVE TO SAVE CURRENT WORK
@@ -100,23 +100,11 @@ public class FileController {
      */
     public void handleLoadEPortfolioRequest() {
         getSaved(ui.isSaveEnabled());
-        try {
-            // WE MAY HAVE TO SAVE CURRENT WORK
-            boolean continueToOpen = true;
-            if (!saved) {
-                // THE USER CAN OPT OUT HERE WITH A CANCEL
-                continueToOpen = promptToSave();
-            }
-
-            // IF THE USER REALLY WANTS TO OPEN A POSE
-            if (continueToOpen) {
+        
                 // GO AHEAD AND PROCEED MAKING A NEW POSE
                 promptToOpen();
-            }
-        } catch (IOException ioe) {
-           // ErrorHandler eH = ui.getErrorHandler();
-            //@todo provide error message
-        }
+            
+       
     }
 
     /**

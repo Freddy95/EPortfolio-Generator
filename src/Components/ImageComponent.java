@@ -14,25 +14,6 @@ public class ImageComponent extends Component {
     double height = 200;
 
     String fileName;
-
-    public ImageComponent(String caption, String path, String fileName,
-            String position, String w, String h) {
-        this.path = path;
-        this.caption = caption;
-        this.fileName = fileName;
-        super.setType("Image");
-        this.position = position;
-        try{
-            this.width = getNumeric(w);
-        }catch(NumberFormatException e){
-            this.width = 500;
-        }
-        try{
-            this.height = getNumeric(h);
-        }catch(NumberFormatException e){
-            this.height = 200;
-        }
-    }
     
     public ImageComponent(){
         path = "";

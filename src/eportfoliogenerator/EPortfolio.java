@@ -21,8 +21,8 @@ public class EPortfolio {
 
     public EPortfolio() {
         pages = new ArrayList<>();
-        studentName = "";
-        title = "";
+        studentName = "Student Name";
+        title = "Eportfolio Title";
     }
 
     public ArrayList<Page> getPages() {

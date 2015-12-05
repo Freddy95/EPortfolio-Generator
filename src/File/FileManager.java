@@ -35,6 +35,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -79,6 +83,9 @@ public class FileManager {
     public static String JSON_EXT = ".json";
     public static String JSON_ELEMENTS = "elements";
     public static String SLASH = "/";
+    
+    public static String imageFolderPath;
+    public static String videoFolderPath;
 
     public EPortfolio ePortfolio;
 
@@ -95,23 +102,31 @@ public class FileManager {
         // BUILD THE FILE PATH
         this.ePortfolio = ePortfolio;
         File folder = new File("EPortfolios" + SLASH + ePortfolio.getTitle());
-            if(folder.exists()){
-                folder.delete();
-            }
-            
-                folder.mkdir();
-           File file = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + ePortfolio.getTitle() + ".txt");
-           BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            
+        if (folder.exists()) {
+            folder.delete();
+        }
+          
+        
+        folder.mkdir();
+        
+         imageFolderPath = "EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + "Images";        
+        File imageFolder = new File(imageFolderPath);
+        imageFolder.mkdir();
+        
+         videoFolderPath = "EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + "Videos";
+        File videoFolder = new File(videoFolderPath);
+        videoFolder.mkdir();
+        File file = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + ePortfolio.getTitle() + ".txt");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+
         for (int i = 0; i < ePortfolio.getPages().size(); i++) {
             Page p = ePortfolio.getPages().get(i);
             String title = "" + p.getTitle();
             writer.write(title);
             writer.newLine();
-            String jsonFilePath = "EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + title + JSON_EXT;
+            String jsonFilePath = "EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + title + JSON_EXT;
 
         // INIT THE WRITER
-            
             OutputStream os = new FileOutputStream(jsonFilePath);
             JsonWriter jsonWriter = Json.createWriter(os);
 
@@ -129,27 +144,30 @@ public class FileManager {
             // AND SAVE EVERYTHING AT ONCE
             jsonWriter.writeObject(courseJsonObject);
             File html = new File("./src/sites/index.html");
-            File newHtml = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH+p.getTitle() + ".html");
+            File newHtml = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + p.getTitle() + ".html");
             copyFile(html, newHtml);
-            
-            File layout = new File("./src/sites/Layouts/" + p.getLayout()+".css");
-            File newLayout = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + p.getLayout() + ".css");
-            if(!(newLayout.exists()))
+
+            File layout = new File("./src/sites/Layouts/" + p.getLayout() + ".css");
+            File newLayout = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + p.getLayout() + ".css");
+            if (!(newLayout.exists())) {
                 copyFile(layout, newLayout);
-            
-            File colorTheme = new File("./src/sites/Styles/" + p.getColorTheme()+".css");
-            File newColorTheme = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + p.getColorTheme() + ".css");
-            if(!(newColorTheme.exists()))
+            }
+
+            File colorTheme = new File("./src/sites/Styles/" + p.getColorTheme() + ".css");
+            File newColorTheme = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + p.getColorTheme() + ".css");
+            if (!(newColorTheme.exists())) {
                 copyFile(colorTheme, newColorTheme);
-            
-            File font =  new File("./src/sites/Fonts/" + p.getFont()+".css");
-            File newFont = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + p.getFont() + ".css");
-            if(!(newFont.exists()))
+            }
+
+            File font = new File("./src/sites/Fonts/" + p.getFont() + ".css");
+            File newFont = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + p.getFont() + ".css");
+            if (!(newFont.exists())) {
                 copyFile(font, newFont);
+            }
         }
         writer.close();
         File js = new File("./src/sites/EPortfolio.js");
-        File newJs = new File("EPortfolios" + SLASH + ePortfolio.getTitle()+ SLASH + "EPortfolio.js");
+        File newJs = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + "EPortfolio.js");
         copyFile(js, newJs);
     }
 
@@ -196,30 +214,30 @@ public class FileManager {
         ePortfolio = ePortfolioToLoad;
         String ePortfolioPath = ePortfolioFile.getPath();
         ePortfolio.setTitle(ePortfolioFile.getName().substring(0, ePortfolioFile.getName().indexOf(".txt")));
-         try {
+        try {
             // FileReader reads text files in the default encoding.
-            FileReader fileReader = 
-                new FileReader(ePortfolioPath);
+            FileReader fileReader
+                    = new FileReader(ePortfolioPath);
 
             // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader = 
-                new BufferedReader(fileReader);
+            BufferedReader bufferedReader
+                    = new BufferedReader(fileReader);
             String line;
-            while((line = bufferedReader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 String path = ePortfolioFile.getPath().substring(0, ePortfolioFile.getPath().indexOf(ePortfolioFile.getName()));
                 JsonObject js = loadJSONFile(path + line + JSON_EXT);
                 Page p = new Page();
                 p.setTitle(line);
                 loadPage(js, p);
-            }   
-            
+            }
+
             // Always close files.
-            bufferedReader.close();         
-        } catch (Exception e){
+            bufferedReader.close();
+        } catch (Exception e) {
             //throw IOException e  = new IOException();
         }
         // NOW LOAD THE COURSE
-       
+
     }
 
     // AND HERE ARE THE PRIVATE HELPER METHODS TO HELP THE PUBLIC ONES
@@ -231,8 +249,8 @@ public class FileManager {
         is.close();
         return json;
     }
-    
-    private void loadPage(JsonObject js, Page page){
+
+    private void loadPage(JsonObject js, Page page) {
         ePortfolio.setStudentName(js.getString(JSON_STUDENT_NAME));
         JsonObject pageInfo = js.getJsonObject(JSON_PAGE_INFO);
         page.setTitle(js.getString(JSON_PAGE_TITLE));
@@ -240,17 +258,16 @@ public class FileManager {
         page.setFont(pageInfo.getString(JSON_FONT));
         page.setColorTheme(pageInfo.getString(JSON_COLOR));
         JsonArray content = pageInfo.getJsonArray(JSON_CONTENT);
-        for(int i = 0; i < content.size(); i++){
+        for (int i = 0; i < content.size(); i++) {
             JsonObject jo = content.getJsonObject(i);
             addComponent(page, jo);
-            
-            
+
         }
         ePortfolio.addPage(page);
     }
-    
+
     private ArrayList<String> loadJSONArray(JsonObject jo, String arrayName) throws IOException {
-       
+
         ArrayList<String> items = new ArrayList();
         JsonArray jsonArray = jo.getJsonArray(arrayName);
         for (JsonValue jsV : jsonArray) {
@@ -270,9 +287,16 @@ public class FileManager {
     }
 
     private JsonObject makeSlideJsonObject(Slide slide) {
+        File img = new File(slide.getPath());
+        File newImg = new File(imageFolderPath + SLASH + slide.getFileName());
+        try {
+            copyImageFile(img, newImg);
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         JsonObject jso = Json.createObjectBuilder()
                 .add(JSON_IMAGE_FILE_NAME, slide.getFileName())
-                .add(JSON_IMAGE_PATH, slide.getPath())
+                .add(JSON_IMAGE_PATH, "Images/" + slide.getFileName())
                 .add(JSON_CAPTION, slide.getCaption())
                 .build();
         return jso;
@@ -312,12 +336,19 @@ public class FileManager {
 
     private JsonObject makeImageJSONObject(Component c) {
         ImageComponent comp = (ImageComponent) c;
+        File img = new File(comp.getPath());
+        File newImg = new File(imageFolderPath + SLASH + comp.getFileName());
+        try {
+            copyImageFile(img, newImg);
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         JsonObject js = Json.createObjectBuilder()
                 .add(JSON_TYPE, comp.getType())
                 .add(JSON_WIDTH, Double.toString(comp.getWidth()))
                 .add(JSON_HEIGHT, Double.toString(comp.getHeight()))
                 .add(JSON_POSITION, comp.getPosition())
-                .add(JSON_IMAGE_PATH, comp.getPath())
+                .add(JSON_IMAGE_PATH, "Images/" + comp.getFileName())
                 .add(JSON_IMAGE_FILE_NAME, comp.getFileName())
                 .add(JSON_CAPTION, comp.getCaption())
                 .build();
@@ -325,12 +356,16 @@ public class FileManager {
     }
 
     private JsonObject makeVideoJSONObject(Component c) {
+        
         VideoComponent comp = (VideoComponent) c;
+        File video = new File(comp.getPath());
+        File newVideo = new File(videoFolderPath + SLASH + comp.getFileName());
+        copyVideoFile(video, newVideo);
         JsonObject js = Json.createObjectBuilder()
                 .add(JSON_TYPE, comp.getType())
                 .add(JSON_WIDTH, Double.toString(comp.getWidth()))
                 .add(JSON_HEIGHT, Double.toString(comp.getHeight()))
-                .add(JSON_VIDEO_PATH, comp.getPath())
+                .add(JSON_VIDEO_PATH, "Videos/"+comp.getFileName())
                 .add(JSON_VIDEO_FILE_NAME, comp.getFileName())
                 .add(JSON_CAPTION, comp.getCaption())
                 .build();
@@ -358,6 +393,7 @@ public class FileManager {
 
     private JsonObject makeSlideShowJSONObject(Component c) {
         SlideShowComponent comp = (SlideShowComponent) c;
+        
         JsonObject js = Json.createObjectBuilder()
                 .add(JSON_TYPE, comp.getType())
                 .add(JSON_TITLE, comp.getTitle())
@@ -365,29 +401,35 @@ public class FileManager {
                 .build();
         return js;
     }
-    public void addComponent(Page page, JsonObject jo){
+
+    public void addComponent(Page page, JsonObject jo) {
         String type = jo.getString(JSON_TYPE);
-        if(type.equals("Paragraph"))
+        if (type.equals("Paragraph")) {
             page.addComponent(makeParagraphObject(jo));
-        if(type.equals("Image"))
+        }
+        if (type.equals("Image")) {
             page.addComponent(makeImageObject(jo));
-        if(type.equals("Video"))
+        }
+        if (type.equals("Video")) {
             page.addComponent(makeVideoObject(jo));
-        if(type.equals("List"))
+        }
+        if (type.equals("List")) {
             page.addComponent(makeListObject(jo));
-        if(type.equals("Slide Show"))
+        }
+        if (type.equals("Slide Show")) {
             page.addComponent(makeSlideShowObject(jo));
+        }
     }
-    
-    private ParagraphComponent makeParagraphObject(JsonObject jo){
+
+    private ParagraphComponent makeParagraphObject(JsonObject jo) {
         ParagraphComponent comp = new ParagraphComponent();
         comp.setFont(jo.getString(JSON_FONT));
         comp.setHeader(jo.getString(JSON_HEADING));
         comp.setText(jo.getString(JSON_TEXT));
         return comp;
     }
-    
-    private ImageComponent makeImageObject(JsonObject jo){
+
+    private ImageComponent makeImageObject(JsonObject jo) {
         ImageComponent comp = new ImageComponent();
         comp.setCaption(jo.getString(JSON_CAPTION));
         comp.setFileName(jo.getString(JSON_IMAGE_FILE_NAME));
@@ -397,8 +439,8 @@ public class FileManager {
         comp.setHeight(jo.getString(JSON_HEIGHT));
         return comp;
     }
-    
-    private VideoComponent makeVideoObject(JsonObject jo){
+
+    private VideoComponent makeVideoObject(JsonObject jo) {
         VideoComponent video = new VideoComponent();
         video.setCaption(jo.getString(JSON_CAPTION));
         video.setFileName(JSON_VIDEO_FILE_NAME);
@@ -407,8 +449,8 @@ public class FileManager {
         video.setHeight(JSON_HEIGHT);
         return video;
     }
-    
-    private ListComponent makeListObject(JsonObject jo){
+
+    private ListComponent makeListObject(JsonObject jo) {
         ListComponent comp = new ListComponent();
         comp.setTitle(jo.getString(JSON_TITLE));
         try {
@@ -418,18 +460,18 @@ public class FileManager {
         }
         return comp;
     }
-    
-    private SlideShowComponent makeSlideShowObject(JsonObject jo){
+
+    private SlideShowComponent makeSlideShowObject(JsonObject jo) {
         SlideShowComponent slideShow = new SlideShowComponent();
         JsonArray slides = jo.getJsonArray(JSON_SLIDES);
-        for(int i = 0; i < slides.size(); i++){
-           JsonObject JSONSlide = slides.getJsonObject(i);
-          slideShow.addSlide(makeSlideObject(JSONSlide));
+        for (int i = 0; i < slides.size(); i++) {
+            JsonObject JSONSlide = slides.getJsonObject(i);
+            slideShow.addSlide(makeSlideObject(JSONSlide));
         }
         return slideShow;
     }
-    
-    private Slide makeSlideObject(JsonObject JSONSlide){
+
+    private Slide makeSlideObject(JsonObject JSONSlide) {
         Slide s = new Slide();
         s.setCaption(JSONSlide.getString(JSON_CAPTION));
         s.setFileName(JSONSlide.getString(JSON_IMAGE_FILE_NAME));
@@ -437,8 +479,7 @@ public class FileManager {
         return s;
     }
 
-    
-     public void copyFile(File source, File target) {
+    public void copyFile(File source, File target) {
         OutputStream stream;
         try {
             stream = new FileOutputStream(target);
@@ -448,6 +489,41 @@ public class FileManager {
         try {
             Files.copy(source.toPath(), stream);
         } catch (IOException ex) {
+        }
+    }
+    
+    private static void copyImageFile(File source, File target)
+            throws IOException {
+
+        ImageInputStream in = new FileImageInputStream(source);
+        ImageOutputStream out = new FileImageOutputStream(target);
+// Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
+    
+    private static void copyVideoFile(File source, File target){
+
+        FileInputStream fin;
+        try {
+            fin = new FileInputStream(source);
+        
+        byte b[] = new byte[(int)source.length()];
+        fin.read(b);
+
+        
+        FileOutputStream fw = new FileOutputStream(target);
+        fw.write(b);
+        fw.flush();
+        fw.close();
+        } catch (Exception ex) {
+            System.out.println("ERROR");
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -300,6 +300,7 @@ public class EPortfolioGeneratorView {
         pageEditor.getStyleClass().add("bannerImage");
         //bannerImage.setPreserveRatio(true);
         studentName = new Label("Add Student Name Here");
+        
         studentName.getStyleClass().add("studentName");
         studentName.setOnMouseClicked(e -> {
             SetDialog d = new SetDialog();
@@ -368,6 +369,8 @@ public class EPortfolioGeneratorView {
      */
     public void reloadPane() {
         // components = new VBox();
+        
+        
         removeDisabled();
         pageEditorView.getChildren().clear();
         pageEditor.getChildren().clear();
@@ -601,10 +604,12 @@ public class EPortfolioGeneratorView {
                 currentEPortfolio.setTitle(d.getValue());
                 makeUI();
                 ePortfolioTitle.setText(d.getValue());
+                
                 d.getWindow().close();
-
+                
+                removePageEditSpace();
             });
-
+            
         });
 
         changeTitle.setOnAction(e -> {
@@ -621,6 +626,13 @@ public class EPortfolioGeneratorView {
         });
 
         load.setOnAction(e -> {
+            if (!save.isDisabled()) {
+                try {
+                    controller.promptToSave();
+                } catch (IOException ex) {
+                    Logger.getLogger(EPortfolioGeneratorView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             currentEPortfolio = new EPortfolio();
             controller.handleLoadEPortfolioRequest();
             makeUI();
@@ -679,6 +691,10 @@ public class EPortfolioGeneratorView {
     }
 
     public void removeDisabled() {
+        if(currentPage == null){
+            removeComponent.setDisable(true);
+            return;
+        }
         if (currentPage.getComponents().isEmpty()) {
             removeComponent.setDisable(true);
         }
@@ -719,5 +735,18 @@ public class EPortfolioGeneratorView {
         } else {
             bannerImage = null;
         }
+    }
+    
+    
+    public void removePageEditSpace(){
+        pane.getChildren().clear();
+        pane.setTop(fileToolbar);
+        pane.setLeft(siteToolbar);
+        siteToolbar.getChildren().clear();
+        siteToolbar.getChildren().addAll(addPage, removePage);
+        pages.clear();
+        
+        removePage.setDisable(true);
+        
     }
 }
