@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title id = 'title'>FredPortfolio</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="">
+       
+       <link href="http://fonts.googleapis.com/css?family=Average|Courgette|Ubuntu|Indie Flower|Oxygen" rel="stylesheet" type="text/css">
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+       <script src="EPortfolio.js"></script>
+    </head>
+    <body>
+        <script>
+            var url = "Site Info/" + getTitle() + ".json";
+            $(document).ready(function () {
+                // parse json here
+                $.getJSON(url, function (data) {
+                    var d = data;
+                    init(d);
+                });
+            });
+        </script>
+         <div id='Banner'>
+             </div>
+        <div id='NavBar'>
+           
+        </div>
+      
+       
+        <div id='ContentDiv'>
+             
+        </div>
+        
+    </body>
+</html>

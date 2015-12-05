@@ -1,0 +1,71 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 3, 2015, 8:26:41 PM
+    Author     : andrewestevez
+*/
+#ContentDiv{
+    background-color: white;
+}
+body{
+    background-color: #D7F2FF;
+}
+
+#NavBar{
+    background-color:#0099FF;
+}
+
+.content{
+    border-bottom-style: groove;
+    border-bottom-color: #005ce6;
+    background-color: white;
+    
+}
+
+.buttonsDiv{
+    border-bottom-style: groove;
+    border-bottom-color: #005ce6;
+   
+}
+
+.paraLink{
+    color:activeborder;
+    text-decoration: none;
+}
+
+.paraLink:visited{
+    color:red;
+    text-decoration: none;
+}
+
+.paraLink:hover{
+    color: green;
+    text-decoration: none;
+}
+
+
+#BannerImg{
+    border-style: solid;
+    border-color: white;
+    border-width: 10px;
+}
+
+#Banner{
+   background-color: #ADE4FF;
+}
+
+h3{
+   color: white;
+}
+
+.link:hover{
+    text-decoration: none;
+}
+
+.link{
+    color: white;
+}
+
