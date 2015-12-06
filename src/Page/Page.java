@@ -27,6 +27,7 @@ public class Page {
         layout = "Layout 1";
         font = "Courgette";
         colorTheme = "Blue";
+        footer = "";
     }
     
     
