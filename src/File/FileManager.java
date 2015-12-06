@@ -300,7 +300,7 @@ public class FileManager {
         }
         JsonObject jso = Json.createObjectBuilder()
                 .add(JSON_IMAGE_FILE_NAME, slide.getFileName())
-                .add(JSON_IMAGE_PATH, "Images/" + slide.getFileName())
+                .add(JSON_IMAGE_PATH, slide.getPath())
                 .add(JSON_CAPTION, slide.getCaption())
                 .build();
         return jso;
@@ -352,7 +352,7 @@ public class FileManager {
                 .add(JSON_WIDTH, Double.toString(comp.getWidth()))
                 .add(JSON_HEIGHT, Double.toString(comp.getHeight()))
                 .add(JSON_POSITION, comp.getPosition())
-                .add(JSON_IMAGE_PATH, "Images/" + comp.getFileName())
+                .add(JSON_IMAGE_PATH,  comp.getPath())
                 .add(JSON_IMAGE_FILE_NAME, comp.getFileName())
                 .add(JSON_CAPTION, comp.getCaption())
                 .build();
@@ -369,7 +369,7 @@ public class FileManager {
                 .add(JSON_TYPE, comp.getType())
                 .add(JSON_WIDTH, Double.toString(comp.getWidth()))
                 .add(JSON_HEIGHT, Double.toString(comp.getHeight()))
-                .add(JSON_VIDEO_PATH, "Videos/"+comp.getFileName())
+                .add(JSON_VIDEO_PATH, comp.getPath())
                 .add(JSON_VIDEO_FILE_NAME, comp.getFileName())
                 .add(JSON_CAPTION, comp.getCaption())
                 .build();
@@ -447,10 +447,10 @@ public class FileManager {
     private VideoComponent makeVideoObject(JsonObject jo) {
         VideoComponent video = new VideoComponent();
         video.setCaption(jo.getString(JSON_CAPTION));
-        video.setFileName(JSON_VIDEO_FILE_NAME);
-        video.setPath(JSON_VIDEO_PATH);
-        video.setWidth(JSON_WIDTH);
-        video.setHeight(JSON_HEIGHT);
+        video.setFileName(jo.getString(JSON_VIDEO_FILE_NAME));
+        video.setPath(jo.getString(JSON_VIDEO_PATH));
+        video.setWidth(jo.getString(JSON_WIDTH));
+        video.setHeight(jo.getString(JSON_HEIGHT));
         return video;
     }
 

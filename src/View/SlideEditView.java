@@ -1,5 +1,6 @@
 package View;
 
+import Controller.SelectionController;
 import Dialog.AddSlideShowDialog;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -73,7 +74,24 @@ public class SlideEditView extends HBox {
             // LAY EVERYTHING OUT INSIDE THIS COMPONENT
             getChildren().add(imageSelectionView);
             getChildren().add(captionVBox);
+            imageSelectionView.setOnMouseClicked(e -> {
+                SelectionController c = new SelectionController();
+                File file2 = c.processSelectImage();
+                if (file2 != null) {
+                    
+                    try {
+                        // GET AND SET THE IMAGE
+                        file = file2;
+                        URL url = file.toURI().toURL();
+                        Image img = new Image(url.toExternalForm());
+                        imageSelectionView.setImage(img);
 
+                    } catch (Exception a) {
+                        // @todo - use Error handler to respond to missing image
+                    }
+
+                }
+            });
             // SETUP THE EVENT HANDLERS
             setOnMouseClicked(e -> {
                 for (int i = 0; i < slideEditorPane.getChildren().size(); i++) {
@@ -96,14 +114,16 @@ public class SlideEditView extends HBox {
     public void setCaption(String s) {
         captionTextField.setText(s);
     }
-    public String getCaption(){
+
+    public String getCaption() {
         return captionTextField.getText();
     }
-    
-    public String getImageFilePath(){
+
+    public String getImageFilePath() {
         return file.getPath();
     }
-    public String getImageFileName(){
+
+    public String getImageFileName() {
         return file.getName();
     }
 

@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -64,6 +66,7 @@ public class EPortfolioGeneratorView {
 
     Page currentPage;
     ArrayList<Label> pages;
+    List<Node> siteToolbarChildren;
     Label currentLabelPage;
     Label studentName;
     Label footer;
@@ -319,7 +322,6 @@ public class EPortfolioGeneratorView {
         });
         pageEditor.getChildren().add(pageEditorView);
         pageEditor.getChildren().add(studentName);
-        
 
         //pageEditor.setMinWidth(getWidth());
         //pageEditor.setPrefWidth(getWidth());
@@ -330,6 +332,39 @@ public class EPortfolioGeneratorView {
         pageEditorTab.setText("Edit Page");
         Tab pageViewerTab = new Tab();
         pageViewerTab.setText("View Page");
+        webView = new WebView();
+        engine = webView.getEngine();
+        pageViewerTab.setContent(webView);
+        pageEditorTab.setOnSelectionChanged(new EventHandler<Event>() {
+            @Override
+            public void handle(Event t) {
+                System.out.println("nnnfalsemmm");
+                if (siteToolbar.getChildren().isEmpty()) {
+                    for(int i = 0; i < siteToolbarChildren.size(); i++){
+                        siteToolbar.getChildren().add(siteToolbarChildren.get(i));
+                    }
+                    
+                }
+
+            }
+        });
+        pageViewerTab.setOnSelectionChanged(new EventHandler<Event>() {
+            @Override
+            public void handle(Event t) {
+                System.out.println("nnnTruennn");
+                if (!siteToolbar.getChildren().isEmpty()) {
+                    siteToolbarChildren = new ArrayList<>();
+                    for(int i = 0; i < siteToolbar.getChildren().size(); i++){
+                        siteToolbarChildren.add(siteToolbar.getChildren().get(i));
+                    }
+                    siteToolbar.getChildren().clear();
+                }
+                if (isSaveEnabled()) {
+                    controller.handleSaveEPortfolioRequest();
+                }
+                engine.load("file:EPortfolios/" + currentEPortfolio.getTitle() + "/" + currentPage.getTitle() + ".html");
+            }
+        });
         pageEditorPane.getTabs().add(pageEditorTab);
         pageEditorPane.getTabs().add(pageViewerTab);
         pageEditorScrollPane = new ScrollPane(pageEditor);
@@ -374,13 +409,12 @@ public class EPortfolioGeneratorView {
      */
     public void reloadPane() {
         // components = new VBox();
-        
-        
+
         removeDisabled();
         pageEditorView.getChildren().clear();
         pageEditor.getChildren().clear();
         pageEditor.getChildren().add(studentName);
-        
+
         if (bannerImage != null) {
             pageEditor.getChildren().add(bannerImage);
         }
@@ -568,7 +602,7 @@ public class EPortfolioGeneratorView {
                 reloadPane();
                 d.getWindow().close();
             });
-            
+
         });
         selectBannerImage.setOnAction(e -> {
             AddBannerImageDialog d = new AddBannerImageDialog(currentPage, this);
@@ -619,12 +653,12 @@ public class EPortfolioGeneratorView {
                 currentEPortfolio.setTitle(d.getValue());
                 makeUI();
                 ePortfolioTitle.setText(d.getValue());
-                
+
                 d.getWindow().close();
-                
+
                 removePageEditSpace();
             });
-            
+
         });
 
         changeTitle.setOnAction(e -> {
@@ -706,7 +740,7 @@ public class EPortfolioGeneratorView {
     }
 
     public void removeDisabled() {
-        if(currentPage == null){
+        if (currentPage == null) {
             removeComponent.setDisable(true);
             return;
         }
@@ -751,17 +785,16 @@ public class EPortfolioGeneratorView {
             bannerImage = null;
         }
     }
-    
-    
-    public void removePageEditSpace(){
+
+    public void removePageEditSpace() {
         pane.getChildren().clear();
         pane.setTop(fileToolbar);
         pane.setLeft(siteToolbar);
         siteToolbar.getChildren().clear();
         siteToolbar.getChildren().addAll(addPage, removePage);
         pages.clear();
-        
+
         removePage.setDisable(true);
-        
+
     }
 }

@@ -39,8 +39,8 @@
 }
 
 .heading{//the header or caption of each component if it has one
-    -fx-font-size: 30px;
-    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+    
     
 }
 
@@ -134,7 +134,7 @@
 
 .caption{
     -fx-font-size: 20;
-    -fx-text-alignment: center;
+    
 }
 
 .center{
@@ -149,4 +149,9 @@
 .ePortfolioTitle{
     -fx-font-size: 20px;
     -fx-font-color: yellow;
+}
+
+.leftCaption{
+    -fx-font-size: 25px;
+    -fx-text-alignment: left;
 }

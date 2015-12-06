@@ -1,39 +1,70 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 var slideShows = [];
+//determine index of slide show
 var index = [];
+// holds interval for slide show
 var myVar = [];
+var url;
+var studentName;
+var pageTitle;
+var pages;
+    
+var ePortfolioTitle;
+var pageInfo;
 function init(data){
-    var pages = data.pages;
+    url = getTitle();
+    pageInfo = data.page_info;
+    ePortfolioTitle = data.ePortfolio_title;
+    pages = data.pages;
+    pageTitle = data.page_title;
+    studentName = data.student_name;
+
+    initCSS(pageInfo.layout);
+    initCSS(pageInfo.color_theme);
+    initCSS(pageInfo.font);
     makePages(pages);
-    var banner = data.banner;
+
+    var banner = pageInfo.banner_image;
     makeBanner(banner);
-    var content = data.content;//create divs
+    var content = pageInfo.content;
     var i = 0;
     while(i < content.length){
         var contDiv = document.createElement("div");
         contDiv.setAttribute('class','scontent');
         document.getElementById("ContentDiv").appendChild(contDiv);
         var divs = document.getElementById("ContentDiv");
-        if(content[i].type==="video/mp4"){
-            addVideo(divs, content[i].FilePath, content[i].type, content[i].caption);
-        }else if (content[i].type==="image"){
-            addImage(divs, content[i].FilePath, content[i].caption);
-        }else if (content[i].type==="list"){
+        if(content[i].type==="Video"){
+            addVideo(divs, content[i]);
+        }else if (content[i].type==="Image"){
+            addImage(divs, content[i]);
+        }else if (content[i].type==="List"){
             addList(divs, content[i]);
-        }else if(content[i].type ==="paragraph"){
+        }else if(content[i].type ==="Paragraph"){
             addParagraph(divs, content[i]);
-        }else if(content[i].type ==="slideShow"){
+        }else if(content[i].type ==="Slide Show"){
             addSlideShow(divs, content[i], index.length);
         }else if(content[i].type === "linkParagraph"){
             addLinkParagraph(divs, content[i]);
         }
         i++;
     }
+    addFooter(pageInfo.footer);
+}
+
+function addFooter(footer){
+    var foot = document.createElement('h3');
+    foot.innerHTML = footer;
+    foot.setAttribute('class', 'footer');
+    document.body.appendChild(foot);
+}
+
+function initCSS(css){
+    var linkElem = document.createElement("Link");
+    linkElem.setAttribute('rel', 'stylesheet');
+    linkElem.setAttribute('type', 'text/css');
+    linkElem.setAttribute('href', css+".css");
+    
+    document.head.appendChild(linkElem);
 }
 
 function getTitle(){
@@ -43,18 +74,20 @@ function getTitle(){
    return page;
 }
 
-function addVideo(div, src, type, cap){
+function addVideo(div, component){
     var videlem = document.createElement("video");
 
    
     videlem.setAttribute('controls','');
+    videlem.setAttribute('width', component.width);
+    videlem.setAttribute('height', component.height);
     var sourceMP4 = document.createElement("source"); 
-    sourceMP4.type = type;
-    sourceMP4.src = src;
+    sourceMP4.type = "video/mp4";
+    sourceMP4.src = "Videos/" + component.file_name;
     videlem.appendChild(sourceMP4);
     videlem.setAttribute('class', 'content');
     var caps  = document.createElement('p');
-    caps.innerHTML = cap;
+    caps.innerHTML = component.caption;
     caps.setAttribute('class','caption');
     div.appendChild(caps);
     div.appendChild(videlem);
@@ -66,20 +99,24 @@ function makePages(pages){
     while(i < pages.length){
         var a = document.createElement('a');
         a.setAttribute('href', pages[i].URL);
-        a.innerHTML = pages[i].name;
+        a.innerHTML = pages[i].page_title;
+        if(a.innerHTML === pageTitle)
+            a.setAttribute('id', 'currentPage');
         a.setAttribute('class','link');
         navBar.appendChild(a);
         i++;
     }
 }
 
-function addImage(div, file, cap){
+function addImage(div, component){
     var picElem = document.createElement('img');
-    picElem.setAttribute('src', file);
-    picElem.setAttribute('class', 'content');
+    picElem.setAttribute('src', "Images/" + component.image_file_name);
+    picElem.setAttribute('class', component.position + 'Content');
+    picElem.setAttribute('width', component.width);
+    picElem.setAttribute('height', component.height);
     picElem.setAttribute('alt', 'picture');
     var caps = document.createElement('p');
-    caps.innerHTML = cap;
+    caps.innerHTML = component.caption;
     caps.setAttribute('class','caption');
     div.appendChild(caps);
     div.appendChild(picElem);
@@ -124,7 +161,7 @@ function addSlideShow(div, slideShow, i){
     title.innerHTML = slideShow.title;
     
     var image = document.createElement('img');
-    image.setAttribute('src', slideShow.slides[0].image_path);
+    image.setAttribute('src', "Images/" + slideShow.slides[0].image_file_name);
     image.setAttribute('alt', 'image');
     image.setAttribute('id','image_'+i);
     image.setAttribute('class', 'slide');
@@ -273,11 +310,11 @@ function addLinkParagraph(div, text){
 function makeBanner(banner){
     var ban = document.getElementById('Banner');
     var text = document.createElement('h3');
-    text.innerHTML = banner.text;
+    text.innerHTML = studentName;
     var img = null;
-    if(banner.image !== ""){
+    if(banner!== ""){
         img = document.createElement('img');
-        img.setAttribute('src', banner.image);
+        img.setAttribute('src', banner);
         img.setAttribute('alt','Banner Image');
         img.setAttribute('id', 'BannerImg');
     }

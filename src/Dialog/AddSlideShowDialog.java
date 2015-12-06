@@ -11,6 +11,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -72,6 +73,7 @@ public class AddSlideShowDialog {
         moveButtons.getChildren().addAll(moveUpButton, moveDownButton);
         scrollPane.setMinWidth(500);
         pane.getChildren().addAll(scrollPane, moveButtons);
+        moveButtons.setAlignment(Pos.CENTER);
         pane.getStyleClass().add("center");
         labelTitle = new Label("Enter Slide Show Title");
         slideShowTitle = new TextField();

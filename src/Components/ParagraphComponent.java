@@ -34,7 +34,8 @@ public class ParagraphComponent extends Component{
     }
 
     public void setFont(String font) {
-        this.font = font;
+        if(font != null)
+            this.font = font;
     }
 
     public String getText() {

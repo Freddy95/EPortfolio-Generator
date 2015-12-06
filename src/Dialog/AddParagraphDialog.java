@@ -82,7 +82,6 @@ public class AddParagraphDialog {
         box.getItems().add("Dosis");
         box.getItems().add("Average");
         box.getItems().add("Oxygen");
-        box.setValue("Select Font");
         
         elems.getChildren().addAll(box, okBtn);
         elems.getStyleClass().add("dialogButton");
@@ -140,7 +139,6 @@ public class AddParagraphDialog {
         box.getItems().add("Average");
         box.getItems().add("Oxygen");
 
-        box.setValue("Select Font");
         heading.setText(p.getHeader());
         paragraph.setText(p.getText());
         heading.setText(p.getHeader());

@@ -55,7 +55,7 @@ public class ComponentEditView extends HBox {
 
     public ComponentEditView(Component comp, Page p, EPortfolioGeneratorView initUi) {
         getStyleClass().add("componentEditView");
-        getStyleClass().add(p.getFont());
+        
         page = p;
         setSpacing(30);
         editComponent = new Button("Edit");
@@ -89,22 +89,19 @@ public class ComponentEditView extends HBox {
      * Initialize a paragraph component onto the page edit space.
      */
     public void initParagraph() {
-        VBox btns = new VBox(10);
-        Button addLink = new Button("Add Link");
-        Button removeLink = new Button("Remove Link");
+       
         ParagraphComponent c = (ParagraphComponent) component;
         VBox para = new VBox(15);
         Label heading = new Label(c.getHeader());
-        heading.getStyleClass().clear();
+        
         heading.getStyleClass().add("heading");
         TextArea text = new TextArea(c.getText());
         text.setEditable(false);
-        text.getStyleClass().clear();
         text.setMaxWidth(700);
         text.setMinHeight(100);
         text.setMaxHeight(500);
         text.setWrapText(true);
-        if (c.getFont() != null || !(c.getFont().equals(""))) {
+        if (c.getFont() != null && !(c.getFont().equals(""))) {
             heading.getStyleClass().add(c.getFont());
             text.getStyleClass().add(c.getFont());
         } else {
@@ -113,49 +110,16 @@ public class ComponentEditView extends HBox {
         }
 
         para.getChildren().addAll(heading, text);
+        
         getChildren().add(para);
-        btns.getChildren().add(editComponent);
-        btns.getChildren().add(addLink);
-        btns.getChildren().add(removeLink);
-        getChildren().add(btns);
+       
+        getChildren().add(editComponent);
         editComponent.setOnAction(e -> {
             AddParagraphDialog dia = new AddParagraphDialog(page, ui);
             dia.editDisplay(c);
         });
 
-        addLink.setOnAction(e -> {
-            if (text.getSelectedText() == "" || text.getSelectedText() == null) {
-                return;
-            }
-            LinkDialog dia = new LinkDialog(c, text.getSelection(), ui);
-            dia.addDisplay();
-            ui.reloadPane();
-            removeLink.setDisable(!(c.getLinks().size() > 0));
-        });
-
-        removeLink.setOnAction(e -> {
-            if (text.getSelectedText().equals("") || text.getSelectedText() == null) {
-                return;
-            }
-            String t = text.getSelectedText();
-            if (t.indexOf("***") != 0 || t.lastIndexOf("***") != t.length() - 3) {
-
-                return;
-
-            }
-            StringBuilder s = new StringBuilder();
-            IndexRange r = text.getSelection();
-
-            s.append(text.getText().substring(0, r.getStart()));
-            System.out.println(r.getStart() + " " + r.getEnd());
-            s.append(text.getText().substring(r.getStart() + 3, r.getEnd() - 3));
-
-            s.append(text.getText().substring(r.getEnd()));
-            c.setText(s.toString());
-            c.getLinks().remove(getIndexOfLink(r.getStart(), text.getText()));
-            removeLink.setDisable(!(c.getLinks().size() > 0));
-            ui.reloadPane();
-        });
+       
 
     }
 
@@ -168,6 +132,7 @@ public class ComponentEditView extends HBox {
         img.getStyleClass().add("component2");
         Label cap = new Label(image.getCaption());
         cap.getStyleClass().add("heading");
+        cap.getStyleClass().add(page.getFont());
         File file = new File(image.getPath());
         URL url;
         try {
@@ -208,6 +173,9 @@ public class ComponentEditView extends HBox {
             Media media = new Media(url.toExternalForm());
             MediaPlayer player = new MediaPlayer(media);
             MediaView view = new MediaView(player);
+            Label cap = new Label(video.getCaption());
+            cap.getStyleClass().add(page.getFont());
+            cap.getStyleClass().add("leftCaption");
             view.setFitWidth(video.getWidth());
             view.setFitHeight(video.getHeight());
             VBox play = new VBox(20);
@@ -226,7 +194,7 @@ public class ComponentEditView extends HBox {
                 }
             });
             play.setAlignment(Pos.CENTER);
-            play.getChildren().addAll(view, playPause);
+            play.getChildren().addAll(cap, view, playPause);
             editComponent.setOnAction(e -> {
                 AddVideoDialog d = new AddVideoDialog(page, ui);
                 d.editDisplay(video);
@@ -244,7 +212,9 @@ public class ComponentEditView extends HBox {
         listView.getItems().addAll(list.getElements());
         listView.setMaxSize(200, 300);
         Label title = new Label(list.getTitle());
-        title.getStyleClass().add("heading");
+        listView.getStyleClass().add(page.getFont());
+        title.getStyleClass().add(page.getFont());
+        title.getStyleClass().add("leftCaption");
         VBox content = new VBox(15);
         content.getChildren().addAll(title, listView);
         getChildren().addAll(content, editComponent);
@@ -264,6 +234,7 @@ public class ComponentEditView extends HBox {
         File file = new File(initSlide.getPath());
         Label title = new Label(slideShow.getTitle());
         title.getStyleClass().add("heading");
+        title.getStyleClass().add(page.getFont());
         
         HBox btns = new HBox(30);
         URL url;
@@ -276,9 +247,12 @@ public class ComponentEditView extends HBox {
             view.setFitWidth(500);
             view.setPreserveRatio(true);
             Label caption = new Label();
+            title.setAlignment(Pos.CENTER);
             caption.setAlignment(Pos.CENTER);
             caption.getStyleClass().add("caption");
+            caption.getStyleClass().add(page.getFont());
             caption.setText(initSlide.getCaption());
+            caption.setAlignment(Pos.CENTER);
             Button nextSlide = new Button();
             Button previousSlide = new Button();
             Image next = new Image("file:icons/rightArrow.png");
