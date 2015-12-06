@@ -15,6 +15,7 @@ import File.FileManager;
 import eportfoliogenerator.EPortfolio;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -198,7 +199,6 @@ public class EPortfolioGeneratorView {
         saveAs = initChildButton(fileToolbar, "icons/saveAs.png", "Save As", false);
         changeTitle = initChildButton(fileToolbar, "icons/editTitle.png", "Change EPortfolio Title", false);
         export = initChildButton(fileToolbar, "icons/export.png", "Export EPortfolio", false);
-        toggleView = initChildButton(fileToolbar, "icons/site.png", "Site View", false);
         exit = initChildButton(fileToolbar, "icons/exit.png", "Exit", false);
         ePortfolioTitle = new Label("");
         ePortfolioTitle.getStyleClass().add("ePortfolioTitle");
@@ -340,10 +340,10 @@ public class EPortfolioGeneratorView {
             public void handle(Event t) {
                 System.out.println("nnnfalsemmm");
                 if (siteToolbar.getChildren().isEmpty()) {
-                    for(int i = 0; i < siteToolbarChildren.size(); i++){
+                    for (int i = 0; i < siteToolbarChildren.size(); i++) {
                         siteToolbar.getChildren().add(siteToolbarChildren.get(i));
                     }
-                    
+
                 }
 
             }
@@ -354,15 +354,29 @@ public class EPortfolioGeneratorView {
                 System.out.println("nnnTruennn");
                 if (!siteToolbar.getChildren().isEmpty()) {
                     siteToolbarChildren = new ArrayList<>();
-                    for(int i = 0; i < siteToolbar.getChildren().size(); i++){
+                    for (int i = 0; i < siteToolbar.getChildren().size(); i++) {
                         siteToolbarChildren.add(siteToolbar.getChildren().get(i));
                     }
                     siteToolbar.getChildren().clear();
+                    if (isSaveEnabled()) {
+                        controller.handleSaveEPortfolioRequest();
+                        saveDisabled(true);
+                    }
+                    File file = new File("EPortfolios/" + currentEPortfolio.getTitle() + "/" + currentPage.getTitle() + ".html");
+                    if (file.exists()); else {
+                        try {
+                            file.createNewFile();
+                        } catch (IOException ex) {
+                        }
+                    }
+
+                    try {
+                        engine.load(file.toURI().toURL().toExternalForm());
+                    } catch (MalformedURLException ex) {
+                    }
+
                 }
-                if (isSaveEnabled()) {
-                    controller.handleSaveEPortfolioRequest();
-                }
-                engine.load("file:EPortfolios/" + currentEPortfolio.getTitle() + "/" + currentPage.getTitle() + ".html");
+
             }
         });
         pageEditorPane.getTabs().add(pageEditorTab);
@@ -696,10 +710,7 @@ public class EPortfolioGeneratorView {
 
         });
 
-        toggleView.setOnAction(e -> {
-            SiteView v = new SiteView();
-            v.display();
-        });
+       
 
     }
 

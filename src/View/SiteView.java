@@ -35,6 +35,7 @@ public class SiteView {
         } catch (MalformedURLException ex) {
         }
         
+        
         scene = new Scene(webView);
         window = new Stage();
         window.setScene(scene);
