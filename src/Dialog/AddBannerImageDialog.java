@@ -5,8 +5,11 @@ import Controller.SelectionController;
 import Page.Page;
 import View.EPortfolioGeneratorView;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,7 +35,9 @@ public class AddBannerImageDialog {
     Page page;
     EPortfolioGeneratorView ui;
     Image image;
-
+    String path;
+    File f;
+    URL fileURL;
     public AddBannerImageDialog(Page p, EPortfolioGeneratorView view) {
         page = p;
         ui = view;
@@ -41,7 +46,11 @@ public class AddBannerImageDialog {
     public void display(String title) {
 
         ImageView view = new ImageView();
-        image = new Image("file:image.jpg");
+        f = new File("image.jpg");
+        try {
+            fileURL = f.toURI().toURL();
+       
+        image = new Image(fileURL.toExternalForm());
         view.setImage(image);
         view.setFitWidth(300);
         view.setPreserveRatio(true);
@@ -60,16 +69,20 @@ public class AddBannerImageDialog {
         scene.getStylesheets().add("Style/EPortfolioGeneratorStyle.css");
         layout.getStyleClass().add("dialogImage");
         window.show();
+         } catch (MalformedURLException ex) {
+            Logger.getLogger(AddBannerImageDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         addImage.setOnAction(e -> {
             SelectionController c = new SelectionController();
-            File file = c.processSelectImage();
-            if (file != null) {
+             f = c.processSelectImage();
+            if (f != null) {
                 try {
                     // GET AND SET THE IMAGE
-                    URL fileURL = file.toURI().toURL();
+                     fileURL = f.toURI().toURL();
                     image = new Image(fileURL.toExternalForm());
+                    
                     view.setImage(image);
-                    page.setBannerImagePath(file.getPath());
+                    page.setBannerImagePath(f.getPath());
 
                 } catch (Exception a) {
                     // @todo - use Error handler to respond to missing image
@@ -93,5 +106,12 @@ public class AddBannerImageDialog {
         window.close();
     }
     
+    public String getPath(){
+        return f.getPath();
+    }
+    
+    public URL getURL(){
+       return fileURL;
+    }
     
 }

@@ -150,7 +150,7 @@ public class EPortfolioGeneratorView {
     public void setPageWorkSpace() {
 
         pane.setCenter(pageEditorPane);
-        pageEditorView.setPrefWidth(getWidth() * .79);
+        pageEditorView.setPrefWidth((getWidth() * .92) - 170);
 
     }
 
@@ -338,7 +338,6 @@ public class EPortfolioGeneratorView {
         pageEditorTab.setOnSelectionChanged(new EventHandler<Event>() {
             @Override
             public void handle(Event t) {
-                System.out.println("nnnfalsemmm");
                 if (siteToolbar.getChildren().isEmpty()) {
                     for (int i = 0; i < siteToolbarChildren.size(); i++) {
                         siteToolbar.getChildren().add(siteToolbarChildren.get(i));
@@ -351,7 +350,6 @@ public class EPortfolioGeneratorView {
         pageViewerTab.setOnSelectionChanged(new EventHandler<Event>() {
             @Override
             public void handle(Event t) {
-                System.out.println("nnnTruennn");
                 if (!siteToolbar.getChildren().isEmpty()) {
                     siteToolbarChildren = new ArrayList<>();
                     for (int i = 0; i < siteToolbar.getChildren().size(); i++) {
@@ -382,7 +380,8 @@ public class EPortfolioGeneratorView {
         pageEditorPane.getTabs().add(pageEditorTab);
         pageEditorPane.getTabs().add(pageViewerTab);
         pageEditorScrollPane = new ScrollPane(pageEditor);
-        workSpaceToolbar.setPrefWidth(getWidth() * .13);
+        System.out.println(getWidth() * .13);
+        workSpaceToolbar.setPrefWidth(170);
         workSpace.getChildren().add(pageEditorScrollPane);
         workSpace.getChildren().add(workSpaceToolbar);
         pageEditorTab.setContent(workSpace);
@@ -432,7 +431,7 @@ public class EPortfolioGeneratorView {
         if (bannerImage != null) {
             pageEditor.getChildren().add(bannerImage);
         }
-        pageEditor.getChildren().add(pageEditorView);
+        
         ComponentEditView view = null;
 
         for (int i = 0; i < currentPage.getComponents().size(); i++) {
@@ -446,6 +445,7 @@ public class EPortfolioGeneratorView {
                 view.deselect();
             }
         }
+        pageEditor.getChildren().add(pageEditorView);
         pageEditor.getChildren().add(footer);
         saveDisabled(false);
 
@@ -523,8 +523,10 @@ public class EPortfolioGeneratorView {
             dia.display("Add Component", "Select Type of"
                     + " Component");
             dia.getButton().setOnAction(c -> {
-                addComponent(dia.getValue());
-                dia.close();
+                if (!(dia.getValue() == null)) {
+                    addComponent(dia.getValue());
+                    dia.close();
+                }
             });
 
         });
@@ -540,9 +542,12 @@ public class EPortfolioGeneratorView {
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Font", "Select Font for the Page to use");
             dia.getButton().setOnAction(b -> {
-                currentPage.setFont(dia.getValue());
-                pageEditorView.getStyleClass().add(dia.getValue());
-                reloadPane();
+                if (!(dia.getValue() == null)) {
+                    currentPage.setFont(dia.getValue());
+                    pageEditorView.getStyleClass().add(dia.getValue());
+                    reloadPane();
+
+                }
                 dia.close();
             });
 
@@ -558,7 +563,11 @@ public class EPortfolioGeneratorView {
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Color", "Select Color Template for the Page");
             dia.getButton().setOnAction(a -> {
-                currentPage.setColorTheme(dia.getValue());
+                if (!(dia.getValue() == null)) {
+                    currentPage.setColorTheme(dia.getValue());
+                    saveDisabled(false);
+                }
+
                 dia.close();
             });
         });
@@ -572,7 +581,11 @@ public class EPortfolioGeneratorView {
             SelectDialog dia = new SelectDialog(components);
             dia.display("Select Layout", "Select Layout for the Page to use");
             dia.getButton().setOnAction(x -> {
-                currentPage.setLayout(dia.getValue());
+                if (!(dia.getValue() == null)) {
+                    currentPage.setLayout(dia.getValue());
+
+                    saveDisabled(false);
+                }
                 dia.close();
             });
         });
@@ -580,8 +593,11 @@ public class EPortfolioGeneratorView {
             SetDialog d = new SetDialog();
             d.display("Enter Title", "Enter Title of Page");
             d.getButton().setOnAction(b -> {
-                currentLabelPage.setText(d.getValue());
-                currentPage.setTitle(d.getValue());
+                if (!(d.getValue().equals(""))) {
+                    currentLabelPage.setText(d.getValue());
+                    currentPage.setTitle(d.getValue());
+                    saveDisabled(false);
+                }
                 d.getWindow().close();
             });
         });
@@ -623,11 +639,13 @@ public class EPortfolioGeneratorView {
             d.display("Add Banner Image");
             d.getButton().setOnAction(a -> {
                 bannerImage = new ImageView();
-                bannerImage.setFitWidth(getWidth() * .79);
+                bannerImage.setFitWidth((getWidth() * .92) - 170);
                 bannerImage.setFitHeight(getWidth() * .2);
                 bannerImage.setImage(d.getImage());
+                currentPage.setBannerImagePath(d.getPath());
                 pageEditor.getChildren().clear();
                 pageEditor.getChildren().addAll(studentName, bannerImage);
+                reloadPane();
                 d.close();
 
             });
@@ -711,8 +729,18 @@ public class EPortfolioGeneratorView {
             saveDisabled(true);
 
         });
-
-       
+        
+        exit.setOnAction(e -> {
+            if (!save.isDisabled()) {
+                try {
+                    controller.promptToSave();
+                } catch (IOException ex) {
+                    Logger.getLogger(EPortfolioGeneratorView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            primaryStage.close();
+            System.exit(0);
+        });
 
     }
 
@@ -791,6 +819,8 @@ public class EPortfolioGeneratorView {
 
                 URL url = file.toURI().toURL();
                 bannerImage = new ImageView(new Image(url.toExternalForm()));
+               bannerImage.setFitWidth((getWidth() * .92) - 170);
+                bannerImage.setFitHeight(getWidth() * .2);
 
             } catch (Exception x) {
             }
@@ -811,7 +841,6 @@ public class EPortfolioGeneratorView {
 
     }
 }
-
 
 //fix setting layout + color to set save
 //fix layouts 

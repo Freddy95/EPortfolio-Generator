@@ -143,11 +143,13 @@ function addParagraph(div, paragraph){
     var header = null;
     if(paragraph.heading !== ""){
         header = document.createElement('h2');
+        header.setAttribute('class', paragraph.font);
         header.innerHTML = paragraph.heading;
+        
     }
     var para = document.createElement('p');
     para.innerHTML = paragraph.text;
-    para.setAttribute('class', 'content');
+    para.setAttribute('class', 'content ' + paragraph.font);
     if(header !== null){
         div.appendChild(header);
     }

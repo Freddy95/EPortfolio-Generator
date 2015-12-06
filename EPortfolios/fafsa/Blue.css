@@ -71,3 +71,10 @@ h3{
    color: blue;
 }
 
+.currentPage{
+    color: blue;
+}
+
+.currentPage:hover{
+    text-decoration: none;
+}

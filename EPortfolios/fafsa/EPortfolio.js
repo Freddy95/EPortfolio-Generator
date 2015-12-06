@@ -98,11 +98,12 @@ function makePages(pages){
     var i = 0;
     while(i < pages.length){
         var a = document.createElement('a');
-        a.setAttribute('href', pages[i].URL);
+        a.setAttribute('href', pages[i].url);
         a.innerHTML = pages[i].page_title;
         if(a.innerHTML === pageTitle)
-            a.setAttribute('id', 'currentPage');
-        a.setAttribute('class','link');
+            a.setAttribute('class', 'currentPage');
+        else
+            a.setAttribute('class','link');
         navBar.appendChild(a);
         i++;
     }

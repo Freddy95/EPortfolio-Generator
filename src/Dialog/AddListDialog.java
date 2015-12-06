@@ -55,9 +55,11 @@ public class AddListDialog {
         list.setMinSize(300, 200);    
         addBtn = new Button("Add Element");
         removeBtn = new Button("Remove Element");
+        removeBtn.setDisable(true);
         HBox btns = new HBox(15);
         btns.getChildren().addAll(addBtn, removeBtn);
         okBtn = new Button("OK");
+        okBtn.setDisable(true);
         btns.setAlignment(Pos.CENTER);
         VBox layout = new VBox(25);
         layout.setPadding(new Insets(10,10,10,10));
@@ -70,11 +72,17 @@ public class AddListDialog {
         addBtn.setOnAction(e -> {
             if(!(element.getText().equals("")) && element.getText() != null ){
                 list.getItems().add(element.getText());
+                okBtn.setDisable(false);
+                removeBtn.setDisable(false);
                 element.clear();
             }
         });
         removeBtn.setOnAction(e -> {
             list.getItems().remove(list.getSelectionModel().getSelectedIndex());
+             if(list.getItems().isEmpty()){
+                okBtn.setDisable(true);
+                removeBtn.setDisable(true);
+            }
         });
         
         okBtn.setOnAction(e -> {
@@ -122,11 +130,17 @@ public class AddListDialog {
         addBtn.setOnAction(e -> {
             if(!(element.getText().equals("")) && element.getText() != null ){
                 list.getItems().add(element.getText());
+                okBtn.setDisable(false);
+                removeBtn.setDisable(false);
                 element.clear();
             }
         });
         removeBtn.setOnAction(e -> {
             list.getItems().remove(list.getSelectionModel().getSelectedIndex());
+            if(list.getItems().isEmpty()){
+                okBtn.setDisable(true);
+                removeBtn.setDisable(true);
+            }
         });
         
         okBtn.setOnAction(e -> {

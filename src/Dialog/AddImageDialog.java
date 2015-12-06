@@ -131,6 +131,7 @@ public class AddImageDialog {
 
     public void editDisplay(ImageComponent imageComponent) {
         initEditDisplay(imageComponent);
+        
         view.setFitWidth(300);
         view.setPreserveRatio(true);
         view.setSmooth(true);
@@ -188,6 +189,8 @@ public class AddImageDialog {
     public void initEditDisplay(ImageComponent imageComponent) {
         caption.setText(imageComponent.getCaption());
         position.setValue(imageComponent.getPosition());
+        width.setText(Double.toString(imageComponent.getWidth()));
+        height.setText(Double.toString(imageComponent.getHeight()));
         file = new File(imageComponent.getPath());
         URL url;
         try {
