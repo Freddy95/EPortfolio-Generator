@@ -623,6 +623,8 @@ public class EPortfolioGeneratorView {
             d.display("Add Banner Image");
             d.getButton().setOnAction(a -> {
                 bannerImage = new ImageView();
+                bannerImage.setFitWidth(getWidth() * .79);
+                bannerImage.setFitHeight(getWidth() * .2);
                 bannerImage.setImage(d.getImage());
                 pageEditor.getChildren().clear();
                 pageEditor.getChildren().addAll(studentName, bannerImage);
@@ -809,3 +811,9 @@ public class EPortfolioGeneratorView {
 
     }
 }
+
+
+//fix setting layout + color to set save
+//fix layouts 
+//ssh
+//finish :D

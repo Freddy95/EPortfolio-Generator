@@ -11,23 +11,23 @@ and open the template in the editor.
     background-color: white;
 }
 body{
-    background-color: #FFA7A7;
+    background-color: #FFFFCC;
 }
 
 #NavBar{
-    background-color:#FF3333;
+    background-color: #FFF158;
 }
 
 .content{
     border-bottom-style: groove;
-    border-bottom-color: #FF0000;
+    border-bottom-color: gray;
     background-color: white;
     
 }
 
 .buttonsDiv{
     border-bottom-style: groove;
-    border-bottom-color: #FF0000;
+    border-bottom-color: gray;
    
 }
 
@@ -54,7 +54,7 @@ body{
 }
 
 #Banner{
-   background-color: #FF6666;
+   background-color: #5D5D5D;
 }
 
 h3{
@@ -65,17 +65,14 @@ h3{
     text-decoration: none;
 }
 
-.link{
+.footer{
     color: black;
 }
-.footer{
-    color: red;
-   
-}
+
 .currentPage{
-    color: darkred;
+    color: black;
 }
 .currentPage:hover{
-    color: white;
+    color: darkslategray;
     text-decoration: none;
 }

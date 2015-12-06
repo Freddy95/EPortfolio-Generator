@@ -68,3 +68,12 @@ h3{
 .footer{
     color: black;
 }
+
+.currentPage{
+    color: blue;
+    text-decoration: none;
+}
+.currentPage:hover{
+    color: darkslategray;
+    text-decoration: none;
+}
