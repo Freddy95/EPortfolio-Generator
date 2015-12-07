@@ -66,7 +66,8 @@ public class FileManager {
     public static String JSON_TYPE = "type";
     public static String JSON_HEADING = "heading";
     public static String JSON_STUDENT_NAME = "student_name";
-    public static String JSON_BANNER_IMAGE = "banner_image";
+    public static String JSON_BANNER_IMAGE_PATH = "banner_image_path";
+    public static String JSON_BANNER_IMAGE_FILE = "banner_image_file";
     public static String JSON_CONTENT = "content";
     public static String JSON_SLIDES = "slides";
     public static String JSON_TEXT = "text";
@@ -87,6 +88,7 @@ public class FileManager {
     
     public static String imageFolderPath;
     public static String videoFolderPath;
+    public static String iconFolderPath;
 
     public EPortfolio ePortfolio;
 
@@ -117,11 +119,37 @@ public class FileManager {
          videoFolderPath = "EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + "Videos";
         File videoFolder = new File(videoFolderPath);
         videoFolder.mkdir();
+        
+        iconFolderPath = "EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + "icons";
+        File iconFolder = new File(iconFolderPath);
+        iconFolder.mkdir();
+        
+        File play = new File("icons/play.jpg");
+        File newPlay = new File(iconFolderPath + SLASH  + "play.jpg");
+        copyImageFile(play, newPlay);
+        
+        File pause = new File("icons/pause.jpg");
+        File newPause = new File(iconFolderPath + SLASH + "pause.jpg");
+        copyImageFile(pause, newPause);
+        
+        File next = new File("icons/next.jpg");
+        File newNext = new File(iconFolderPath + SLASH  + "next.jpg");
+        copyImageFile(next, newNext);
+        
+        File prev = new File("icons/previous.jpg");
+        File newPrev = new File(iconFolderPath + SLASH + "previous.jpg");
+        copyImageFile(prev, newPrev);
+        
+        
         File file = new File("EPortfolios" + SLASH + ePortfolio.getTitle() + SLASH + ePortfolio.getTitle() + ".txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-
+        
         for (int i = 0; i < ePortfolio.getPages().size(); i++) {
             Page p = ePortfolio.getPages().get(i);
+            File oldBanner = new File(p.getBannerImagePath());
+            File newBanner = new File(imageFolderPath + SLASH + p.getBannerImageFile());
+            if(oldBanner.exists())
+                copyImageFile(oldBanner, newBanner);
             String title = "" + p.getTitle();
             writer.write(title);
             writer.newLine();
@@ -174,7 +202,8 @@ public class FileManager {
 
     private JsonObject makePageInfoObject(Page p) {
         JsonObject js = Json.createObjectBuilder()
-                .add(JSON_BANNER_IMAGE, p.getPath())
+                .add(JSON_BANNER_IMAGE_PATH, p.getBannerImagePath())
+                .add(JSON_BANNER_IMAGE_FILE, p.getBannerImageFile())
                 .add(JSON_LAYOUT, p.getLayout())
                 .add(JSON_FONT, p.getFont())
                 .add(JSON_COLOR, p.getColorTheme())
@@ -256,7 +285,8 @@ public class FileManager {
         ePortfolio.setStudentName(js.getString(JSON_STUDENT_NAME));
         JsonObject pageInfo = js.getJsonObject(JSON_PAGE_INFO);
         page.setTitle(js.getString(JSON_PAGE_TITLE));
-        page.setBannerImagePath(pageInfo.getString(JSON_BANNER_IMAGE));
+        page.setBannerImagePath(pageInfo.getString(JSON_BANNER_IMAGE_PATH));
+        page.setBannerImageFile(pageInfo.getString(JSON_BANNER_IMAGE_FILE));
         page.setFont(pageInfo.getString(JSON_FONT));
         page.setColorTheme(pageInfo.getString(JSON_COLOR));
         page.setFooter(pageInfo.getString(JSON_FOOTER));

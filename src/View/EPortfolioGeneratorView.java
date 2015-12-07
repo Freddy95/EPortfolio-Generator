@@ -416,6 +416,13 @@ public class EPortfolioGeneratorView {
         width = bounds.getWidth();
         return width;
     }
+    
+    public double getHeight(){
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        return bounds.getHeight();
+    }
 
     /**
      * when a change is made to the content reload the workspace.
@@ -429,6 +436,8 @@ public class EPortfolioGeneratorView {
         pageEditor.getChildren().add(studentName);
 
         if (bannerImage != null) {
+            bannerImage.setFitWidth((getWidth() * .92) - 170);
+            bannerImage.setFitHeight(getWidth() * .2);
             pageEditor.getChildren().add(bannerImage);
         }
         
@@ -643,6 +652,7 @@ public class EPortfolioGeneratorView {
                 bannerImage.setFitHeight(getWidth() * .2);
                 bannerImage.setImage(d.getImage());
                 currentPage.setBannerImagePath(d.getPath());
+                currentPage.setBannerImageFile(d.getFile().getName());
                 pageEditor.getChildren().clear();
                 pageEditor.getChildren().addAll(studentName, bannerImage);
                 reloadPane();
@@ -666,9 +676,9 @@ public class EPortfolioGeneratorView {
             d.getButton().setOnAction(x -> {
                 currentEPortfolio.setTitle(d.getValue());
                 ePortfolioTitle.setText(d.getValue());
-                if (!save.isDisabled()) {
+                
                     save.setDisable(controller.handleSaveEPortfolioRequest());
-                }
+                
                 d.getWindow().close();
             });
         });
@@ -741,6 +751,27 @@ public class EPortfolioGeneratorView {
             primaryStage.close();
             System.exit(0);
         });
+        
+        export.setOnAction(e -> {
+            if (!save.isDisabled()) {
+                controller.handleSaveEPortfolioRequest();
+                saveDisabled(true);
+            }
+            File file = new File("EPortfolios/" + currentEPortfolio.getTitle() + "/" + currentPage.getTitle() + ".html");
+                    
+
+                    try {
+                        WebView newView = new WebView();
+                        WebEngine newEngine = newView.getEngine();
+                        Stage stage = new Stage();
+                        stage.setTitle("EPortfolio Site Viewer");
+                        Scene webScene = new Scene(newView, getWidth(), getHeight());
+                        newEngine.load(file.toURI().toURL().toExternalForm());
+                        stage.setScene(webScene);
+                        stage.show();
+                    } catch (MalformedURLException ex) {
+                    }
+        });
 
     }
 
@@ -783,6 +814,7 @@ public class EPortfolioGeneratorView {
     public void removeDisabled() {
         if (currentPage == null) {
             removeComponent.setDisable(true);
+            export.setDisable(true);
             return;
         }
         if (currentPage.getComponents().isEmpty()) {

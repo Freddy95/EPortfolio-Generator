@@ -102,6 +102,11 @@ and open the template in the editor.
     
 }
 
+.currentPage{
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
 p{
     text-align: left;
     

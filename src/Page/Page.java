@@ -14,6 +14,7 @@ public class Page {
     ArrayList<Component> components;
     String URL;
     String bannerImagePath;
+    String bannerImageFile;
     String layout;
     String footer;
     String colorTheme;
@@ -28,6 +29,7 @@ public class Page {
         font = "Courgette";
         colorTheme = "Blue";
         footer = "";
+        bannerImageFile = "";
     }
     
     
@@ -104,6 +106,15 @@ public class Page {
     public void setFooter(String footer) {
         this.footer = footer;
     }
+
+    public String getBannerImageFile() {
+        return bannerImageFile;
+    }
+
+    public void setBannerImageFile(String bannerImageFile) {
+        this.bannerImageFile = bannerImageFile;
+    }
     
     
-}
+    
+}   

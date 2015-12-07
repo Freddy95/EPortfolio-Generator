@@ -26,6 +26,16 @@ and open the template in the editor.
    margin-left: 0.5%;
 }
 
+.currentPage{
+   position: relative;
+  
+   padding-bottom: 20%;
+   
+   display: block;
+   
+   margin-left: 0.5%;
+}
+
 #Banner{
     position: relative;
     width: 80%;

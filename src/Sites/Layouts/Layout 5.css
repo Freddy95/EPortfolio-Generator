@@ -30,6 +30,13 @@ and open the template in the editor.
    padding-bottom: 20px;
    margin-left: 10px;
 }
+.currentPage{
+   position: relative;
+   padding-bottom: 20px;
+   margin-left: 15px;
+   margin-right: 5px;
+
+}
 
 #Banner{
     position: relative;

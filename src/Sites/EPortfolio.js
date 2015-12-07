@@ -24,7 +24,7 @@ function init(data){
     initCSS(pageInfo.font);
     makePages(pages);
 
-    var banner = pageInfo.banner_image;
+    var banner = pageInfo.banner_image_file;
     makeBanner(banner);
     var content = pageInfo.content;
     var i = 0;
@@ -182,7 +182,7 @@ function addSlideShow(div, slideShow, i){
     play.setAttribute('type', 'button');
     play.value = 'play';
     play.setAttribute('class', 'button');
-    play.setAttribute('src', 'play.jpg');
+    play.setAttribute('src', 'icons/play.jpg');
     play.setAttribute('alt', 'Play');
     
     play.onclick = function(){
@@ -196,7 +196,7 @@ function addSlideShow(div, slideShow, i){
     prev.setAttribute('id', 'prev_'+i);
     prev.setAttribute('type', 'button');
     prev.setAttribute('class', 'button');
-    prev.setAttribute('src', 'previous.jpg');
+    prev.setAttribute('src', 'icons/previous.jpg');
     prev.setAttribute('alt', 'Previous');
     prev.onclick = function(){prevImage(slideShow, i);};
     
@@ -206,7 +206,7 @@ function addSlideShow(div, slideShow, i){
     next.setAttribute('type', 'button');
     next.setAttribute('class', 'button');
     next.onclick= function(){nextImage(slideShow,i);};
-    next.setAttribute('src', 'next.jpg');
+    next.setAttribute('src', 'icons/next.jpg');
     next.setAttribute('alt', 'Next');
     
     
@@ -232,7 +232,7 @@ function nextImage(slideShow, ind){
         index[ind] = 0;
     }
 
-    document.getElementById("image_"+ind).src = slideShow.slides[index[ind]].image_path;
+    document.getElementById("image_"+ind).src = "Images/" + slideShow.slides[index[ind]].image_file_name;
     document.getElementById("caption_" + ind).innerHTML= slideShow.slides[index[ind]].caption;
 }
 
@@ -241,7 +241,7 @@ function prevImage(slideShow, ind){
     if(index[ind] === -1){
         index[ind] = slideShow.slides.length-1;
     }
-    document.getElementById("image_"+ind).src = slideShow.slides[index[ind]].image_path;
+    document.getElementById("image_"+ind).src = "Images/" + slideShow.slides[index[ind]].image_file_name;
     document.getElementById("caption_" + ind).innerHTML= slideShow.slides[index[ind]].caption;
 }
 
@@ -250,11 +250,11 @@ function playPause(slideShow, i){
         console.log(document.getElementById("playImage_"+i).value);
         if(document.getElementById("playImage_"+i).value==="play"){
             document.getElementById("playImage_"+i).value = "pause"; 
-            document.getElementById("playImage_"+i).src="pause.jpg";
+            document.getElementById("playImage_"+i).src="icons/pause.jpg";
             myVar[x] = setInterval(function(){nextImage(slideShow, x);}, 3000);
         }else{
             document.getElementById("playImage_"+i).value = "play";
-            document.getElementById("playImage_" + i).src="play.jpg";
+            document.getElementById("playImage_" + i).src="icons/play.jpg";
             clearInterval(myVar[i]);
         }
 }
@@ -317,7 +317,7 @@ function makeBanner(banner){
     var img = null;
     if(banner!== ""){
         img = document.createElement('img');
-        img.setAttribute('src', banner);
+        img.setAttribute('src', "Images/" + banner);
         img.setAttribute('alt','Banner Image');
         img.setAttribute('id', 'BannerImg');
     }

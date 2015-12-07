@@ -83,6 +83,7 @@ public class AddBannerImageDialog {
                     
                     view.setImage(image);
                     page.setBannerImagePath(f.getPath());
+                    page.setBannerImageFile(f.getName());
 
                 } catch (Exception a) {
                     // @todo - use Error handler to respond to missing image
@@ -110,8 +111,8 @@ public class AddBannerImageDialog {
         return f.getPath();
     }
     
-    public URL getURL(){
-       return fileURL;
-    }
+   public File getFile(){
+       return f;
+   }
     
 }
